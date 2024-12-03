@@ -11,6 +11,11 @@
 
   };
 
+
+  # programs.hyprland = {
+  #   enable = true;
+  # };
+
   programs.git = {
     enable = true;
     userName = user;
@@ -19,6 +24,8 @@
       init.defaultBranch = "master";
     };
   };
+
+  # programs.nix-ld.enable = true;
 
 
   home.stateVersion = "24.11";
