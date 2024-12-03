@@ -1,0 +1,7 @@
+{ inputs, outputs, ... }:
+
+{
+  imports = [
+    ./ben
+  ];
+}
