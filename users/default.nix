@@ -1,7 +1,5 @@
 { ... }:
 
 {
-  imports = [
-    ./ben
-  ];
+  imports = [ ./ben ];
 }

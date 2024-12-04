@@ -1,9 +1,7 @@
 { pkgs, home-manager, ... }:
 
 {
-  imports = [
-    ./hardware-configuration.nix
-  ];
+  imports = [ ./hardware-configuration.nix ];
 
   # Bootloader.
   boot.loader.grub.enable = true;
