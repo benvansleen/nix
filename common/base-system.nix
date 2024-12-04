@@ -1,4 +1,4 @@
-{ home-manager, ... }:
+{ pkgs, home-manager, ... }:
 
 {
   imports = [
@@ -6,6 +6,24 @@
     ../users
     ./fonts.nix
   ];
+
+  environment.variables = { EDITOR = "vim"; };
+  environment.systemPackages = with pkgs; [
+    git
+    ((vim_configurable.override {  }).customize{
+      name = "vim";
+      vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
+        start = [ vim-nix vim-lastplace ];
+        opt = [];
+      };
+      vimrcConfig.customRC = ''
+        imap jj <C-[>
+        set nocompatible
+        set backspace=indent,eol,start
+        syntax on
+      '';
+    }
+  )];
 
 
   nixpkgs.config.allowUnfree = true;

@@ -10,27 +10,19 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ...}@inputs:
-    let
-      # inherit (self) outputs;
-      # system = "x86_64-linux";
-      # pkgs = nixpkgs.legacyPackages.${system};
-      host = "nixos";
-    in
+  outputs = { self, nixpkgs, home-manager, ...}:
       rec {
         nixosConfigurations = {
           qemu = import ./hosts/qemu { inherit nixpkgs home-manager; };
-          # qemu = nixpkgs.lib.nixosSystem {
-          #   system = system;
-          #   specialArgs = { inherit pkgs inputs outputs; };
-          #   modules = [
-          #     ./hosts/qemu
-          #   ];
-          # };
         };
 
         # homeConfigurations = {
         #   "ben@qemu" = nixosConfigurations.qemu.config.home-manager.users.ben.home;
         # };
-      };
+
+       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
+       # devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64.pkgs.mkShell {
+       #  buildInputs = jk
+       # };
+   };
 }

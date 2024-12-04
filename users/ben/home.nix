@@ -1,6 +1,12 @@
 { user, pkgs, ... }:
 
 {
+  imports = [
+    ../../features/cli.nix
+    ../../features/terminal.nix
+    ../../features/window-manager.nix
+  ];
+
   home = {
     username = user;
     homeDirectory = "/home/${user}";
@@ -11,11 +17,6 @@
 
   };
 
-
-  # programs.hyprland = {
-  #   enable = true;
-  # };
-
   programs.git = {
     enable = true;
     userName = user;
@@ -24,8 +25,6 @@
       init.defaultBranch = "master";
     };
   };
-
-  # programs.nix-ld.enable = true;
 
 
   home.stateVersion = "24.11";
