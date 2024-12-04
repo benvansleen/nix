@@ -1,11 +1,9 @@
 { pkgs, home-manager, ... }:
 
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-    ];
-
+  imports = [
+    ./hardware-configuration.nix
+  ];
 
   # Bootloader.
   boot.loader.grub.enable = true;
@@ -21,7 +19,6 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-
 
   # Select internationalisation properties.
   # Configure keymap in X11
@@ -58,9 +55,9 @@
 
   networking.firewall.allowedTCPPorts = [ 22 ];
   services.openssh = {
-     enable = true;
-     settings.PasswordAuthentication = false;
-     settings.KbdInteractiveAuthentication = false;
+    enable = true;
+    settings.PasswordAuthentication = false;
+    settings.KbdInteractiveAuthentication = false;
   };
   services.tlp.enable = false;
   services.thermald.enable = true;

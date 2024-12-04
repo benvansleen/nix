@@ -7,14 +7,19 @@
     ./fonts.nix
   ];
 
-  environment.variables = { EDITOR = "vim"; };
+  environment.variables = {
+    EDITOR = "vim";
+  };
   environment.systemPackages = with pkgs; [
     git
-    ((vim_configurable.override {  }).customize{
+    ((vim_configurable.override { }).customize {
       name = "vim";
       vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
-        start = [ vim-nix vim-lastplace ];
-        opt = [];
+        start = [
+          vim-nix
+          vim-lastplace
+        ];
+        opt = [ ];
       };
       vimrcConfig.customRC = ''
         imap jj <C-[>
@@ -22,9 +27,8 @@
         set backspace=indent,eol,start
         syntax on
       '';
-    }
-  )];
-
+    })
+  ];
 
   nixpkgs.config.allowUnfree = true;
   nix.extraOptions = ''
