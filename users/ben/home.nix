@@ -5,6 +5,7 @@
     ../../features/cli.nix
     ../../features/terminal.nix
     ../../features/window-manager.nix
+    ../../features/emacs
   ];
 
   home = {

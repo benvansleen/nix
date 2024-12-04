@@ -2,6 +2,7 @@
 
 {
   imports = [ ./hardware-configuration.nix ];
+  nix.settings.max-jobs = 2;
 
   # Bootloader.
   boot.loader.grub.enable = true;

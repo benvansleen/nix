@@ -1,12 +1,14 @@
-{ nixpkgs, home-manager, ... }:
+{ nixpkgs, overlays, ... }@inputs:
 
 let
   system = "x86_64-linux";
-  pkgs = nixpkgs.legacyPackages.${system};
+  pkgs = import nixpkgs { inherit system overlays; };
 in
 nixpkgs.lib.nixosSystem {
   inherit system;
-  specialArgs = { inherit pkgs home-manager; };
+  specialArgs = {
+    inherit pkgs;
+  } // inputs;
   modules = [
     ../../common/base-system.nix
     ./system.nix

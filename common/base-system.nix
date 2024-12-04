@@ -1,17 +1,40 @@
-{ pkgs, home-manager, ... }:
+{
+  pkgs,
+  home-manager,
+  nix-index-database,
+  ...
+}:
 
 {
+  nixpkgs.config.allowUnfree = true;
+  nix.settings = {
+    accept-flake-config = true;
+    cores = 0;
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    trusted-users = [ "@wheel" ];
+    use-xdg-base-directories = true;
+  };
+  nix.extraOptions = '''';
+
   imports = [
     home-manager.nixosModules.home-manager
+    nix-index-database.nixosModules.nix-index
+
     ../users
+
     ./fonts.nix
   ];
 
-  environment.variables = {
-    EDITOR = "vim";
-  };
+  home-manager.useGlobalPkgs = true;
+  home-manager.useUserPackages = true;
+
   environment.systemPackages = with pkgs; [
     git
+    htop-vim
+
     ((vim_configurable.override { }).customize {
       name = "vim";
       vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
@@ -29,10 +52,13 @@
       '';
     })
   ];
+  environment.variables = {
+    EDITOR = "vim";
+  };
 
-  nixpkgs.config.allowUnfree = true;
-  nix.extraOptions = ''
-    experimental-features = nix-command flakes
+  programs.command-not-found.enable = false;
+  programs.bash.interactiveShellInit = ''
+    source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
   '';
 
   time.timeZone = "America/New_York";
