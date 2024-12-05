@@ -2,8 +2,7 @@
 
 {
   imports = [
-    ../../features/cli.nix
-    ../../features/terminal.nix
+    ../../features/cli
     ../../features/window-manager.nix
     ../../features/emacs
   ];
@@ -12,10 +11,10 @@
     username = user;
     homeDirectory = "/home/${user}";
     packages = with pkgs; [
+      nix-output-monitor
       nh
       nixd
     ];
-
   };
 
   programs.git = {

@@ -1,6 +1,11 @@
 _:
 
 {
+  imports = [
+    ./terminal.nix
+    ./zsh.nix
+  ];
+
   programs.readline = {
     enable = true;
     bindings = { };

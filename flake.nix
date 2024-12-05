@@ -52,7 +52,7 @@
 
       overlays = import ./overlays inputs;
     in
-    rec {
+    {
       nixosConfigurations = {
         qemu = import ./hosts/qemu {
           inherit

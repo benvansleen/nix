@@ -1,7 +1,5 @@
 {
   pkgs,
-  inputs,
-  outputs,
   ...
 }:
 
@@ -9,7 +7,9 @@ let
   user = "ben";
 in
 {
+  programs.zsh.enable = true;
   users.users.${user} = {
+    shell = pkgs.zsh;
     isNormalUser = true;
     description = "ben";
     extraGroups = [

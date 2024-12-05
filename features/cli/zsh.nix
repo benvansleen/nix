@@ -1,0 +1,173 @@
+{ config, pkgs, ... }:
+
+{
+  imports = [
+    ./starship.nix
+  ];
+
+  programs.starship.enableZshIntegration = true;
+
+  programs.zsh = {
+    enable = true;
+    autocd = true;
+    autosuggestion.enable = true;
+    defaultKeymap = "viins";
+
+    history = {
+      expireDuplicatesFirst = true;
+      ignoreSpace = true;
+      ignoreAllDups = true;
+      size = 10000;
+      path = "${config.xdg.dataHome}/zsh/history";
+    };
+
+    plugins = [
+      # {
+      # 	name = "zsh-vi-mode";
+      # 	src = pkgs.fetchFromGitHub {
+      # 	  repo = "zsh-vi-mode";
+      # 	  owner = "jeffreytse";
+      # 	  rev = "v0.11.0";
+      # 	  hash = "sha256-xbchXJTFWeABTwq6h4KWLh+EvydDrDzcY9AQVK65RS8=";
+      # 	};
+      # }
+
+      {
+        name = "fzf-tab-completion";
+        file = "zsh/fzf-zsh-completion.sh";
+        src = pkgs.fetchFromGitHub {
+          owner = "lincheney";
+          repo = "fzf-tab-completion";
+          rev = "5ff8ab0f71006662fd3a7ab774a6cd837cdff32d";
+          hash = "sha256-T7BocqbLIrEdaVZ5+5sOqP7NTc7hWmUU2EiicpKPZ0Y=";
+        };
+      }
+
+    ];
+
+    syntaxHighlighting = {
+      enable = true;
+      styles = {
+        default = "fg=250";
+        unknown-token = "fg=none";
+        reserved-word = "fg=108";
+        alias = "fg=blue";
+        builtin = "fg=blue";
+        command = "fg=blue";
+        precommand = "fg=069";
+        path = "fg=white";
+        history-expansion = "fg=222";
+        comment = "fg=245,italic";
+        single-hyphen-option = "fg=250";
+        double-hyphen-option = "fg=250";
+        back-quoted-argument = "fg=250";
+        back-double-quoted-argument = "fg=033";
+        single-quoted-argument = "fg=173";
+        double-quoted-argument = "fg=173";
+        dollar-quoted-argument = "fg=140";
+        dollar-double-quoted-argument = "fg=140";
+        back-dollar-quoted-argument = "fg=140";
+        bracket-level-1 = "fg=250";
+        bracket-level-2 = "fg=250";
+        cursor-matchingbracket = "fg=237,bold,bg=74";
+      };
+    };
+
+    initExtraFirst = ''
+            # zsh-vi-mode overwrites C-k for scrolling up history
+      	  function zvm_before_lazy_keybindings() {
+               bindkey -M viins '^k' up-history
+            } 
+      	  function zvm_after_lazy_keybindings() {
+               bindkey -M viins '^k' up-history
+            } 
+      	  ZVM_LAZY_KEYBINDINGS=false
+
+            bindkey -M viins jj vi-cmd-mode
+    '';
+
+    initExtra = ''
+      	  bindkey '^I' fzf_completion
+            zstyle ':completion:*' fzf-search-display true
+      	  zstyle ':completion::*:git::git,add,*' fzf-completion-opts --preview='git -c color.status=always status --short'
+
+      	  ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+            ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
+            ZVM_SURROUND_BINDKEY=classic
+
+
+      	  bindkey -M viins '^[;' autosuggest-accept
+            bindkey -M viins '^[:' forward-word
+            function up_dir() {
+      		  zle kill-whole-line
+      		  cd ..
+      		  zle end-of-line
+      		  zle accept-line
+            }
+            function last_dir() {
+                zle kill-whole-line
+                cd - >/dev/null
+                zle end-of-line
+                zle accept-line
+            }
+            zle -N up_dir
+            zle -N last_dir
+            bindkey -M viins '^[^H' up_dir
+            bindkey -M viins '^[^L' last_dir
+            
+            echo -ne '\e[3 q' # Use underscore shape cursor on startup.
+            bindkey -M viins '^[l' delete-char
+            bindkey -M viins '^[h' backward-delete-char
+            bindkey -M viins '^h' backward-delete-word
+            bindkey -M viins '^k' up-history
+            bindkey -M viins '^j' down-history
+            bindkey -M viins '^[f' open_emacs_find_file
+            bindkey -M viins '^[r' open_emacs_recent_file
+            bindkey -M viins '^[g' open_magit_here
+            bindkey -M viins '^[e' zvm_vi_edit_and_fix_cursor
+            WORDCHARS='*?-.[]~=&;!#$%^(){}<>'
+
+      	  unsetopt BEEP
+            setopt extendedglob
+            setopt nomatch
+            setopt menucomplete
+            setopt interactivecomments
+      	'';
+
+    shellAliases = {
+      os-rebuild-test = "${pkgs.nh}/bin/nh os test ${config.xdg.configHome}/nix";
+      os-rebuild = "${pkgs.nh}/bin/nh os switch ${config.xdg.configHome}/nix";
+    };
+
+    # zsh-abbr = {
+    #   enable = true;
+    #   abbreviations = {
+    # 	q  = "exit";
+    # 	cls = "clear";
+    # 	ga = "git add";
+    # 	gs = "git status";
+    # 	gp = "git push";
+    # 	gr = "git restore";
+    #   };
+    # };
+
+  };
+
+  programs.atuin = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  programs.eza = {
+    enable = true;
+    enableZshIntegration = true;
+    git = true;
+    icons = "auto";
+  };
+
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = false;
+  };
+
+}
