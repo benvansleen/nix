@@ -39,10 +39,8 @@
     {
       self,
       nixpkgs,
-      home-manager,
       systems,
       treefmt-nix,
-      nix-index-database,
       ...
     }@inputs:
     let
@@ -51,17 +49,14 @@
       treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
 
       overlays = import ./overlays inputs;
+
+	  utils = import ./utils.nix inputs;
+	  defaultSystem = utils.makeSystem overlays nixpkgs;
     in
     {
       nixosConfigurations = {
-        qemu = import ./hosts/qemu {
-          inherit
-            nixpkgs
-            overlays
-            home-manager
-            nix-index-database
-            ;
-        };
+		qemu = defaultSystem "x86_64-linux" [ ./hosts/qemu ];
+		iso = defaultSystem "x86_64-linux" [ ./hosts/iso ];
       };
 
       # homeConfigurations = {
