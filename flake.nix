@@ -11,7 +11,8 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    systems.url = "github:nix-systems/default";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
@@ -31,6 +32,13 @@
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-stable.follows = "nixpkgs";
+    };
+
+    pre-commit-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-stable.follows = "nixpkgs";
     };
 
   };
@@ -39,33 +47,54 @@
     {
       self,
       nixpkgs,
-      systems,
+      pre-commit-hooks,
       treefmt-nix,
       ...
     }@inputs:
     let
-      eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
+      utils = import ./utils.nix inputs;
+      overlays = import ./overlays inputs;
 
       treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
 
-      overlays = import ./overlays inputs;
-
-	  utils = import ./utils.nix inputs;
-	  defaultSystem = utils.makeSystem overlays nixpkgs;
+      defaultSystem = utils.makeSystem overlays nixpkgs;
     in
-    {
+    rec {
       nixosConfigurations = {
-		qemu = defaultSystem "x86_64-linux" [ ./hosts/qemu ];
-		iso = defaultSystem "x86_64-linux" [ ./hosts/iso ];
+        qemu = defaultSystem "x86_64-linux" [ ./hosts/qemu ];
+        iso = defaultSystem "x86_64-linux" [
+          "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+          ./hosts/iso
+        ];
       };
 
       # homeConfigurations = {
       #   "ben@qemu" = nixosConfigurations.qemu.config.home-manager.users.ben.home;
       # };
 
-      formatter = eachSystem (pkgs: (treefmtEval pkgs).config.build.wrapper);
-      checks = eachSystem (pkgs: {
-        formatting = (treefmtEval pkgs).config.build.check self;
-      });
+      formatter = utils.eachSystem ({ pkgs, ... }: (treefmtEval pkgs).config.build.wrapper);
+      checks = utils.eachSystem (
+        { system, pkgs }:
+        {
+          formatting = (treefmtEval pkgs).config.build.check self;
+          pre-commit-check = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              deadnix.enable = true;
+              ripsecrets.enable = true;
+            };
+          };
+        }
+      );
+
+      packages = utils.eachSystem (
+        { pkgs, ... }:
+        {
+          default = import ./hosts/iso/run.nix {
+            inherit pkgs;
+            iso = nixosConfigurations.iso.config.system.build.isoImage;
+          };
+        }
+      );
     };
 }

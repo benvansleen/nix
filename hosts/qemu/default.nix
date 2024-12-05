@@ -2,6 +2,6 @@
 
 {
   imports = [
-	./system.nix
+    ./system.nix
   ];
 }
