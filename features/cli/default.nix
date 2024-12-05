@@ -1,9 +1,13 @@
-_:
+{ pkgs, ... }:
 
 {
   imports = [
     ./terminal.nix
     ./zsh.nix
+  ];
+
+  home.packages = with pkgs; [
+    pipr
   ];
 
   programs.readline = {
@@ -25,5 +29,13 @@ _:
         "\C-l": clear-screen
       $endif
     '';
+  };
+
+  programs.broot = {
+    enable = true;
+    settings = {
+      modal = true;
+    };
+
   };
 }

@@ -16,6 +16,7 @@ in
       "wheel"
       "video"
       "audio"
+      "network"
       "networkmanager"
     ];
     packages = [ ];

@@ -11,6 +11,8 @@
     username = user;
     homeDirectory = "/home/${user}";
     packages = with pkgs; [
+      bandwhich
+      bottom
       nix-output-monitor
       nh
       nixd
@@ -23,6 +25,12 @@
     userEmail = "benvansleen@gmail.com";
     extraConfig = {
       init.defaultBranch = "master";
+    };
+    difftastic = {
+      enable = true;
+      color = "auto";
+      display = "side-by-side";
+      background = "dark";
     };
   };
 

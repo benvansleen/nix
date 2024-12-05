@@ -170,4 +170,6 @@
     enableZshIntegration = false;
   };
 
+  programs.broot.enableZshIntegration = true;
+
 }

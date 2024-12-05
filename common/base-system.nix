@@ -34,8 +34,12 @@
   };
 
   environment.systemPackages = with pkgs; [
+    bat
+    fd
     git
     htop-vim
+    procs
+    ripgrep
 
     ((vim_configurable.override { }).customize {
       name = "vim";
