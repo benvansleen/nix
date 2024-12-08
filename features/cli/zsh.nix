@@ -135,8 +135,17 @@
       	'';
 
     shellAliases = {
-      os-rebuild-test = "${pkgs.nh}/bin/nh os test ${config.xdg.configHome}/nix";
-      os-rebuild = "${pkgs.nh}/bin/nh os switch ${config.xdg.configHome}/nix";
+	  # by default, nixpkgs#<pkg> is a zsh glob pattern
+	  nix = "noglob nix";
+
+      os-rebuild-test = ''
+	    ${pkgs.nh}/bin/nh os test ${config.xdg.configHome}/nix
+      '';
+      os-rebuild = ''
+	    ${pkgs.nh}/bin/nh os switch ${config.xdg.configHome}/nix
+	  '';
+
+	  htop = "${pkgs.bottom}/bin/btm -b";
     };
 
     # zsh-abbr = {
