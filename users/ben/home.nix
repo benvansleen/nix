@@ -12,11 +12,23 @@
     homeDirectory = "/home/${user}";
     packages = with pkgs; [
       bandwhich
-      bottom
+	  bottom
       nix-output-monitor
       nh
       nixd
     ];
+
+	persistence."/nix/persist/home/${user}" = {
+	  allowOther = true;
+	  directories = [
+		".config/nix"
+		".ssh"
+		"Documents"
+		"Downloads"
+		"Code"
+	  ];
+	};
+
   };
 
   programs.git = {

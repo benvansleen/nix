@@ -1,12 +1,46 @@
-{ pkgs, ... }:
+{ pkgs, nixos-facter-modules, disko, impermanence, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
+
+  imports = [
+	nixos-facter-modules.nixosModules.facter {
+	  config.facter.reportPath = ./facter.json;
+	}
+
+    disko.nixosModules.disko (import ./disko-config.nix)
+
+	impermanence.nixosModules.impermanence
+
+	# ./hardware-configuration.nix
+  ];
+
+  environment.persistence."/nix/persist" = {
+	enable = true;
+	hideMounts = true;
+	directories = [
+	  "/var/log"
+	  "/var/lib/bluetooth"
+	  "/var/lib/nixos"
+	  "/var/lib/systemd/coredump"
+	  "/etc/NetworkManager/system-connections"
+	];
+	files = [
+      "/etc/machine-id"
+
+	  # Investigate declarative ssh key config
+	  "/etc/ssh/ssh_host_ed25519_key"
+	  "/etc/ssh/ssh_host_ed25519_key.pub"
+	  "/etc/ssh/ssh_host_rsa_key"
+	  "/etc/ssh/ssh_host_rsa_key.pub"
+    ];
+  };
+
+
   nix.settings.max-jobs = 4;
 
   # Bootloader.
   boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
+  # boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
 
   networking.hostName = "qemu";

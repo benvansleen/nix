@@ -24,7 +24,6 @@
     nix-index-database.nixosModules.nix-index
 
     ../users
-
     ./fonts.nix
   ];
 
@@ -32,9 +31,12 @@
     useGlobalPkgs = true;
     useUserPackages = true;
   };
+  # Allow home.persistence.allowOther
+  programs.fuse.userAllowOther = true;
 
   environment.systemPackages = with pkgs; [
     bat
+    bottom
     fd
     git
     htop-vim

@@ -14,10 +14,19 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     systems.url = "github:nix-systems/default";
 
+	nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
+
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+	disko = {
+	  url = "github:nix-community/disko";
+	  inputs.nixpkgs.follows = "nixpkgs";
+	};
+
+	impermanence.url = "github:nix-community/impermanence";
 
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
@@ -27,7 +36,7 @@
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
+	};
 
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
@@ -60,8 +69,13 @@
       defaultSystem = utils.makeSystem overlays nixpkgs;
     in
     rec {
+
+	  nix.nixPath = [ "nixpkgs=${nixpkgs}" ];
+
       nixosConfigurations = {
-        qemu = defaultSystem "x86_64-linux" [ ./hosts/qemu ];
+        qemu = defaultSystem "x86_64-linux" [
+		  ./hosts/qemu
+		];
         iso = defaultSystem "x86_64-linux" [
           "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
           ./hosts/iso
@@ -90,11 +104,22 @@
       packages = utils.eachSystem (
         { pkgs, ... }:
         {
-          default = import ./hosts/iso/run.nix {
+		  qemu-install = pkgs.writeShellApplication {
+			name = "install-nix";
+			runtimeInputs = with pkgs; [];
+			# TODO: add facter configuration command
+			text = ''
+			  nix run github:nix-community/disko/latest -- --mode disko /nixos-config/hosts/qemu/disko-config.nix
+              nixos-install --flake /nixos-config#qemu
+			'';
+		  };
+
+          test-iso = import ./hosts/iso/run.nix {
             inherit pkgs;
             iso = nixosConfigurations.iso.config.system.build.isoImage;
           };
         }
       );
+
     };
 }
