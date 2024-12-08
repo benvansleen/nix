@@ -159,6 +159,7 @@
 		 ("C-M-f" . eval-last-sexp)
 		 ("C-f" . eval-defun)
 		 ("C-/" . comment-line)
+		 ("C-_" . comment-line)
 
 		 ("C-k" . evil-scroll-up)
 		 ("C-j" . evil-scroll-down)
@@ -341,10 +342,23 @@
 			  ("SPC ef" . eglot-format)
 			  ("SPC en" . flymake-goto-next-error)
 			  ("SPC ep" . flymake-goto-prev-error))
+
+  :hook ((nix-ts-mode . eglot-ensure))
   :config
   (add-hook 'eglot-managed-mode-hook
 			#'flymake-mode)
-  :hook ((nix-ts-mode . eglot-ensure)))
+
+  (setq eglot-workspace-configuration
+		'(
+		  ;; https://kokada.dev/blog/make-nixd-module-completion-to-work-anywhere-with-flakes/
+		  (:nixd (:nixpkgs
+				  (:expr "import \"${flake.inputs.nixpkgs}\" { }"))
+				 (:formatting
+				  (:command '("nix" "fmt")))
+				 (:options
+				  ((:nixos (:expr "(let pkgs = import \"${inputs.nixpkgs}\" { }; in (pkgs.lib.evalModules { modules =  (import \"${inputs.nixpkgs}/nixos/modules/module-list.nix\") ++ [ ({...}: { nixpkgs.hostPlatform = builtins.currentSystem;} ) ] ; })).options"))
+				   (:home-manager (:expr "(let pkgs = import \"${inputs.nixpkgs}\" { }; lib = import \"${inputs.home-manager}/modules/lib/stdlib-extended.nix\" pkgs.lib; in (lib.evalModules { modules =  (import \"${inputs.home-manager}/modules/modules.nix\") { inherit lib pkgs; check = false; }; })).options"))))))))
+
 
 (use-package nix-ts-mode
   :mode "\\.nix\\'")
