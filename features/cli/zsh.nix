@@ -147,6 +147,11 @@
       '';
 
       htop = "${pkgs.bottom}/bin/btm -b";
+      ps = "${pkgs.procs}/bin/procs";
+      grep = "${pkgs.ripgrep}/bin/rg";
+      find = "${pkgs.fd}/bin/fd";
+      cat = "${pkgs.bat}/bin/bat";
+
     };
 
     # zsh-abbr = {
@@ -168,10 +173,7 @@
     enableZshIntegration = true;
   };
 
-  programs.direnv = {
-    enable = true;
-    enableZshIntegration = true;
-  };
+  programs.direnv.enableZshIntegration = true;
 
   programs.eza = {
     enable = true;
