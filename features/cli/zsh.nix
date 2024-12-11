@@ -143,7 +143,7 @@
         ${pkgs.nh}/bin/nh os test ${config.xdg.configHome}/nix
       '';
       os-rebuild = ''
-          ${pkgs.nh}/bin/nh os switch ${config.xdg.configHome}/nix
+        ${pkgs.nh}/bin/nh os switch ${config.xdg.configHome}/nix
       '';
 
       htop = "${pkgs.bottom}/bin/btm -b";

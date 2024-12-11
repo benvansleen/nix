@@ -1,13 +1,15 @@
 {
   install-nix =
-    pkgs:
+    pkgs: host:
     pkgs.writeShellApplication {
       name = "install-nix";
       runtimeInputs = with pkgs; [ ];
-      # TODO: add facter configuration command
       text = ''
-        nix run github:nix-community/disko/latest -- --mode disko /nixos-config/hosts/qemu/disko-config.nix
-        nixos-install --flake /nixos-config#qemu
+        nix run github:nix-community/disko/latest -- \
+          --mode disko /nixos-config/hosts/${host}/disko-config.nix
+        nix run nixpkgs#nixos-facter -- \
+          -o /nixos-config/hosts/${host}/facter.json
+        nixos-install --flake /nixos-config#${host}
       '';
     };
 

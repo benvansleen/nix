@@ -4,6 +4,7 @@
   home-manager,
   sops-nix,
   nix-index-database,
+  nixpkgs,
   ...
 }:
 
@@ -25,6 +26,7 @@
     ];
     fallback = true;
     min-free = 128000000; # 128 MB
+    nix-path = [ "nixpkgs=${nixpkgs}" ];
     trusted-users = [ "@wheel" ];
     use-xdg-base-directories = true;
   };
@@ -140,5 +142,6 @@
 
   users.mutableUsers = false;
   users.users.root.hashedPasswordFile = config.sops.secrets.root-password.path;
+  users.users.root.hashedPassword = null;
 
 }

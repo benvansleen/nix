@@ -76,8 +76,6 @@
     in
     rec {
 
-      nix.nixPath = [ "nixpkgs=${nixpkgs}" ];
-
       nixosConfigurations = {
         qemu = defaultSystem "x86_64-linux" [
           ./hosts/qemu
@@ -110,7 +108,7 @@
       packages = utils.eachSystem (
         { pkgs, ... }:
         {
-          qemu-install = run.install-nix pkgs;
+          qemu-install = run.install-nix pkgs "qemu";
 
           test-iso = import ./hosts/iso/run.nix {
             inherit pkgs;
