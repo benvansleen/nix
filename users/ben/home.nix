@@ -3,16 +3,24 @@
 {
   imports = [
     ../../features/cli
-    ../../features/window-manager
+    (import ../../features/window-manager {
+      inherit pkgs;
+    })
     ../../features/emacs
   ];
+
+  nix.gc = {
+    automatic = true;
+    frequency = "weekly";
+    options = "--delete-older-than 30d";
+  };
 
   home = {
     username = user;
     homeDirectory = "/home/${user}";
     packages = with pkgs; [
       bandwhich
-	  bottom
+      bottom
       nix-output-monitor
       nh
       nixd
@@ -21,9 +29,10 @@
 	persistence."/nix/persist/home/${user}" = {
 	  allowOther = true;
 	  directories = [
+		"Code"
 		"Documents"
 		"Downloads"
-		"Code"
+		"Pictures"
 		".config/nix"
 		".ssh"
 		".local/share/atuin"

@@ -32,7 +32,8 @@
 
   imports = [
     home-manager.nixosModules.home-manager
-    sops-nix.nixosModules.sops {
+    sops-nix.nixosModules.sops
+    {
       sops = {
         defaultSopsFile = ../secrets/default.env;
         defaultSopsFormat = "dotenv";
@@ -91,7 +92,6 @@
   environment.variables = {
     EDITOR = "vim";
   };
-
 
   boot.initrd.systemd.enable = true;
   boot.binfmt.emulatedSystems = [

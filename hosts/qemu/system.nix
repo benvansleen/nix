@@ -1,41 +1,48 @@
-{ pkgs, nixos-facter-modules, disko, impermanence, ... }:
+{
+  pkgs,
+  nixos-facter-modules,
+  disko,
+  impermanence,
+  ...
+}:
 
 {
 
   imports = [
-	nixos-facter-modules.nixosModules.facter {
-	  config.facter.reportPath = ./facter.json;
-	}
+    nixos-facter-modules.nixosModules.facter
+    {
+      config.facter.reportPath = ./facter.json;
+    }
 
-    disko.nixosModules.disko (import ./disko-config.nix)
+    disko.nixosModules.disko
+    (import ./disko-config.nix)
 
-	impermanence.nixosModules.impermanence
+    impermanence.nixosModules.impermanence
 
-	# ./hardware-configuration.nix
+    # ./hardware-configuration.nix
   ];
 
   environment.persistence."/nix/persist" = {
-	enable = true;
-	hideMounts = true;
-	directories = [
-	  "/var/log"
+    enable = true;
+    hideMounts = true;
+    directories = [
+      "/var/log"
       "/var/db/sudo"
-	  "/var/lib/bluetooth"
-	  "/var/lib/nixos"
-	  "/var/lib/systemd/coredump"
-	  "/etc/NetworkManager/system-connections"
-	];
-	files = [
+      "/var/lib/bluetooth"
+      "/var/lib/nixos"
+      "/var/lib/systemd/coredump"
+      "/etc/NetworkManager/system-connections"
+    ];
+    files = [
       "/etc/machine-id"
 
-	  # Investigate declarative ssh key config
-	  "/etc/ssh/ssh_host_ed25519_key"
-	  "/etc/ssh/ssh_host_ed25519_key.pub"
-	  "/etc/ssh/ssh_host_rsa_key"
-	  "/etc/ssh/ssh_host_rsa_key.pub"
+      # Investigate declarative ssh key config
+      "/etc/ssh/ssh_host_ed25519_key"
+      "/etc/ssh/ssh_host_ed25519_key.pub"
+      "/etc/ssh/ssh_host_rsa_key"
+      "/etc/ssh/ssh_host_rsa_key.pub"
     ];
   };
-
 
   nix.settings.max-jobs = 4;
 

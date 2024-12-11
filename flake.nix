@@ -14,19 +14,19 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     systems.url = "github:nix-systems/default";
 
-	nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
+    nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
 
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-	disko = {
-	  url = "github:nix-community/disko";
-	  inputs.nixpkgs.follows = "nixpkgs";
-	};
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-	impermanence.url = "github:nix-community/impermanence";
+    impermanence.url = "github:nix-community/impermanence";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -41,7 +41,7 @@
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
-	};
+    };
 
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
@@ -76,12 +76,12 @@
     in
     rec {
 
-	  nix.nixPath = [ "nixpkgs=${nixpkgs}" ];
+      nix.nixPath = [ "nixpkgs=${nixpkgs}" ];
 
       nixosConfigurations = {
         qemu = defaultSystem "x86_64-linux" [
-		  ./hosts/qemu
-		];
+          ./hosts/qemu
+        ];
         iso = defaultSystem "x86_64-linux" [
           "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
           ./hosts/iso
@@ -110,7 +110,7 @@
       packages = utils.eachSystem (
         { pkgs, ... }:
         {
-		  qemu-install = run.install-nix pkgs;
+          qemu-install = run.install-nix pkgs;
 
           test-iso = import ./hosts/iso/run.nix {
             inherit pkgs;
@@ -126,12 +126,14 @@
       devShells = utils.eachSystem (
         { pkgs, ... }:
         {
-          default = with pkgs; mkShell {
-            buildInputs = [ sops ];
-            shellHook = ''
-              export SOPS_AGE_KEY=$(${ssh-to-age}/bin/ssh-to-age -i ~/.ssh/master -private-key)
-            '';
-          };
+          default =
+            with pkgs;
+            mkShell {
+              buildInputs = [ sops ];
+              shellHook = ''
+                export SOPS_AGE_KEY=$(${ssh-to-age}/bin/ssh-to-age -i ~/.ssh/master -private-key)
+              '';
+            };
         }
 
       );

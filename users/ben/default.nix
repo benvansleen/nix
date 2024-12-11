@@ -37,9 +37,9 @@ in
   };
 
   home-manager.users.${user} = {
-	imports = [
-	  impermanence.homeManagerModules.impermanence
-	  (import ./home.nix { inherit user pkgs; })
-	];
+    imports = [
+      impermanence.homeManagerModules.impermanence
+      (import ./home.nix { inherit user pkgs; })
+    ];
   };
 }
