@@ -18,6 +18,7 @@
       ignoreSpace = true;
       ignoreAllDups = true;
       size = 10000;
+      share = false;
       path = "${config.xdg.dataHome}/zsh/history";
     };
 
@@ -163,6 +164,11 @@
   };
 
   programs.atuin = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  programs.direnv = {
     enable = true;
     enableZshIntegration = true;
   };

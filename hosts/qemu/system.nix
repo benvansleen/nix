@@ -19,6 +19,7 @@
 	hideMounts = true;
 	directories = [
 	  "/var/log"
+      "/var/db/sudo"
 	  "/var/lib/bluetooth"
 	  "/var/lib/nixos"
 	  "/var/lib/systemd/coredump"
@@ -52,6 +53,9 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  ## Without this, rebuilding os hangs
+  systemd.services.NetworkManager-wait-online.enable = false;
+  systemd.network.wait-online.enable = false;
 
   # Select internationalisation properties.
   # Configure keymap in X11
@@ -94,6 +98,7 @@
   };
   services.tlp.enable = false;
   services.thermald.enable = true;
+  services.irqbalance.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedUDPPorts = [ ... ];

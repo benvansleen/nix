@@ -3,7 +3,7 @@
 {
   imports = [
     ../../features/cli
-    ../../features/window-manager.nix
+    ../../features/window-manager
     ../../features/emacs
   ];
 
@@ -21,11 +21,15 @@
 	persistence."/nix/persist/home/${user}" = {
 	  allowOther = true;
 	  directories = [
-		".config/nix"
-		".ssh"
 		"Documents"
 		"Downloads"
 		"Code"
+		".config/nix"
+		".ssh"
+		".local/share/atuin"
+	  ];
+	  files = [
+		".local/share/zsh/history"
 	  ];
 	};
 

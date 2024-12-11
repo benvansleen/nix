@@ -28,6 +28,11 @@
 
 	impermanence.url = "github:nix-community/impermanence";
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -61,6 +66,7 @@
       ...
     }@inputs:
     let
+      run = import ./run;
       utils = import ./utils.nix inputs;
       overlays = import ./overlays inputs;
 
@@ -104,21 +110,30 @@
       packages = utils.eachSystem (
         { pkgs, ... }:
         {
-		  qemu-install = pkgs.writeShellApplication {
-			name = "install-nix";
-			runtimeInputs = with pkgs; [];
-			# TODO: add facter configuration command
-			text = ''
-			  nix run github:nix-community/disko/latest -- --mode disko /nixos-config/hosts/qemu/disko-config.nix
-              nixos-install --flake /nixos-config#qemu
-			'';
-		  };
+		  qemu-install = run.install-nix pkgs;
 
           test-iso = import ./hosts/iso/run.nix {
             inherit pkgs;
             iso = nixosConfigurations.iso.config.system.build.isoImage;
           };
+
+          set-user-password = run.set-password-for pkgs "./secrets/user-password.sops";
+          set-root-password = run.set-password-for pkgs "./secrets/root-password.sops";
+
         }
+      );
+
+      devShells = utils.eachSystem (
+        { pkgs, ... }:
+        {
+          default = with pkgs; mkShell {
+            buildInputs = [ sops ];
+            shellHook = ''
+              export SOPS_AGE_KEY=$(${ssh-to-age}/bin/ssh-to-age -i ~/.ssh/master -private-key)
+            '';
+          };
+        }
+
       );
 
     };

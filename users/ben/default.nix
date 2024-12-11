@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   impermanence,
   ...
@@ -8,13 +9,17 @@ let
   user = "ben";
 in
 {
+  sops.secrets.user-password = {
+    sopsFile = ../../secrets/user-password.sops;
+    format = "binary";
+    neededForUsers = true;
+  };
+
   programs.zsh.enable = true;
   users.users.${user} = {
-    shell = pkgs.zsh;
-
-	initialPassword = "helloworld";
-	password = null;
     isNormalUser = true;
+    shell = pkgs.zsh;
+    hashedPasswordFile = config.sops.secrets.user-password.path;
 
     description = "ben";
     extraGroups = [
