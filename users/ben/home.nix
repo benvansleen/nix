@@ -26,21 +26,21 @@
       nixd
     ];
 
-	persistence."/nix/persist/home/${user}" = {
-	  allowOther = true;
-	  directories = [
-		"Code"
-		"Documents"
-		"Downloads"
-		"Pictures"
-		".config/nix"
-		".ssh"
-		".local/share/atuin"
-	  ];
-	  files = [
-		".local/share/zsh/history"
-	  ];
-	};
+    persistence."/nix/persist/home/${user}" = {
+      allowOther = true;
+      directories = [
+        "Code"
+        "Documents"
+        "Downloads"
+        "Pictures"
+        ".config/nix"
+        ".ssh"
+        ".local/share/atuin"
+      ];
+      files = [
+        ".local/share/zsh/history"
+      ];
+    };
 
   };
 
