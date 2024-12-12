@@ -1,6 +1,12 @@
 { user, pkgs, ... }:
 
-{
+let
+  home-dir = "/home/${user}";
+  config-dir-name = ".config";
+  data-dir-name = ".local/share";
+  state-dir-name = ".local/state";
+in
+rec {
   imports = [
     ../../features/cli
     (import ../../features/window-manager {
@@ -17,7 +23,7 @@
 
   home = {
     username = user;
-    homeDirectory = "/home/${user}";
+    homeDirectory = home-dir;
     packages = with pkgs; [
       bandwhich
       bottom
@@ -26,22 +32,28 @@
       nixd
     ];
 
-    persistence."/nix/persist/home/${user}" = {
+    persistence."/nix/persist${home-dir}" = {
       allowOther = true;
       directories = [
-        "Code"
-        "Documents"
-        "Downloads"
-        "Pictures"
-        ".config/nix"
-        ".ssh"
-        ".local/share/atuin"
+        { directory = "Code"; method = "symlink"; }
+        { directory = "Documents"; method = "symlink"; }
+        { directory = "Downloads"; method = "symlink"; }
+        { directory = "Pictures"; method = "symlink"; }
+        { directory = "${config-dir-name}/nix"; method = "symlink"; }
+        { directory = "${data-dir-name}/atuin"; method = "symlink"; }
       ];
       files = [
-        ".local/share/zsh/history"
+        "${data-dir-name}/zsh/history"
       ];
     };
 
+  };
+
+  xdg = {
+    enable = true;
+    configHome = "${home.homeDirectory}/${config-dir-name}";
+    dataHome = "${home.homeDirectory}/${data-dir-name}";
+    stateHome = "${home.homeDirectory}/${state-dir-name}";
   };
 
   programs.git = {
@@ -56,6 +68,16 @@
       color = "auto";
       display = "side-by-side";
       background = "dark";
+    };
+  };
+
+  sops = {
+    defaultSopsFile = ./secrets.yaml;
+    age.sshKeyPaths = [
+      "${home.homeDirectory}/.ssh/master"
+    ];
+    secrets.github_copilot = {
+      path = "${xdg.configHome}/github-copilot/hosts.json";
     };
   };
 

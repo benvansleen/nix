@@ -7,13 +7,9 @@ keys:
   - &master age16ckghl2xua7qgun5xvz7l4h9g4rd8u09azxndurv7x3en6qq74aqh55227
   - &qemu age1dj7a33nw06fg635y54t2x97mjjvec2yulx2ne3e54xa79a3d59ws8g0lw9
 creation_rules:
-  - path_regex: secrets/[^/]+\.(yaml|json|env|ini|sops)$
+  - path_regex: (secrets/)?[^/]+\.(yaml|json|env|ini|sops)$
     key_groups:
       - age:
           - *master
           - *qemu
-  - path_regex: /dev/stdin
-    key_groups:
-      - age:
-          - *master
 

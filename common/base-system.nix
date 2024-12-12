@@ -37,8 +37,8 @@
     sops-nix.nixosModules.sops
     {
       sops = {
-        defaultSopsFile = ../secrets/default.env;
-        defaultSopsFormat = "dotenv";
+        defaultSopsFile = ../secrets/default.yaml;
+        defaultSopsFormat = "yaml";
         gnupg.sshKeyPaths = [ ];
         age.sshKeyPaths = [
           # The persisted /etc isn't mounted fast enough
