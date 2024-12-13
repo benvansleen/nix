@@ -1,0 +1,3 @@
+{
+  persistRoot = "/nix/persist";
+}

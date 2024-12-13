@@ -69,18 +69,19 @@
       run = import ./run;
       utils = import ./utils.nix inputs;
       overlays = import ./overlays inputs;
+      globals = import ./common/globals.nix;
 
       treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
 
-      defaultSystem = utils.makeSystem overlays nixpkgs;
+      mkSystem = utils.mkSystem { inherit globals overlays nixpkgs; };
     in
     rec {
 
       nixosConfigurations = {
-        qemu = defaultSystem "x86_64-linux" [
+        qemu = mkSystem "x86_64-linux" [
           ./hosts/qemu
         ];
-        iso = defaultSystem "x86_64-linux" [
+        iso = mkSystem "x86_64-linux" [
           "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
           ./hosts/iso
         ];
@@ -89,21 +90,6 @@
       # homeConfigurations = {
       #   "ben@qemu" = nixosConfigurations.qemu.config.home-manager.users.ben.home;
       # };
-
-      formatter = utils.eachSystem ({ pkgs, ... }: (treefmtEval pkgs).config.build.wrapper);
-      checks = utils.eachSystem (
-        { system, pkgs }:
-        {
-          formatting = (treefmtEval pkgs).config.build.check self;
-          pre-commit-check = pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              deadnix.enable = true;
-              ripsecrets.enable = true;
-            };
-          };
-        }
-      );
 
       packages = utils.eachSystem (
         { pkgs, ... }:
@@ -134,6 +120,22 @@
             };
         }
 
+      );
+
+      formatter = utils.eachSystem ({ pkgs, ... }: (treefmtEval pkgs).config.build.wrapper);
+      checks = utils.eachSystem (
+        { system, pkgs }:
+        {
+          formatting = (treefmtEval pkgs).config.build.check self;
+          pre-commit-check = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              deadnix.enable = true;
+              ripsecrets.enable = true;
+              statix.enable = true;
+            };
+          };
+        }
       );
 
     };

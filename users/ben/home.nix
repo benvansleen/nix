@@ -1,7 +1,12 @@
-{ user, pkgs, ... }:
+{
+  globals,
+  user,
+  pkgs,
+  ...
+}:
 
 let
-  home-dir = "/home/${user}";
+  home-dir = "home/${user}";
   config-dir-name = ".config";
   data-dir-name = ".local/share";
   state-dir-name = ".local/state";
@@ -23,7 +28,7 @@ rec {
 
   home = {
     username = user;
-    homeDirectory = home-dir;
+    homeDirectory = "/${home-dir}";
     packages = with pkgs; [
       bandwhich
       bottom
@@ -32,15 +37,30 @@ rec {
       nixd
     ];
 
-    persistence."/nix/persist${home-dir}" = {
+    persistence."${globals.persistRoot}/${home-dir}" = {
       allowOther = true;
       directories = [
-        { directory = "Code"; method = "symlink"; }
-        { directory = "Documents"; method = "symlink"; }
-        { directory = "Downloads"; method = "symlink"; }
-        { directory = "Pictures"; method = "symlink"; }
+        {
+          directory = "Code";
+          method = "symlink";
+        }
+        {
+          directory = "Documents";
+          method = "symlink";
+        }
+        {
+          directory = "Downloads";
+          method = "symlink";
+        }
+        {
+          directory = "Pictures";
+          method = "symlink";
+        }
         "${config-dir-name}/nix"
-        { directory = "${data-dir-name}/atuin"; method = "symlink"; }
+        {
+          directory = "${data-dir-name}/atuin";
+          method = "symlink";
+        }
       ];
       files = [
         "${data-dir-name}/zsh/history"

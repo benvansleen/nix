@@ -1,8 +1,13 @@
 { nixpkgs, systems, ... }@inputs:
 
 {
-  makeSystem =
-    overlays: nixpkgs: system: extraModules:
+  mkSystem =
+    {
+      globals,
+      overlays,
+      nixpkgs,
+    }:
+    system: extraModules:
     (
       let
         pkgs = import nixpkgs { inherit system overlays; };
@@ -10,7 +15,7 @@
       nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit pkgs;
+          inherit pkgs globals;
         } // inputs;
         modules = [
           ./common/base-system.nix

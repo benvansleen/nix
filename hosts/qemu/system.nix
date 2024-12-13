@@ -1,4 +1,5 @@
 {
+  globals,
   pkgs,
   nixos-facter-modules,
   disko,
@@ -22,7 +23,7 @@
     # ./hardware-configuration.nix
   ];
 
-  environment.persistence."/nix/persist" = {
+  environment.persistence.${globals.persistRoot} = {
     enable = true;
     hideMounts = true;
     directories = [

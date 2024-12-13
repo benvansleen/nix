@@ -4,7 +4,7 @@
   impermanence,
   sops-nix,
   ...
-}:
+}@inputs:
 
 let
   user = "ben";
@@ -50,7 +50,7 @@ in
     imports = [
       impermanence.homeManagerModules.impermanence
       sops-nix.homeManagerModules.sops
-      (import ./home.nix { inherit user pkgs; })
+      (import ./home.nix ({ inherit user; } // inputs))
     ];
   };
 }
