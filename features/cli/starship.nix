@@ -10,9 +10,50 @@
         error_symbol = "(bold red)";
         vicmd_symbol = " ";
       };
+      # custom = {
+      #   direnv = {
+      #     format = "[\\[direnv\\]]($style) ";
+      #     style = "fg:yellow dimmed";
+      #     when = "printenv DIRENV_FILE";
+      #   };
+      # };
+      fill = {
+        disabled = false;
+        symbol = " ";
+      };
+      direnv = {
+        disabled = false;
+        allowed_msg = "󰄬 ";
+        not_allowed_msg = " ";
+        loaded_msg = "󰄬 ";
+        unloaded_msg = " ";
+        format = ''[\[$symbol$loaded/ $allowed\]]($style) '';
+        style = "dimmed yellow";
+      };
+      hostname = {
+        ssh_only = true;
+        ssh_symbol = " ";
+        format = "[$ssh_symbol$hostname |]($style) ";
+        style = "green";
+      };
+      git_metrics = {
+        disabled = false;
+      };
+      memory_usage = {
+        disabled = false;
+        symbol = "󰍛 ";
+        format = "[\[$symbol \${ram}( | \${swap})\]]($style) ";
+      };
+      nix_shell = {
+        disabled = false;
+        heuristic = true;
+        symbol = "❄️ ";
+        format = ''[\[$symbol$state nix shell\]]($style) '';
+        style = "dimmed blue";
+      };
       format = lib.concatStrings [
         # "$username"
-        # "$hostname"
+        "$hostname"
         "$localip"
         "$shlvl"
         "$singularity"
@@ -64,7 +105,6 @@
         "$vlang"
         "$vagrant"
         "$zig"
-        "$nix_shell"
         "$conda"
         "$spack"
         "$memory_usage"
@@ -73,16 +113,23 @@
         "$openstack"
         "$azure"
         "$crystal"
-        "$custom"
         "$sudo"
         "$cmd_duration"
-        "$line_break"
         "$jobs"
         "$battery"
         "$time"
         "$status"
+        # "$fill"
         "$shell"
+        # "$nix_shell"
+        # "$direnv"
+        "$line_break"
         "$character"
+      ];
+      right_format = lib.concatStrings [
+        # "\${custom.direnv}"
+        "$nix_shell"
+        "$direnv"
       ];
       scan_timeout = 10;
 

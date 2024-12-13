@@ -39,7 +39,7 @@ rec {
         { directory = "Documents"; method = "symlink"; }
         { directory = "Downloads"; method = "symlink"; }
         { directory = "Pictures"; method = "symlink"; }
-        { directory = "${config-dir-name}/nix"; method = "symlink"; }
+        "${config-dir-name}/nix"
         { directory = "${data-dir-name}/atuin"; method = "symlink"; }
       ];
       files = [

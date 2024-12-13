@@ -51,7 +51,10 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
-    config.whitelist.prefix = [ "~/.config/nix" ];
+    config = {
+      global.hide_env_diff = true;
+      whitelist.prefix = [ "~/.config/nix" ];
+    };
   };
 
 }
