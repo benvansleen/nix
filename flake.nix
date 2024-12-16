@@ -93,16 +93,20 @@
 
       packages = utils.eachSystem (
         { pkgs, ... }:
-        {
-          qemu-install = run.install-nix pkgs "qemu";
+        rec {
+          default = rebuild;
 
+          rebuild = run.rebuild pkgs;
+          install = run.install-nixos pkgs;
+
+          set-user-password = run.set-password-for pkgs "./secrets/user-password.sops";
+          set-root-password = run.set-password-for pkgs "./secrets/root-password.sops";
+
+          iso = nixosConfigurations.iso.config.system.build.isoImage;
           test-iso = import ./hosts/iso/run.nix {
             inherit pkgs;
             iso = nixosConfigurations.iso.config.system.build.isoImage;
           };
-
-          set-user-password = run.set-password-for pkgs "./secrets/user-password.sops";
-          set-root-password = run.set-password-for pkgs "./secrets/root-password.sops";
 
         }
       );

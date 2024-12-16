@@ -1,15 +1,23 @@
 {
-  install-nix =
-    pkgs: host:
+  rebuild =
+    pkgs:
     pkgs.writeShellApplication {
-      name = "install-nix";
-      runtimeInputs = with pkgs; [ ];
+      name = "rebuild";
       text = ''
-        nix run github:nix-community/disko/latest -- \
-          --mode disko /nixos-config/hosts/${host}/disko-config.nix
-        nix run nixpkgs#nixos-facter -- \
-          -o /nixos-config/hosts/${host}/facter.json
-        nixos-install --flake /nixos-config#${host}
+        ${pkgs.nh}/bin/nh os "''${1:-switch}" .
+      '';
+    };
+
+  install-nixos =
+    pkgs:
+    pkgs.writeShellApplication {
+      name = "install-nixos";
+      text = ''
+        [ -z "$1" ] && printf "Must provide a host!" && exit 0
+        HOST="$1"
+        ${pkgs.disko}/bin/disko --mode disko "/nixos-config/hosts/$HOST/disko-config.nix"
+        ${pkgs.nixos-facter}/bin/nixos-facter -o "/nixos-config/hosts/$HOST/facter.json"
+        nixos-install --flake "/nixos-config#$HOST"
       '';
     };
 
