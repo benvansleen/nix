@@ -13,12 +13,12 @@ let
 in
 rec {
   imports = [
-    ../../features/cli
-    (import ../../features/window-manager {
-      inherit pkgs;
-    })
-    ../../features/emacs
+    ../../features
   ];
+
+  features.cli.enable = true;
+  features.emacs.enable = true;
+  features.window-manager.enable = true;
 
   nix.gc = {
     automatic = true;

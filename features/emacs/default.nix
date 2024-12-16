@@ -1,6 +1,14 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
+  inherit (lib) mkIf mkEnableOption;
+  cfg = config.features.emacs;
+
   myEmacs = pkgs.emacsWithPackagesFromUsePackage {
     package = pkgs.emacs-pgtk;
     config = ./init.el;
@@ -15,20 +23,26 @@ let
 in
 {
 
-  programs.emacs = {
-    enable = true;
-    package = myEmacs;
+  options.features.emacs = {
+    enable = mkEnableOption "emacs";
   };
 
-  services.emacs = {
-    enable = true;
-    package = myEmacs;
-    defaultEditor = true;
-    socketActivation.enable = true;
-    client = {
+  config = mkIf cfg.enable {
+    programs.emacs = {
       enable = true;
-      arguments = [ "-nw" ];
+      package = myEmacs;
     };
-  };
 
+    services.emacs = {
+      enable = true;
+      package = myEmacs;
+      defaultEditor = true;
+      socketActivation.enable = true;
+      client = {
+        enable = true;
+        arguments = [ "-nw" ];
+      };
+    };
+
+  };
 }
