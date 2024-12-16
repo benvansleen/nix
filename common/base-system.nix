@@ -1,4 +1,5 @@
 {
+  globals,
   config,
   pkgs,
   home-manager,
@@ -43,7 +44,7 @@
         age.sshKeyPaths = [
           # The persisted /etc isn't mounted fast enough
           # From https://github.com/profiluefter/nixos-config/blob/09a56c8096c7cbc00b0fbd7f7c75d6451af8f267/sops.nix
-          "/nix/persist/etc/ssh/ssh_host_ed25519_key"
+          "${globals.persistRoot}/etc/ssh/ssh_host_ed25519_key"
         ];
         secrets.root-password = {
           sopsFile = ../secrets/root-password.sops;
