@@ -18,8 +18,15 @@
 (pixel-scroll-precision-mode)
 (recentf-mode)
 (setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
 (setq split-width-threshold 100) ;; prefer horizontal split
 (setq display-buffer-reuse-frames t)
+
+(use-package which-key
+  :ensure nil
+  :init
+  (setq which-key-idle-delay 0.5)
+  (which-key-mode))
 
 (add-to-list 'default-frame-alist '(alpha-background . 92))
 (defun my/toggle-opacity ()
@@ -32,6 +39,8 @@
          (alist-get 'alpha-background default-frame-alist)
        100))))
 
+
+(use-package ef-themes)
 
 (use-package gruvbox-theme
   :init
@@ -69,8 +78,10 @@
 (use-package evil
   :demand t
   :init
-  (setq evil-want-minibuffer t
+  (setq evil-want-integration t
+		evil-want-minibuffer t
 		evil-want-keybinding nil
+        evil-want-C-i-jump t
 		evil-search-module 'evil-search
 		evil-ex-search-persistent-highlight nil
 		evil-ex-complete-emacs-commands t

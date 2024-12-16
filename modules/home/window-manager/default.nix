@@ -2,19 +2,21 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.features.window-manager;
+  cfg = config.modules.home.window-manager;
 in
 {
   imports = [
     ./hyprland.nix
   ];
 
-  options.features.window-manager = {
+  options.modules.home.window-manager = {
     enable = mkEnableOption "window-manager";
   };
 
   config = mkIf cfg.enable {
-    features.hyprland.enable = true;
+    modules.home.window-manager = {
+      hyprland.enable = true;
+    };
 
     # hypridle
     # hyprlock

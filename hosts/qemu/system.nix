@@ -16,11 +16,9 @@
     }
 
     disko.nixosModules.disko
-    (import ./disko-config.nix)
+    ./disko-config.nix
 
     impermanence.nixosModules.impermanence
-
-    # ./hardware-configuration.nix
   ];
 
   environment.persistence.${globals.persistRoot} = {
@@ -28,10 +26,10 @@
     hideMounts = true;
     directories = [
       "/var/log"
-      "/var/db/sudo"
       "/var/lib/bluetooth"
       "/var/lib/nixos"
-      "/var/lib/systemd/coredump"
+      "/var/lib/systemd"
+      "/var/log/journal"
       "/etc/NetworkManager/system-connections"
     ];
     files = [
@@ -47,23 +45,27 @@
 
   nix.settings.max-jobs = 4;
 
-  # Bootloader.
-  boot.loader.grub.enable = true;
-  # boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
+  boot.loader = {
+    grub = {
+      enable = true;
+      useOSProber = true;
+    };
+  };
 
-  networking.hostName = "qemu";
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking = {
+    hostName = "qemu";
+    nftables.enable = true;
+    networkmanager = {
+      enable = true;
+      wifi.backend = "iwd";
+    };
+  };
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
   ## Without this, rebuilding os hangs
-  systemd.services.NetworkManager-wait-online.enable = false;
-  systemd.network.wait-online.enable = false;
+  systemd = {
+    services.NetworkManager-wait-online.enable = false;
+    network.wait-online.enable = false;
+  };
 
   # Select internationalisation properties.
   # Configure keymap in X11
@@ -98,15 +100,24 @@
 
   # List services that you want to enable:
 
-  networking.firewall.allowedTCPPorts = [ 22 ];
-  services.openssh = {
-    enable = true;
-    settings.PasswordAuthentication = false;
-    settings.KbdInteractiveAuthentication = false;
+  # networking.firewall.allowedTCPPorts = [ 22 ];
+  services = {
+    openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+      };
+    };
+
+    irqbalance.enable = true;
+    tlp.enable = false;
+    thermald.enable = true;
   };
-  services.tlp.enable = false;
-  services.thermald.enable = true;
-  services.irqbalance.enable = true;
+
+  # Experimental
+  ## Currently get `mkcomposefs: command not found` error
+  # system.etc.overlay.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedUDPPorts = [ ... ];

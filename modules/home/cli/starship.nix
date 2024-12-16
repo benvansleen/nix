@@ -2,12 +2,10 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.features.starship;
+  cfg = config.modules.home.cli.starship;
 in
 {
-  imports = [ ];
-
-  options.features.starship = {
+  options.modules.home.cli.starship = {
     enable = mkEnableOption "starship";
   };
 

@@ -67,12 +67,11 @@
     }@inputs:
     let
       run = import ./run;
-      utils = import ./utils.nix inputs;
       overlays = import ./overlays inputs;
-      globals = import ./common/globals.nix;
+      utils = import ./utils.nix inputs;
+      globals = (import ./common/globals.nix) // utils;
 
       treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-
       mkSystem = utils.mkSystem { inherit globals overlays nixpkgs; };
     in
     rec {

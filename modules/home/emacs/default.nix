@@ -7,7 +7,7 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.features.emacs;
+  cfg = config.modules.home.emacs;
 
   myEmacs = pkgs.emacsWithPackagesFromUsePackage {
     package = pkgs.emacs-pgtk;
@@ -23,7 +23,7 @@ let
 in
 {
 
-  options.features.emacs = {
+  options.modules.home.emacs = {
     enable = mkEnableOption "emacs";
   };
 

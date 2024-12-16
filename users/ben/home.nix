@@ -12,13 +12,11 @@ let
   state-dir-name = ".local/state";
 in
 rec {
-  imports = [
-    ../../features
-  ];
-
-  features.cli.enable = true;
-  features.emacs.enable = true;
-  features.window-manager.enable = true;
+  modules.home = {
+    cli.enable = true;
+    emacs.enable = true;
+    window-manager.enable = true;
+  };
 
   nix.gc = {
     automatic = true;
