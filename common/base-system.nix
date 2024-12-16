@@ -10,29 +10,6 @@
 }:
 
 {
-  nixpkgs.config.allowUnfree = true;
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
-  nix.settings = {
-    accept-flake-config = true;
-    auto-optimise-store = true;
-    cores = 0;
-    connect-timeout = 5;
-    experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-    fallback = true;
-    min-free = 128000000; # 128 MB
-    nix-path = [ "nixpkgs=${nixpkgs}" ];
-    trusted-users = [ "@wheel" ];
-    use-xdg-base-directories = true;
-  };
-  nix.extraOptions = '''';
-
   imports = [
     home-manager.nixosModules.home-manager
     sops-nix.nixosModules.sops
@@ -58,6 +35,31 @@
     ../users
     ./fonts.nix
   ];
+
+  nixpkgs.config.allowUnfree = true;
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+    settings = {
+      accept-flake-config = true;
+      auto-optimise-store = true;
+      cores = 0;
+      connect-timeout = 5;
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      fallback = true;
+      min-free = 128000000; # 128 MB
+      nix-path = [ "nixpkgs=${nixpkgs}" ];
+      trusted-users = [ "@wheel" ];
+      use-xdg-base-directories = true;
+      warn-dirty = false;
+    };
+  };
 
   home-manager = {
     useGlobalPkgs = true;
@@ -126,6 +128,8 @@
   };
   # Allows pipewire to get (soft) realtime
   security.rtkit.enable = true;
+
+  system.etc.overlay.enable = true;
 
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
