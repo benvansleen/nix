@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  impermanence,
   ...
 }:
 
@@ -19,7 +20,13 @@ in
     };
   };
 
+  imports = [
+    impermanence.nixosModules.impermanence
+  ];
+
   config = mkIf cfg.enable {
+    # Ensure all necessary state is preserved according to nixos manual:
+    # https://nixos.org/manual/nixos/stable/#ch-system-state
     environment.persistence.${cfg.persistRoot} = {
       enable = true;
       hideMounts = true;
@@ -30,10 +37,15 @@ in
         "/var/lib/systemd"
         "/var/log/journal"
         "/etc/NetworkManager/system-connections"
-        "/etc/nixos"
       ];
       files = [
         "/etc/machine-id"
+        # "/etc/passwd"
+        # "/etc/group"
+        # "/etc/shadow"
+        # "/etc/gshadow"
+        # "/etc/subuid"
+        # "/etc/subgid"
 
         # Investigate declarative ssh key config
         "/etc/ssh/ssh_host_ed25519_key"
@@ -42,5 +54,12 @@ in
         "/etc/ssh/ssh_host_rsa_key.pub"
       ];
     };
+
+    # When /etc is not persisted, sudo lectures on first use every boot
+    security.sudo.extraConfig = ''
+      Defaults lecture=never
+    '';
+
+    users.mutableUsers = false;
   };
 }

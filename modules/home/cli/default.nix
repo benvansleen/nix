@@ -12,7 +12,6 @@ let
 in
 globals.importAll lib ./.
 // {
-
   options.modules.home.cli = {
     enable = mkEnableOption "cli";
   };

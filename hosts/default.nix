@@ -9,7 +9,7 @@
 }:
 
 let
-  inherit (lib) mkIf;
+  inherit (lib) mkIf mkDefault;
 in
 {
   imports = [
@@ -17,8 +17,10 @@ in
   ];
 
   modules.system = {
-    fonts.enable = true;
-    impermanence.persistRoot = globals.persistRoot;
+    fonts.enable = mkDefault true;
+    home-manager.enable = mkDefault true;
+    impermanence.persistRoot = mkDefault globals.persistRoot;
+    sops.enable = mkDefault true;
   };
 
   nix = {
@@ -46,8 +48,6 @@ in
   };
 
   environment = {
-    etc.nixos.source = ../.;
-
     systemPackages = with pkgs; [
       bat
       bottom

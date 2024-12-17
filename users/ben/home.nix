@@ -1,12 +1,13 @@
 {
   user,
+  directory,
   pkgs,
   ...
 }@inputs:
 
 let
   home-dir = {
-    root = "/home/${user}";
+    root = directory;
     config = ".config";
     data = ".local/share";
     state = ".local/state";

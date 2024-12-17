@@ -31,62 +31,43 @@ in
           config.allowUnfree = globals.allowUnfree;
         };
       in
-      nixpkgs.lib.nixosSystem rec {
+      nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
           inherit pkgs globals;
         } // inputs;
         modules = [
-          inputs.home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              extraSpecialArgs = specialArgs;
-            };
-          }
-
-          inputs.sops-nix.nixosModules.sops
-          {
-            sops = {
-              defaultSopsFile = ./secrets/default.yaml;
-              defaultSopsFormat = "yaml";
-              gnupg.sshKeyPaths = [ ];
-              age.sshKeyPaths = [
-                # The persisted /etc isn't mounted fast enough
-                # From https://github.com/profiluefter/nixos-config/blob/09a56c8096c7cbc00b0fbd7f7c75d6451af8f267/sops.nix
-                "${globals.persistRoot}/etc/ssh/ssh_host_ed25519_key"
-              ];
-              secrets.root-password = {
-                sopsFile = ./secrets/root-password.sops;
-                format = "binary";
-                neededForUsers = true;
-              };
-            };
-          }
-
-          inputs.impermanence.nixosModules.impermanence
-
           ./modules/system
           ./hosts
           ./users
+
+          {
+            environment.etc.nixos.source = ./.;
+          }
         ] ++ extraModules;
       }
     );
 
   mkUser =
-    user: extraModules: config:
+    {
+      enable,
+      user,
+      extraHomeModules,
+      extraConfig,
+    }:
     (
-      {
-        home-manager.users.${user} = {
-          imports = [
-            inputs.impermanence.homeManagerModules.impermanence
-            inputs.sops-nix.homeManagerModules.sops
-            ./modules/home
-          ] ++ extraModules;
+      extraConfig
+      // {
+        home-manager = enable {
+          users.${user} = {
+            imports = [
+              inputs.impermanence.homeManagerModules.impermanence
+              inputs.sops-nix.homeManagerModules.sops
+              ./modules/home
+            ] ++ extraHomeModules;
+          };
         };
       }
-      // config
     );
 
   eachSystem =

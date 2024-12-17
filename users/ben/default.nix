@@ -2,48 +2,68 @@
   globals,
   config,
   pkgs,
+  lib,
   ...
 }@inputs:
 
 let
+  inherit (lib) mkIf;
   user = "ben";
-  home-dir = config.home-manager.users.${user}.home.homeDirectory;
+  home-dir = "/home/${user}";
+  if-using-sops = mkIf config.modules.system.sops.enable;
 in
-globals.mkUser user [ (import ./home.nix ({ inherit user; } // inputs)) ] {
-  sops.secrets = {
-    user-password = {
-      sopsFile = ../../secrets/user-password.sops;
-      format = "binary";
-      neededForUsers = true;
+globals.mkUser {
+  inherit user;
+  enable = mkIf config.modules.system.home-manager.enable;
+  extraHomeModules = [
+    (import ./home.nix (
+      inputs
+      // {
+        inherit user;
+        directory = home-dir;
+      }
+    ))
+  ];
+  extraConfig = {
+    sops.secrets = if-using-sops {
+      user-password = {
+        sopsFile = ../../secrets/user-password.sops;
+        format = "binary";
+        neededForUsers = true;
+      };
+      ssh_master_pem = {
+        path = "${home-dir}/.ssh/master";
+        owner = user;
+      };
+      ssh_master_pub = {
+        path = "${home-dir}/.ssh/master.pub";
+        owner = user;
+      };
     };
-    ssh_master_pem = {
-      path = "${home-dir}/.ssh/master";
-      owner = user;
+
+    programs = {
+      hyprland.enable = true;
+      zsh.enable = true;
     };
-    ssh_master_pub = {
-      path = "${home-dir}/.ssh/master.pub";
-      owner = user;
+    users.users.${user} = {
+      isNormalUser = true;
+      shell = pkgs.zsh;
+      hashedPasswordFile = if-using-sops config.sops.secrets.user-password.path;
+      home = home-dir;
+
+      description = "Ben Van Sleen";
+      extraGroups = [
+        "wheel"
+        "video"
+        "audio"
+        "network"
+        "networkmanager"
+      ];
+
+      packages = [ ];
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ7RtJEcXSq6pCTh9/XdFhJkYhrRwQfUeZcCzdg0o4WP benvansleen@gmail.com"
+      ];
     };
-  };
-
-  programs.zsh.enable = true;
-  users.users.${user} = {
-    isNormalUser = true;
-    shell = pkgs.zsh;
-    hashedPasswordFile = config.sops.secrets.user-password.path;
-
-    description = "Ben Van Sleen";
-    extraGroups = [
-      "wheel"
-      "video"
-      "audio"
-      "network"
-      "networkmanager"
-    ];
-
-    packages = [ ];
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ7RtJEcXSq6pCTh9/XdFhJkYhrRwQfUeZcCzdg0o4WP benvansleen@gmail.com"
-    ];
   };
 }
