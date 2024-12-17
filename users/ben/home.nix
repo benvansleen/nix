@@ -1,11 +1,14 @@
 {
   globals,
+  config,
   user,
   pkgs,
+  lib,
   ...
 }:
 
 let
+  inherit (lib) mkIf;
   home-dir = "home/${user}";
   config-dir-name = ".config";
   data-dir-name = ".local/share";
@@ -35,7 +38,7 @@ rec {
       nixd
     ];
 
-    persistence."${globals.persistRoot}/${home-dir}" = {
+    persistence."${globals.persistRoot}/${home-dir}" = mkIf config.modules.system.impermanence.enable {
       allowOther = true;
       directories = [
         {

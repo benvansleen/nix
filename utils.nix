@@ -62,6 +62,8 @@ in
             };
           }
 
+          inputs.impermanence.nixosModules.impermanence
+
           ./modules/system
           ./hosts
           ./users

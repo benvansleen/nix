@@ -1,11 +1,15 @@
 {
   config,
   pkgs,
+  lib,
   nix-index-database,
   nixpkgs,
   ...
 }:
 
+let
+  inherit (lib) mkIf;
+in
 {
   imports = [
     nix-index-database.nixosModules.nix-index
@@ -37,34 +41,39 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    bat
-    bottom
-    fd
-    git
-    htop-vim
-    procs
-    ripgrep
+  environment = {
+    etc.nixos.source = ../.;
 
-    ((vim_configurable.override { }).customize {
-      name = "vim";
-      vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
-        start = [
-          vim-nix
-          vim-lastplace
-        ];
-        opt = [ ];
-      };
-      vimrcConfig.customRC = ''
-        imap jj <C-[>
-        set nocompatible
-        set backspace=indent,eol,start
-        syntax on
-      '';
-    })
-  ];
-  environment.variables = {
-    EDITOR = "vim";
+    systemPackages = with pkgs; [
+      bat
+      bottom
+      fd
+      git
+      htop-vim
+      procs
+      ripgrep
+
+      ((vim_configurable.override { }).customize {
+        name = "vim";
+        vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
+          start = [
+            vim-nix
+            vim-lastplace
+          ];
+          opt = [ ];
+        };
+        vimrcConfig.customRC = ''
+          imap jj <C-[>
+          set nocompatible
+          set backspace=indent,eol,start
+          syntax on
+        '';
+      })
+    ];
+
+    variables = {
+      EDITOR = "vim";
+    };
   };
 
   boot = {
@@ -83,7 +92,7 @@
     '';
 
     # Allow home.persistence.allowOther
-    fuse.userAllowOther = true;
+    fuse.userAllowOther = mkIf config.modules.system.impermanence.enable true;
   };
 
   security = {
@@ -111,17 +120,19 @@
   };
 
   time.timeZone = "America/New_York";
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
+  i18n = {
+    defaultLocale = "en_US.UTF-8";
+    extraLocaleSettings = {
+      LC_ADDRESS = "en_US.UTF-8";
+      LC_IDENTIFICATION = "en_US.UTF-8";
+      LC_MEASUREMENT = "en_US.UTF-8";
+      LC_MONETARY = "en_US.UTF-8";
+      LC_NAME = "en_US.UTF-8";
+      LC_NUMERIC = "en_US.UTF-8";
+      LC_PAPER = "en_US.UTF-8";
+      LC_TELEPHONE = "en_US.UTF-8";
+      LC_TIME = "en_US.UTF-8";
+    };
   };
 
   users = {
