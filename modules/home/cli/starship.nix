@@ -32,11 +32,11 @@ in
         };
         direnv = {
           disabled = false;
-          allowed_msg = "󰄬 ";
+          allowed_msg = "󰄬";
           not_allowed_msg = " ";
-          loaded_msg = "󰄬 ";
+          loaded_msg = "󰄬";
           unloaded_msg = " ";
-          format = ''[\[$symbol$loaded/ $allowed\]]($style) '';
+          format = ''[\[$symbol$loaded󰿟$allowed\]]($style) '';
           style = "dimmed yellow";
         };
         hostname = {
