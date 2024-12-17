@@ -132,7 +132,7 @@
 
       formatter = utils.eachSystem ({ pkgs, ... }: (treefmtEval pkgs).config.build.wrapper);
       checks = utils.eachSystem (
-        { system, ... }:
+        { system, pkgs }:
         {
           pre-commit-check = pre-commit-hooks.lib.${system}.run {
             src = ./.;
@@ -143,7 +143,7 @@
               nix-fmt = {
                 enable = true;
                 name = "nix fmt";
-                entry = "nix fmt";
+                entry = "${pkgs.nix}/bin/nix fmt";
                 language = "system";
                 stages = [ "pre-commit" ];
               };

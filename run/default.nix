@@ -33,7 +33,7 @@
         if [ -e $PASSWORD_FILE ]
         then
             hash=$(${pkgs.mkpasswd}/bin/mkpasswd "$password" -m sha-512)
-            sops set "$PASSWORD_FILE" '["data"]' "\"$hash\""
+            ${pkgs.sops}/bin/sops set "$PASSWORD_FILE" '["data"]' "\"$hash\""
             echo "Password will update after next system rebuild"
         else
             echo "$PASSWORD_FILE not found!"
