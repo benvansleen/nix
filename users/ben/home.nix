@@ -1,20 +1,22 @@
 {
-  config,
   user,
   pkgs,
-  lib,
   ...
-}:
+}@inputs:
 
 let
-  inherit (lib) mkIf;
-  inherit (config.modules.system) impermanence;
-  home-dir = "home/${user}";
-  config-dir-name = ".config";
-  data-dir-name = ".local/share";
-  state-dir-name = ".local/state";
+  home-dir = {
+    root = "/home/${user}";
+    config = ".config";
+    data = ".local/share";
+    state = ".local/state";
+  };
 in
 rec {
+  imports = [
+    (import ./impermanence.nix (inputs // { inherit home-dir; }))
+  ];
+
   modules.home = {
     cli.enable = true;
     emacs.enable = true;
@@ -29,7 +31,7 @@ rec {
 
   home = {
     username = user;
-    homeDirectory = "/${home-dir}";
+    homeDirectory = home-dir.root;
     packages = with pkgs; [
       bandwhich
       bottom
@@ -37,45 +39,23 @@ rec {
       nh
       nixd
     ];
+  };
 
-    persistence."${impermanence.persistRoot}/${home-dir}" = mkIf impermanence.enable {
-      allowOther = true;
-      directories = [
-        {
-          directory = "Code";
-          method = "symlink";
-        }
-        {
-          directory = "Documents";
-          method = "symlink";
-        }
-        {
-          directory = "Downloads";
-          method = "symlink";
-        }
-        {
-          directory = "Pictures";
-          method = "symlink";
-        }
-        "${config-dir-name}/nix"
-        {
-          directory = "${data-dir-name}/atuin";
-          method = "symlink";
-        }
-      ];
-      files = [
-        "${data-dir-name}/zsh/history"
-      ];
+  xdg =
+    let
+      inherit (home-dir)
+        root
+        config
+        data
+        state
+        ;
+    in
+    {
+      enable = true;
+      configHome = "${root}/${config}";
+      dataHome = "${root}/${data}";
+      stateHome = "${root}/${state}";
     };
-
-  };
-
-  xdg = {
-    enable = true;
-    configHome = "${home.homeDirectory}/${config-dir-name}";
-    dataHome = "${home.homeDirectory}/${data-dir-name}";
-    stateHome = "${home.homeDirectory}/${state-dir-name}";
-  };
 
   programs.git = {
     enable = true;
@@ -95,7 +75,7 @@ rec {
   sops = {
     defaultSopsFile = ./secrets.yaml;
     age.sshKeyPaths = [
-      "${home.homeDirectory}/.ssh/master"
+      "${home-dir.root}/.ssh/master"
     ];
     secrets.github_copilot = {
       path = "${xdg.configHome}/github-copilot/hosts.json";
