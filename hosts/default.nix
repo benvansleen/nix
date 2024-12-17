@@ -21,7 +21,6 @@ in
     impermanence.persistRoot = globals.persistRoot;
   };
 
-  nixpkgs.config.allowUnfree = true;
   nix = {
     gc = {
       automatic = true;

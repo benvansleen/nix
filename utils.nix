@@ -19,14 +19,17 @@ in
 
   mkSystem =
     {
-      globals,
-      overlays,
       nixpkgs,
+      overlays,
+      globals,
     }:
     system: extraModules:
     (
       let
-        pkgs = import nixpkgs { inherit system overlays; };
+        pkgs = import nixpkgs {
+          inherit system overlays;
+          config.allowUnfree = globals.allowUnfree;
+        };
       in
       nixpkgs.lib.nixosSystem rec {
         inherit system;

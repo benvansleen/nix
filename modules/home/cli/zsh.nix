@@ -196,17 +196,18 @@ in
           tree = "${pkgs.eza}/bin/eza --tree";
         };
 
-        # zsh-abbr = {
-        #   enable = true;
-        #   abbreviations = {
-        # 	q  = "exit";
-        # 	cls = "clear";
-        # 	ga = "git add";
-        # 	gs = "git status";
-        # 	gp = "git push";
-        # 	gr = "git restore";
-        #   };
-        # };
+        zsh-abbr = mkIf pkgs.config.allowUnfree {
+          enable = true;
+          abbreviations = {
+            q = "exit";
+            cls = "clear";
+            ga = "git add";
+            gs = "git status";
+            gc = "git commit";
+            gp = "git push";
+            gr = "git restore";
+          };
+        };
 
       };
     };
