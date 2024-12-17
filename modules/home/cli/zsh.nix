@@ -80,6 +80,10 @@ in
 
         ];
 
+        sessionVariables = {
+          WORDCHARS = "*?_-.[]~=&;!#$%^(){}<>";
+        };
+
         syntaxHighlighting = {
           enable = true;
           styles = {
