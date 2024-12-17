@@ -1,21 +1,26 @@
 {
-  globals,
   config,
   lib,
   ...
 }:
 
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib) mkIf mkEnableOption mkOption;
   cfg = config.modules.system.impermanence;
 in
 {
   options.modules.system.impermanence = {
     enable = mkEnableOption "impermanence";
+    persistRoot = mkOption {
+      type = lib.types.str;
+      default = "/";
+      example = "/nix/persist";
+      description = "where to mount persistent storage";
+    };
   };
 
   config = mkIf cfg.enable {
-    environment.persistence.${globals.persistRoot} = {
+    environment.persistence.${cfg.persistRoot} = {
       enable = true;
       hideMounts = true;
       directories = [

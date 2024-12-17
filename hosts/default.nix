@@ -1,4 +1,5 @@
 {
+  globals,
   config,
   pkgs,
   lib,
@@ -14,7 +15,11 @@ in
   imports = [
     nix-index-database.nixosModules.nix-index
   ];
-  modules.system.fonts.enable = true;
+
+  modules.system = {
+    fonts.enable = true;
+    impermanence.persistRoot = globals.persistRoot;
+  };
 
   nixpkgs.config.allowUnfree = true;
   nix = {
