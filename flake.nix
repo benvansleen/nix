@@ -111,15 +111,20 @@
       );
 
       devShells = utils.eachSystem (
-        { pkgs, ... }:
+        { pkgs, system }:
         {
           default =
             with pkgs;
             mkShell {
-              buildInputs = [ sops ];
-              shellHook = ''
-                export SOPS_AGE_KEY=$(${ssh-to-age}/bin/ssh-to-age -i ~/.ssh/master -private-key)
-              '';
+              buildInputs = [
+                self.checks.${system}.pre-commit-check.enabledPackages
+                sops
+              ];
+              shellHook =
+                self.checks.${system}.pre-commit-check.shellHook
+                + ''
+                  export SOPS_AGE_KEY=$(${ssh-to-age}/bin/ssh-to-age -i ~/.ssh/master -private-key)
+                '';
             };
         }
 
@@ -127,15 +132,21 @@
 
       formatter = utils.eachSystem ({ pkgs, ... }: (treefmtEval pkgs).config.build.wrapper);
       checks = utils.eachSystem (
-        { system, pkgs }:
+        { system, ... }:
         {
-          formatting = (treefmtEval pkgs).config.build.check self;
           pre-commit-check = pre-commit-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
               deadnix.enable = true;
               ripsecrets.enable = true;
               statix.enable = true;
+              nix-fmt = {
+                enable = true;
+                name = "nix fmt";
+                entry = "nix fmt";
+                language = "system";
+                stages = [ "pre-commit" ];
+              };
             };
           };
         }
