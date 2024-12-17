@@ -1,14 +1,16 @@
-{ config, lib, ... }:
+{
+  globals,
+  config,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) mkIf mkEnableOption;
   cfg = config.modules.home.window-manager;
 in
-{
-  imports = [
-    ./hyprland.nix
-  ];
-
+globals.importAll lib ./.
+// {
   options.modules.home.window-manager = {
     enable = mkEnableOption "window-manager";
   };

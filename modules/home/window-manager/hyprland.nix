@@ -17,6 +17,9 @@ in
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
       enable = true;
+
+      ## Multiple spaces in `settings` strings results in hard-to-debug
+      ## issue w/ empty `home-manager-generation/activate` script
       settings = {
         "$mainMod" = "SUPER";
         bind = [
@@ -39,14 +42,14 @@ in
           ''$mainMod SHIFT, S, exec, grim -g "''$(slurp)" - | swappy -f -''
           # "$mainMod, B, exec, ~/.local/bin/eww open-many bar-0 bar-1 bar-2 --toggle"
 
-          "$mainMod, left,  movefocus, l"
+          "$mainMod, left, movefocus, l"
           "$mainMod, right, movefocus, r"
-          "$mainMod, up,    movefocus, u"
-          "$mainMod, down,  movefocus, d"
-          "$mainMod, h,  movefocus, l"
+          "$mainMod, up, movefocus, u"
+          "$mainMod, down, movefocus, d"
+          "$mainMod, h, movefocus, l"
           "$mainMod, l, movefocus, r"
-          "$mainMod, k,    movefocus, u"
-          "$mainMod, j,  movefocus, d"
+          "$mainMod, k, movefocus, u"
+          "$mainMod, j, movefocus, d"
           # "$mainMod, h, exec, ~/.config/hypr/direction l"
           # "$mainMod, l, exec, ~/.config/hypr/direction r"
           # "$mainMod, k, exec, ~/.config/hypr/direction u"
@@ -87,8 +90,6 @@ in
           gaps_in = 4;
           gaps_out = 7;
           border_size = 0;
-          # col.active_border = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-          # col.inactive_border = "rgba(595959aa)";
           resize_on_border = true;
           extend_border_grab_area = 15;
           hover_icon_on_border = true;
