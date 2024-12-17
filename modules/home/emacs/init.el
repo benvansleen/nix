@@ -373,3 +373,22 @@
 
 (use-package nix-ts-mode
   :mode "\\.nix\\'")
+
+
+(use-package copilot
+  :bind (:map global-map
+              ("M-:" . nil)
+              :map evil-normal-state-map
+              ("M-:" . eval-expression)
+              :map evil-insert-state-map
+              ("M-;" . copilot-accept-completion)
+              ("M-:" . copilot-accept-completion-by-word)
+              ("C-M-;" . copilot-next-completion))
+  :hook ((text-mode . copilot-mode)
+         (nix-ts-mode . copilot-mode))
+
+  ;; Currently an editorconfig error with lisps
+  ; :init
+  ; (copilot-install-server)
+  ; (global-copilot-mode)
+)
