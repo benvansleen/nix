@@ -58,18 +58,41 @@ rec {
       stateHome = "${root}/${state}";
     };
 
-  programs.git = {
-    enable = true;
-    userName = user;
-    userEmail = "benvansleen@gmail.com";
-    extraConfig = {
-      init.defaultBranch = "master";
-    };
-    difftastic = {
+  programs = {
+    bottom = {
       enable = true;
-      color = "auto";
-      display = "side-by-side";
-      background = "dark";
+      settings = {
+        styles.theme = "gruvbox";
+        tree = true;
+        enable_gpu = true;
+        processes.columns = [
+          "PID"
+          "Name"
+          "Mem%"
+          "CPU%"
+          "GPU%"
+          "User"
+          "State"
+          "R/s"
+          "W/s"
+          "T.Read"
+          "T.Write"
+        ];
+      };
+    };
+    git = {
+      enable = true;
+      userName = user;
+      userEmail = "benvansleen@gmail.com";
+      extraConfig = {
+        init.defaultBranch = "master";
+      };
+      difftastic = {
+        enable = true;
+        color = "auto";
+        display = "side-by-side";
+        background = "dark";
+      };
     };
   };
 
