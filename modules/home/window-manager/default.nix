@@ -23,21 +23,27 @@ globals.importAll lib ./.
     # hypridle
     # hyprlock
 
+    wayland.windowManager.hyprland.settings = {
+      exec-once = [
+        "systemctl --user start --now hyprpaper.service"
+      ];
+    };
     services.hyprpaper = {
       enable = true;
       settings =
         let
-          wallpaper = "~/Pictures/pensacola-beach-dimmed.png";
+          wallpaper = ./pensacola-beach-dimmed.png;
+          wallpaper' = builtins.toString wallpaper;
         in
         {
-          ipc = "on";
-          splash = true;
+          ipc = "off";
+          splash = false;
 
           preload = [
-            wallpaper
+            wallpaper'
           ];
           wallpaper = [
-            ",${wallpaper}"
+            ", ${wallpaper'}"
           ];
 
           # wallpaper = {
