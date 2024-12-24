@@ -2,16 +2,10 @@
   pkgs,
   nixos-facter-modules,
   disko,
-  lib,
   ...
 }:
 
 {
-  users.users.root = {
-    initialPassword = lib.mkForce "nixos";
-    hashedPasswordFile = lib.mkForce null;
-  };
-
   imports = [
     nixos-facter-modules.nixosModules.facter
     {
@@ -49,6 +43,10 @@
       };
     };
   };
+
+  hardware.graphics.extraPackages = with pkgs; [
+    amdvlk
+  ];
 
   networking = {
     hostName = "amd";
@@ -91,7 +89,6 @@
     };
 
     irqbalance.enable = true;
-    tlp.enable = false;
     thermald.enable = true;
   };
 
