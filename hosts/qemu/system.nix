@@ -20,8 +20,14 @@
 
   nix.settings.max-jobs = 4;
 
-  boot.loader = {
-    grub = {
+  boot = {
+    binfmt.emulatedSystems = [
+      "wasm32-wasi"
+      "x86_64-windows"
+      "aarch64-linux"
+    ];
+    initrd.systemd.enable = true;
+    loader.grub = {
       enable = true;
       useOSProber = true;
     };
@@ -42,27 +48,6 @@
     network.wait-online.enable = false;
   };
 
-  # Select internationalisation properties.
-  # Configure keymap in X11
-  # services.xserver.xkb = {
-  #   layout = "us";
-  #   variant = "";
-  # };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  # users.users.ben = import ../../users/ben { inherit pkgs; };
-  # users.users.ben = {
-  #   isNormalUser = true;
-  #   description = "ben";
-  #   extraGroups = [ "networkmanager" "wheel" ];
-  #   home =
-  #   # packages = with pkgs; [];
-  # };
-
-  # Allow unfree packages
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [ ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -73,10 +58,12 @@
   #   enableSSHSupport = true;
   # };
 
-  # List services that you want to enable:
-
-  # networking.firewall.allowedTCPPorts = [ 22 ];
   services = {
+    displayManager.ly = {
+      enable = true;
+      settings = { };
+    };
+
     openssh = {
       enable = true;
       settings = {
