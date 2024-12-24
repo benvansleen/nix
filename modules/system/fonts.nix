@@ -18,14 +18,15 @@ in
     fonts = {
       enableDefaultPackages = true;
       packages = with pkgs; [
-        fira-code-nerdfont
+        iosevka
         hack-font
+        fira-code-nerdfont
       ];
 
       fontconfig = {
         defaultFonts = {
-          serif = [ "Hack" ];
-          sansSerif = [ "Fira Code" ];
+          serif = [ "Iosevka Etoile" ];
+          sansSerif = [ "Iosevka Aile" ];
           monospace = [ "Hack" ];
         };
       };

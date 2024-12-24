@@ -10,6 +10,7 @@ in
     allowOther = true;
     directories = [
       "${config}/nix"
+      "${config}/emacs/var"
       "Code"
       "Documents"
       "Downloads"

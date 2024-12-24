@@ -1,13 +1,22 @@
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
+(setq user-emacs-directory
+      (concat (getenv "XDG_CONFIG_HOME") "/emacs"))
+(use-package no-littering
+  :init
+  (require 'no-littering))
+
+(set-face-attribute 'default nil :height 130)
+
 (setq create-lockfiles nil)
 (global-auto-revert-mode)
 (save-place-mode)
 
-(setq auto-save-list-file-prefix "~/.cache/emacs"
-      auto-save-file-name-transforms '((".*" "~/.cache/emacs" t))
-      backup-directory-alist '(("." . "~/.cache/emacs")))
+(setq cache-dir (concat (getenv "XDG_CACHE_HOME") "/emacs"))
+(setq auto-save-list-file-prefix cache-dir
+      auto-save-file-name-transforms `((".*" ,cache-dir t))
+      backup-directory-alist `(("." . ,cache-dir)))
 (setopt use-short-answers t)
 (setq ring-bell-function 'ignore)
 (set-face-attribute 'default nil :height 150)
@@ -17,6 +26,7 @@
 (setq scroll-step 1)
 (pixel-scroll-precision-mode)
 (recentf-mode)
+(save-place-mode)
 (setq-default tab-width 4)
 (setq-default indent-tabs-mode nil)
 (setq split-width-threshold 100) ;; prefer horizontal split
@@ -40,15 +50,45 @@
        100))))
 
 
-(use-package ef-themes)
+(use-package ef-themes
+  ;; :init
+  ;; (load-theme 'ef-melissa-dark t)
+  )
 
 (use-package gruvbox-theme
   :init
-  (load-theme 'gruvbox-dark-hard t))
+  (load-theme 'gruvbox-dark-hard t)
+  )
+
+;; (use-package mixed-pitch
+;;   :hook ((text-mode . mixed-pitch-mode))
+;;   :init
+;;   (defun my/set-fonts ()
+;;       (let ((fixed "Hack")
+;;             (variable "Iosevka")
+;;             (font-size 128))
+;;         (set-face-attribute 'default nil
+;;                             :font fixed
+;;                             :height font-size)
+;;         (set-face-attribute 'fixed-pitch nil
+;;                             :font fixed
+;;                             :height font-size)
+;;         (set-face-attribute 'variable-pitch
+;;                             ;; :font variable
+;;                             :font fixed
+;;                             :height font-size)
+;;         ))
+;;   (if (daemonp)
+;;       (add-hook 'after-make-frame-functions
+;;                 (lambda (frame)
+;;                   (with-selected-frame frame
+;;                     (my/set-fonts))))
+;;     (my/set-fonts))
+;;   )
 
 (use-package olivetti
   :init
-  (setq olivetti-body-width 0.65)
+  (setq olivetti-body-width 0.8)
   :hook
   (prog-mode . olivetti-mode)
   (text-mode . olivetti-mode)
@@ -329,17 +369,9 @@
 		dired-kill-when-opening-new-dired-buffer t))
 
 
-;; elisp dim parens
-(defface paren-face
-  '((((class color) (background dark))
-	 (:foreground "gray40"))
-	(((class color (background light))
-	  (:foreground "gray80"))))
-	"Face used to dim parentheses")
-(add-hook 'emacs-lisp-mode-hook
-		  (lambda ()
-			(font-lock-add-keywords nil
-									'(("(\\|)" . 'paren-face)))))
+(use-package paren-face
+  :init
+  (global-paren-face-mode))
 
 
 (use-package eglot
@@ -384,11 +416,17 @@
               ("M-;" . copilot-accept-completion)
               ("M-:" . copilot-accept-completion-by-word)
               ("C-M-;" . copilot-next-completion))
-  :hook ((text-mode . copilot-mode)
-         (nix-ts-mode . copilot-mode))
 
-  ;; Currently an editorconfig error with lisps
-  ; :init
-  ; (copilot-install-server)
-  ; (global-copilot-mode)
-)
+  :hook ((text-mode . copilot-mode)
+         (prog-mode . copilot-mode))
+
+  :config
+  (add-to-list 'copilot-indentation-alist
+               '(emacs-lisp-mode 2))
+  (add-to-list 'copilot-indentation-alist
+               '(text-mode 0))
+  (add-to-list 'copilot-indentation-alist
+               '(minibuffer-mode 0))
+  (add-to-list 'copilot-indentation-alist
+               '(nix-ts-mode 2))
+  )
