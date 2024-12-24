@@ -17,16 +17,22 @@ in
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
       enable = true;
+      systemd.enable = false; # Conflicts with UWSM
 
       ## Multiple spaces in `settings` strings results in hard-to-debug
       ## issue w/ empty `home-manager-generation/activate` script
       settings = {
+        env = [
+          "XDG_CURRENT_DESKTOP,Hyprland"
+          "GDK_BACKEND,wayland"
+        ];
+
         "$mainMod" = "SUPER";
         bind = [
           # "$mainMod, Return, exec, ~/.config/guix/etc/sway/alacritty"
           "$mainMod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
           # "$mainMod SHIFT, Return, exec, ~/.config/hypr/special-term"
-          "$mainMod, E, exec, emacsclient -c -n"
+          "$mainMod, E, exec, emacsclient -c"
           "$mainMod, Q, killactive, "
           "$mainMod SHIFT, Q, exit, "
           "$mainMod, F, fullscreen"
