@@ -25,6 +25,8 @@ in
   ];
 
   config = mkIf cfg.enable {
+    fileSystems.${cfg.persistRoot}.neededForBoot = true;
+
     # Ensure all necessary state is preserved according to nixos manual:
     # https://nixos.org/manual/nixos/stable/#ch-system-state
     environment.persistence.${cfg.persistRoot} = {

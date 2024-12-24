@@ -77,6 +77,9 @@
     rec {
 
       nixosConfigurations = {
+        amd = mkSystem "x86_64-linux" [
+          ./hosts/amd
+        ];
         qemu = mkSystem "x86_64-linux" [
           ./hosts/qemu
         ];

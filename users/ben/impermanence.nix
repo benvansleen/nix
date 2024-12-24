@@ -10,26 +10,11 @@ in
     allowOther = true;
     directories = [
       "${config}/nix"
-      {
-        directory = "Code";
-        method = "symlink";
-      }
-      {
-        directory = "Documents";
-        method = "symlink";
-      }
-      {
-        directory = "Downloads";
-        method = "symlink";
-      }
-      {
-        directory = "Pictures";
-        method = "symlink";
-      }
-      {
-        directory = "${data}/atuin";
-        method = "symlink";
-      }
+      "Code"
+      "Documents"
+      "Downloads"
+      "Pictures"
+      "${data}/atuin"
     ];
     files = [
       "${data}/zsh/history"
