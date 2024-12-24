@@ -75,11 +75,6 @@
   # };
 
   services = {
-    displayManager.ly = {
-      enable = true;
-      settings = { };
-    };
-
     openssh = {
       enable = true;
       settings = {
