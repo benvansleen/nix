@@ -1,5 +1,4 @@
 {
-  globals,
   config,
   pkgs,
   lib,
@@ -17,9 +16,9 @@ in
   ];
 
   modules.system = {
+    display-manager.enable = mkDefault true;
     fonts.enable = mkDefault true;
     home-manager.enable = mkDefault true;
-    impermanence.persistRoot = mkDefault globals.persistRoot;
     sops.enable = mkDefault true;
   };
 
@@ -80,15 +79,6 @@ in
     };
   };
 
-  boot = {
-    initrd.systemd.enable = true;
-    binfmt.emulatedSystems = [
-      "wasm32-wasi"
-      "x86_64-windows"
-      "aarch64-linux"
-    ];
-  };
-
   programs = {
     command-not-found.enable = false;
     bash.interactiveShellInit = ''
@@ -103,10 +93,6 @@ in
     sudo = {
       enable = true;
       execWheelOnly = true;
-      # When /etc is not persisted, sudo lectures on first use every boot
-      extraConfig = ''
-        Defaults lecture=never
-      '';
     };
 
     # Allows pipewire to get (soft) realtime
@@ -139,11 +125,11 @@ in
     };
   };
 
-  users = {
-    mutableUsers = false;
-    users.root = {
-      hashedPassword = null;
-      hashedPasswordFile = config.sops.secrets.root-password.path;
-    };
+  users.users.root = {
+    hashedPassword = null;
+    hashedPasswordFile = mkIf config.modules.system.sops.enable config.sops.secrets.root-password.path;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINioMpgKUSAxRhCf7rpH7n1OJgpGog2Uxm+jYfCwS4PL benvansleen@gmail.com"
+    ];
   };
 }
