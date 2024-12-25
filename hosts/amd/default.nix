@@ -8,5 +8,6 @@
   config.machine = {
     name = "amd";
     powerful = true;
+    allowUnfree = true;
   };
 }

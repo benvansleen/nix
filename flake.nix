@@ -69,7 +69,7 @@
       run = import ./run;
       overlays = import ./overlays inputs;
       utils = import ./utils.nix inputs;
-      globals = (import ./common/globals.nix) // utils;
+      globals = utils;
 
       treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
       mkSystem = utils.mkSystem { inherit globals overlays nixpkgs; };

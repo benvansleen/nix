@@ -27,6 +27,7 @@ in
       default = "nixos";
       description = "The hostname of the machine";
     };
+    allowUnfree = mkEnableOption "Allow unfree nixpkgs";
     powerful = mkEnableOption "Powerful machine configuration";
   };
 

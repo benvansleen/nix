@@ -1,5 +1,7 @@
 {
   config,
+  pkgs,
+  pkgs-unfree,
   lib,
   home-manager,
   globals,
@@ -23,7 +25,10 @@ in
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      extraSpecialArgs = { inherit globals; };
+      extraSpecialArgs = {
+        inherit globals;
+        pkgs = if config.machine.allowUnfree then pkgs-unfree else pkgs;
+      };
     };
   };
 }

@@ -12,10 +12,9 @@ let
         )
       ) (builtins.readDir dir)
     );
-  importAll = lib: dir: { imports = nixFilesInDir lib dir; };
 in
 {
-  inherit importAll;
+  importAll = lib: dir: { imports = nixFilesInDir lib dir; };
 
   mkSystem =
     {
@@ -28,13 +27,16 @@ in
       let
         pkgs = import nixpkgs {
           inherit system overlays;
-          config.allowUnfree = globals.allowUnfree;
+        };
+        pkgs-unfree = import nixpkgs {
+          inherit system overlays;
+          config.allowUnfree = true;
         };
       in
       nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit pkgs globals;
+          inherit pkgs pkgs-unfree globals;
         } // inputs;
         modules = [
           ./modules/system
