@@ -18,15 +18,14 @@
   ];
 
   config = {
-    powerful-machine = true;
     modules.system.impermanence = {
       enable = true;
       persistRoot = "/persist";
     };
 
     nix.settings = {
-      cores = lib.mkForce 6;
-      max-jobs = 4;
+      cores = lib.mkForce 12;
+      max-jobs = 6;
     };
 
     boot = {
@@ -55,7 +54,6 @@
     ];
 
     networking = {
-      hostName = "amd";
       # nftables.enable = true;
       networkmanager = {
         enable = true;

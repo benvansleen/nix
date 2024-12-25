@@ -1,6 +1,6 @@
 {
   user,
-  powerful-machine,
+  machine,
   directory,
   pkgs,
   ...
@@ -24,7 +24,7 @@ rec {
     emacs = {
       enable = true;
       framesOnlyMode = true;
-      nativeBuild = powerful-machine;
+      nativeBuild = machine.powerful;
     };
     window-manager.enable = true;
   };

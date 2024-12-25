@@ -8,14 +8,27 @@
 }:
 
 let
-  inherit (lib) mkIf mkDefault mkEnableOption;
+  inherit (lib)
+    mkIf
+    mkDefault
+    mkOption
+    mkEnableOption
+    types
+    ;
 in
 {
   imports = [
     nix-index-database.nixosModules.nix-index
   ];
 
-  options.powerful-machine = mkEnableOption "Powerful machine configuration";
+  options.machine = {
+    name = mkOption {
+      type = types.str;
+      default = "nixos";
+      description = "The hostname of the machine";
+    };
+    powerful = mkEnableOption "Powerful machine configuration";
+  };
 
   config = {
     modules.system = {
@@ -81,6 +94,8 @@ in
         EDITOR = "vim";
       };
     };
+
+    networking.hostName = config.machine.name;
 
     programs = {
       command-not-found.enable = false;

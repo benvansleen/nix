@@ -34,7 +34,6 @@
   };
 
   networking = {
-    hostName = "qemu";
     nftables.enable = true;
     networkmanager = {
       enable = true;
