@@ -13,13 +13,15 @@ pkgs.writeShellApplication {
     fi
     set -- "${iso}/iso/${iso.name}"
     exec qemu-kvm \
-      --nographic \
-      -m 2G \
-      -smp 2 \
+      -m 8G \
+      -smp 4 \
       -boot c \
+      -hda "$disk" \
       -cpu host \
       -boot d -cdrom "$1" \
+      -vga virtio \
       -netdev user,id=net0,net=192.168.0.0/24,dhcpstart=192.168.0.9 \
+      -net user,hostfwd=tcp::2222-:22 \
       -device virtio-net-pci,netdev=net0
   '';
 }

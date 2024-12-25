@@ -83,7 +83,7 @@ in
             opt = [ ];
           };
           vimrcConfig.customRC = ''
-              imap jj <C-[>
+            imap jj <C-[>
             set nocompatible
             set backspace=indent,eol,start
             syntax on

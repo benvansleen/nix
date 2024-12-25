@@ -8,7 +8,8 @@
 let
   inherit (lib) mkIf mkEnableOption;
   cfg = config.modules.system.sops;
-  inherit (config.modules.system.impermanence) persistRoot;
+  impermanence-cfg = config.modules.system.impermanence;
+  inherit (impermanence-cfg) persistRoot;
 in
 {
   options.modules.system.sops = {
@@ -24,12 +25,16 @@ in
       defaultSopsFile = ../../secrets/default.yaml;
       defaultSopsFormat = "yaml";
       gnupg.sshKeyPaths = [ ];
-      age.sshKeyPaths = [
-        # The persisted /etc isn't mounted fast enough
-        # From https://github.com/profiluefter/nixos-config/blob/09a56c8096c7cbc00b0fbd7f7c75d6451af8f267/sops.nix
-        "${persistRoot}/etc/ssh/ssh_host_ed25519_key"
-        # "/etc/ssh/ssh_host_ed25519_key"
-      ];
+      age.sshKeyPaths =
+        let
+          hostKeyPath =
+            (if impermanence-cfg.enable then persistRoot else "") + "/etc/ssh/ssh_host_ed25519_key";
+        in
+        [
+          # The persisted /etc isn't mounted fast enough
+          # From https://github.com/profiluefter/nixos-config/blob/09a56c8096c7cbc00b0fbd7f7c75d6451af8f267/sops.nix
+          hostKeyPath
+        ];
       secrets.root-password = {
         sopsFile = ../../secrets/root-password.sops;
         format = "binary";
