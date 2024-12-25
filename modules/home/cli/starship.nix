@@ -51,11 +51,11 @@ in
         memory_usage = {
           disabled = false;
           symbol = "󰍛 ";
-          format = "[\[$symbol \${ram}( | \${swap})\]]($style) ";
+          format = "[\[$symbol \${ram}( \| \${swap})\]]($style) ";
         };
         nix_shell = {
           disabled = false;
-          heuristic = true;
+          heuristic = false;
           symbol = "❄️ ";
           format = ''[\[$symbol$state nix shell\]]($style) '';
           style = "dimmed blue";
