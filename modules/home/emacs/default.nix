@@ -12,9 +12,14 @@ let
   emacs-pkg = pkgs.emacs-pgtk;
   emacs = pkgs.emacsWithPackagesFromUsePackage {
     package =
-      if cfg.native-build then
+      if cfg.nativeBuild then
         emacs-pkg.overrideAttrs (_oldAttrs: {
-          NIX_CFLAGS_COMPILE = "-O3 -pipe -march=native -fomit-frame-pointer";
+          NIX_CFLAGS_COMPILE = lib.concatStringsSep " " [
+            "-O3"
+            "-march=native"
+            "-pipe"
+            "-fomit-frame-pointer"
+          ];
         })
       else
         emacs-pkg;
