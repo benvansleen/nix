@@ -66,34 +66,27 @@
       ...
     }@inputs:
     let
+      treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
       run = import ./run;
       overlays = import ./overlays inputs;
-      utils = import ./utils.nix inputs;
-      globals = utils;
-
-      treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-      mkSystem = utils.mkSystem { inherit globals overlays nixpkgs; };
+      lib = nixpkgs.lib.extend (_final: _prev: (import ./lib.nix lib overlays inputs));
     in
     rec {
 
       nixosConfigurations = {
-        amd = mkSystem "x86_64-linux" [
+        amd = lib.mkSystem "x86_64-linux" [
           ./hosts/amd
         ];
-        qemu = mkSystem "x86_64-linux" [
+        qemu = lib.mkSystem "x86_64-linux" [
           ./hosts/qemu
         ];
-        iso = mkSystem "x86_64-linux" [
+        iso = lib.mkSystem "x86_64-linux" [
           "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
           ./hosts/iso
         ];
       };
 
-      # homeConfigurations = {
-      #   "ben@qemu" = nixosConfigurations.qemu.config.home-manager.users.ben.home;
-      # };
-
-      packages = utils.eachSystem (
+      packages = lib.eachSystem (
         { pkgs, ... }:
         rec {
           default = rebuild;
@@ -113,7 +106,7 @@
         }
       );
 
-      devShells = utils.eachSystem (
+      devShells = lib.eachSystem (
         { pkgs, system }:
         {
           default =
@@ -133,8 +126,8 @@
 
       );
 
-      formatter = utils.eachSystem ({ pkgs, ... }: (treefmtEval pkgs).config.build.wrapper);
-      checks = utils.eachSystem (
+      formatter = lib.eachSystem ({ pkgs, ... }: (treefmtEval pkgs).config.build.wrapper);
+      checks = lib.eachSystem (
         { system, pkgs }:
         {
           pre-commit-check = pre-commit-hooks.lib.${system}.run {

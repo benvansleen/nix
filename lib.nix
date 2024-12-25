@@ -1,8 +1,9 @@
+lib: overlays:
 { nixpkgs, systems, ... }@inputs:
 
 let
   nixFilesInDir =
-    lib: dir:
+    dir:
     lib.mapAttrsToList (name: _: dir + ("/" + name)) (
       lib.filterAttrs (
         name: type:
@@ -12,31 +13,29 @@ let
         )
       ) (builtins.readDir dir)
     );
+
+  mkPkgs = cfg: import nixpkgs cfg;
 in
 {
-  importAll = lib: dir: { imports = nixFilesInDir lib dir; };
+  importAll = dir: { imports = nixFilesInDir dir; };
 
   mkSystem =
-    {
-      nixpkgs,
-      overlays,
-      globals,
-    }:
     system: extraModules:
     (
       let
-        pkgs = import nixpkgs {
-          inherit system overlays;
-        };
-        pkgs-unfree = import nixpkgs {
-          inherit system overlays;
-          config.allowUnfree = true;
-        };
+        pkgs-config = { inherit system overlays; };
+        pkgs = mkPkgs pkgs-config;
+        pkgs-unfree = mkPkgs (
+          pkgs-config
+          // {
+            config.allowUnfree = true;
+          }
+        );
       in
-      nixpkgs.lib.nixosSystem {
+      lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit pkgs pkgs-unfree globals;
+          inherit pkgs pkgs-unfree;
         } // inputs;
         modules = [
           ./modules/system

@@ -1,3 +1,3 @@
-{ globals, lib, ... }:
+{ lib, ... }:
 
-globals.importAll lib ./.
+lib.importAll ./.

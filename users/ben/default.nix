@@ -1,5 +1,4 @@
 {
-  globals,
   config,
   pkgs,
   lib,
@@ -12,7 +11,7 @@ let
   home-dir = "/home/${user}";
   if-using-sops = mkIf config.modules.system.sops.enable;
 in
-globals.mkUser {
+lib.mkUser {
   inherit user;
   enable = mkIf config.modules.system.home-manager.enable;
   extraHomeModules = [
