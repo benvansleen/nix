@@ -20,6 +20,7 @@ globals.mkUser {
       inputs
       // {
         inherit user;
+        inherit (config) powerful-machine;
         directory = home-dir;
       }
     ))

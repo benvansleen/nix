@@ -1,5 +1,6 @@
 {
   user,
+  powerful-machine,
   directory,
   pkgs,
   ...
@@ -20,7 +21,10 @@ rec {
 
   modules.home = {
     cli.enable = true;
-    emacs.enable = true;
+    emacs = {
+      enable = true;
+      native-build = powerful-machine;
+    };
     window-manager.enable = true;
   };
 
