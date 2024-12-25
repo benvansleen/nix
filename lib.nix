@@ -60,10 +60,11 @@ in
       extraConfig
       // {
         home-manager = enable {
-          users.${user} = {
+          users.${user} = _: {
             imports = [
               inputs.impermanence.homeManagerModules.impermanence
               inputs.sops-nix.homeManagerModules.sops
+              inputs.stylix.homeManagerModules.stylix
               ./modules/home
             ] ++ extraHomeModules;
           };

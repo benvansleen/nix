@@ -40,6 +40,10 @@ lib.mkUser {
         owner = user;
       };
     };
+    # By default, nix-sops will create the .ssh directory as owned by root
+    system.activationScripts."user-owns-.ssh".text = if-using-sops ''
+      chown ${user} ${home-dir}/.ssh
+    '';
 
     programs = {
       hyprland = {
