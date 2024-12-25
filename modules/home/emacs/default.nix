@@ -19,7 +19,11 @@ let
       else
         emacs-pkg;
     config = ./init.el;
-    defaultInitFile = true;
+    defaultInitFile = pkgs.substituteAll {
+      name = "default.el";
+      src = ./init.el;
+      inherit (cfg) framesOnlyMode;
+    };
     alwaysEnsure = true;
     alwaysTangle = true;
     extraEmacsPackages =
@@ -32,7 +36,8 @@ in
 
   options.modules.home.emacs = {
     enable = mkEnableOption "emacs";
-    native-build = mkEnableOption "emacs with native build flags";
+    nativeBuild = mkEnableOption "emacs with native build flags";
+    framesOnlyMode = mkEnableOption "emacs with frames-only-mode";
   };
 
   config = mkIf cfg.enable {

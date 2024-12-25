@@ -430,3 +430,19 @@
   (add-to-list 'copilot-indentation-alist
                '(nix-ts-mode 2))
   )
+
+
+(when @framesOnlyMode@
+  (use-package frames-only-mode
+    :config
+    (dolist (f '(embark-act
+                 vterm-toggle
+                 org-latex-export-to-pdf
+                 org-fragtog--post-cmd
+                 geiser-debug-debugger-quit
+                 git-gutter:revert-hunk
+                 git-gutter:stage-hunk
+                 corfu-doc-toggle))
+      (add-to-list 'frames-only-mode-use-window-functions f))
+    :init
+    (frames-only-mode)))

@@ -23,7 +23,8 @@ rec {
     cli.enable = true;
     emacs = {
       enable = true;
-      native-build = powerful-machine;
+      framesOnlyMode = true;
+      nativeBuild = powerful-machine;
     };
     window-manager.enable = true;
   };
