@@ -210,6 +210,8 @@ in
             gc = "git commit";
             gp = "git push";
             gr = "git restore";
+            sys = "systemctl";
+            sysu = "systemctl --user";
           };
         };
 
