@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   lib,
   ...
 }:
@@ -23,8 +24,19 @@ in
   };
 
   config = mkIf cfg.enable {
+    # To enable screensharing in Firefox
+    xdg.portal = {
+      enable = true;
+      config.common.default = "*";
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+        xdg-desktop-portal-gtk
+      ];
+    };
+
     programs.firefox = {
       enable = true;
+      package = pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true; }) { };
       policies = {
         DisableTelemetry = true;
         DisableFirefoxStudies = true;

@@ -75,6 +75,11 @@ in
         procs
         ripgrep
 
+        # To use graphical wayland applications over ssh
+        ## 1. Ensure `waypipe` is installed on both client and server
+        ## 2. From client: `waypipe ssh <user>@<host> <command>`
+        waypipe
+
         ((vim_configurable.override { }).customize {
           name = "vim";
           vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
