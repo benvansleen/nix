@@ -3,7 +3,7 @@
   pkgs,
   lib,
   ...
-}@inputs:
+}:
 
 let
   inherit (lib) mkIf;
@@ -15,14 +15,11 @@ lib.mkUser {
   inherit user;
   enable = mkIf config.modules.system.home-manager.enable;
   extraHomeModules = [
-    (import ./home.nix (
-      inputs
-      // {
-        inherit user;
-        inherit (config) machine;
-        directory = home-dir;
-      }
-    ))
+    (import ./home.nix {
+      inherit user;
+      systemConfig = config;
+      directory = home-dir;
+    })
   ];
   extraConfig = {
     sops.secrets = if-using-sops {

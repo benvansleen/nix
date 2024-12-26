@@ -1,44 +1,69 @@
+{ home-dir, systemConfig }:
 { lib, ... }@inputs:
 
 let
-  inherit (inputs.lib) mkIf;
-  inherit (inputs.config.modules.system) impermanence;
-  inherit (inputs.home-dir)
+  inherit (lib) mkIf mkOption types;
+  inherit (systemConfig.modules.system) impermanence;
+  cfg = inputs.config.impermanence;
+
+  inherit (home-dir)
     root
     config
     data
     cache
     ;
-
-  persistFiles = [
-    "${data}/zsh/history"
-    ".ssh/known_hosts"
-  ];
 in
 {
-  home.persistence."${impermanence.persistRoot}${root}" = mkIf impermanence.enable {
-    allowOther = true;
-    directories = [
-      "${config}/nix"
-      "${config}/emacs/var"
-      "Code"
-      "Documents"
-      "Downloads"
-      "Pictures"
-      "${data}/atuin"
-      # For firefox-related data
-      ".mozilla"
-      "${cache}/mozilla"
-    ];
-    files = persistFiles;
+  options.impermanence = {
+    persistDir = mkOption {
+      type = types.str;
+      default = "${impermanence.persistRoot}${root}";
+      description = "Where to persist files";
+    };
+
+    persistedFiles = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "Files to persist";
+    };
+
+    persistedDirectories = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "Directories to persist";
+    };
   };
 
-  home.activation."rm-persisted-files" = mkIf impermanence.enable (
-    lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
-      for f in ${toString persistFiles}; do
-        echo "Removing $f"
-        rm $f || true
-      done
-    ''
-  );
+  config =
+    let
+      replace-home-dirs =
+        with builtins;
+        map (
+          dir: replaceStrings [ "@config@" "@data@" "@cache@" ] [ "${config}" "${data}" "${cache}" ] dir
+        );
+      persistedFiles = replace-home-dirs cfg.persistedFiles;
+      persistedDirectories = replace-home-dirs cfg.persistedDirectories;
+    in
+    {
+      home.persistence.${cfg.persistDir} = mkIf impermanence.enable {
+        allowOther = true;
+        directories = [
+          "${config}/nix"
+          "Code"
+          "Documents"
+          "Downloads"
+          "Pictures"
+        ] ++ persistedDirectories;
+        files = [ ".ssh/known_hosts" ] ++ persistedFiles;
+      };
+
+      home.activation."rm-persisted-files" = mkIf impermanence.enable (
+        lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
+          for f in ${toString inputs.config.home.persistence.${cfg.persistDir}.files}; do
+              echo "Removing $f"
+              rm $f || true
+          done
+        ''
+      );
+    };
 }

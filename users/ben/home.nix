@@ -1,12 +1,15 @@
 {
   user,
-  machine,
+  systemConfig,
   directory,
+}:
+{
   pkgs,
   ...
-}@inputs:
+}:
 
 let
+  inherit (systemConfig) machine;
   home-dir = {
     root = directory;
     config = ".config";
@@ -17,7 +20,7 @@ let
 in
 {
   imports = [
-    (import ./impermanence.nix (inputs // { inherit home-dir; }))
+    (import ./impermanence.nix { inherit home-dir systemConfig; })
     ./stylix.nix
     ./etc
   ];

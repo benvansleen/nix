@@ -7,6 +7,7 @@
 
 let
   inherit (lib) mkIf;
+  flake = "${config.xdg.configHome}/nix";
 in
 {
   config.programs.zsh = {
@@ -14,11 +15,12 @@ in
       # by default, nixpkgs#<pkg> is a zsh glob pattern
       nix = "noglob nix";
 
+      "nh search" = "nh search --flake ${flake}";
       os-rebuild-test = ''
-        ${pkgs.nh}/bin/nh os test ${config.xdg.configHome}/nix
+        ${pkgs.nh}/bin/nh os test ${flake}
       '';
       os-rebuild = ''
-        ${pkgs.nh}/bin/nh os switch ${config.xdg.configHome}/nix
+        ${pkgs.nh}/bin/nh os switch ${flake}
       '';
 
       cd = mkIf config.programs.zoxide.enable "z";

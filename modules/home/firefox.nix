@@ -14,6 +14,11 @@ in
   };
 
   config = mkIf cfg.enable {
+    impermanence.persistedDirectories = [
+      ".mozilla"
+      "@cache@/mozilla"
+    ];
+
     programs.firefox = {
       enable = true;
       profiles = {

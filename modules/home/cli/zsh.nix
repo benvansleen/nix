@@ -17,6 +17,8 @@ in
   config = mkIf cfg.enable {
     modules.home.cli.starship.enable = mkDefault true;
 
+    impermanence.persistedFiles = [ "@data@/zsh/history" ];
+
     programs = {
       atuin = {
         enable = true;
