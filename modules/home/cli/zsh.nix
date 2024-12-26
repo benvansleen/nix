@@ -67,16 +67,6 @@ in
         };
 
         plugins = [
-          # {
-          # 	name = "zsh-vi-mode";
-          # 	src = pkgs.fetchFromGitHub {
-          # 	  repo = "zsh-vi-mode";
-          # 	  owner = "jeffreytse";
-          # 	  rev = "v0.11.0";
-          # 	  hash = "sha256-xbchXJTFWeABTwq6h4KWLh+EvydDrDzcY9AQVK65RS8=";
-          # 	};
-          # }
-
           {
             name = "fzf-tab-completion";
             file = "zsh/fzf-zsh-completion.sh";
@@ -133,6 +123,22 @@ in
           ZVM_LAZY_KEYBINDINGS=false
 
           bindkey -M viins jj vi-cmd-mode
+
+          # Change cursor shape for different vi modes.
+          function zle-keymap-select {
+            if [[ ''${KEYMAP} == vicmd ]] ||
+               [[ ''$1 = 'block' ]]; then
+              echo -ne '\e[1 q'
+
+            elif [[ ''${KEYMAP} == main ]] ||
+                 [[ ''${KEYMAP} == viins ]] ||
+                 [[ ''${KEYMAP} = "" ]] ||
+                 [[ ''$1 = 'beam' ]]; then
+              echo -ne '\e[5 q'
+            fi
+            starship_zle-keymap-select
+          }
+          zle -N zle-keymap-select
         '';
 
         initExtra = ''
@@ -181,6 +187,9 @@ in
           setopt nomatch
           setopt menucomplete
           setopt interactivecomments
+
+          # Use beam shape cursor on startup.
+          echo -ne '\e[5 q'
         '';
 
         loginExtra = ''
