@@ -1,10 +1,7 @@
-{ ... }:
+{ lib, ... }:
 
-{
-  imports = [
-    ./system.nix
-  ];
-
+lib.importAll ./.
+// {
   config.machine = {
     name = "amd";
     powerful = true;

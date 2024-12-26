@@ -1,22 +1,10 @@
 {
   pkgs,
   lib,
-  nixos-facter-modules,
-  disko,
   ...
 }:
 
 {
-  imports = [
-    nixos-facter-modules.nixosModules.facter
-    {
-      config.facter.reportPath = ./facter.json;
-    }
-
-    disko.nixosModules.disko
-    ./disko-config.nix
-  ];
-
   config = {
     modules.system.impermanence = {
       enable = true;
