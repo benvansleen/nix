@@ -39,6 +39,10 @@ in
           "browser.newtabpage.activity-stream.showSponsored" = lock-false;
           "browser.newtabpage.activity-stream.system.showSponsored" = lock-false;
           "browser.newtabpage.activity-stream.showSponsoredTopSites" = lock-false;
+
+          # Disable Alt key opening the menu
+          "ui.key.menuAccessKey" = 17; # 18 is ALT
+          "ui.key.menuAccessKeyFocuses" = false;
         };
 
         ExtensionSettings = {
