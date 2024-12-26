@@ -307,6 +307,9 @@
 (use-package magit
   :bind (:map evil-normal-state-map
 			  ("SPC SPC g" . magit)))
+(use-package magit-delta
+  :hook (magit-mode . magit-delta-mode))
+
 (use-package git-gutter
   :hook (prog-mode . git-gutter-mode)
   :config
