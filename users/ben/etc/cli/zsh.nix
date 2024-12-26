@@ -21,6 +21,7 @@ in
         ${pkgs.nh}/bin/nh os switch ${config.xdg.configHome}/nix
       '';
 
+      cd = mkIf config.programs.zoxide.enable "z";
       htop = "${pkgs.bottom}/bin/btm -b";
       ps = "${pkgs.procs}/bin/procs";
       grep = "${pkgs.ripgrep}/bin/rg";

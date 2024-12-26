@@ -43,6 +43,11 @@ in
 
       starship.enableZshIntegration = mkIf config.modules.home.cli.starship.enable true;
 
+      zoxide = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+
       zsh = {
         enable = true;
         autocd = true;
