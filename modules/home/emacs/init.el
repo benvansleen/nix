@@ -43,17 +43,6 @@
   (setq which-key-idle-delay 0.5)
   (which-key-mode))
 
-(add-to-list 'default-frame-alist '(alpha-background . 92))
-(defun my/toggle-opacity ()
-  (interactive)
-  (let* ((cur-frame (current-frame))
-         (cur-val (frame-parameter cur-frame 'alpha-background)))
-    (set-frame-parameter
-     cur-frame 'alpha-background
-     (if (= cur-val 100)
-         (alist-get 'alpha-background default-frame-alist)
-       100))))
-
 (use-package smart-cursor-color
   :init
   (smart-cursor-color-mode))
