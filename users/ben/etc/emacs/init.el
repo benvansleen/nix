@@ -36,6 +36,9 @@
 (setq split-width-threshold 100) ;; prefer horizontal split
 (setq display-buffer-reuse-frames t)
 
+(add-to-list 'auto-mode-alist
+             '("\\.ts\\'" . typescript-ts-mode))
+
 (use-package which-key
   :ensure nil
   :init
@@ -281,6 +284,9 @@
 		xref-show-xrefs-function #'consult-xref
 		xref-show-definitions-function #'consult-xref))
 
+(use-package direnv
+  :init
+  (direnv-mode))
 
 (use-package project
   :ensure nil
@@ -301,6 +307,13 @@
 		   (list #'project-find-file "Find file" "f")
 		   (list open-consult-ripgrep-in-project-root "Find word" "w")
 		   (list #'project-eshell "Eshell" "e")))))
+
+(use-package fancy-compilation
+  :init
+  (setq fancy-compilation-override-colors nil
+        fancy-compilation-quiet-prelude nil
+        fancy-compilation-quiet-prolog nil)
+  (fancy-compilation-mode))
 
 
 (use-package magit
@@ -360,7 +373,8 @@
 			  ("SPC en" . flymake-goto-next-error)
 			  ("SPC ep" . flymake-goto-prev-error))
 
-  :hook ((nix-ts-mode . eglot-ensure))
+  :hook ((nix-ts-mode . eglot-ensure)
+         (typescript-ts-mode . eglot-ensure))
   :config
   (add-hook 'eglot-managed-mode-hook
 			#'flymake-mode)
