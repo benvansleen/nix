@@ -6,6 +6,7 @@ _:
     ".envrc"
     "*.el"
     "*.sops*"
+    "*.png"
   ];
 
   programs = {
