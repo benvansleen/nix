@@ -9,6 +9,25 @@ let
   inherit (lib) mkIf mkEnableOption;
   cfg = config.modules.home.emacs;
 
+  init-el =
+    config.programs.emacs.extraConfig
+    + lib.optionalString cfg.framesOnlyMode ''
+      (use-package frames-only-mode
+        :config
+        (dolist (f '(embark-act
+                     vterm-toggle
+                     org-latex-export-to-pdf
+                     org-fragtog--post-cmd
+                     geiser-debug-debugger-quit
+                     git-gutter:revert-hunk
+                     git-gutter:stage-hunk
+                     corfu-doc-toggle))
+          (add-to-list 'frames-only-mode-use-window-functions f))
+        :init
+        (frames-only-mode))
+    ''
+    + (builtins.readFile ./init.el);
+
   emacs-pkg = pkgs.emacs-pgtk;
   emacs = pkgs.emacsWithPackagesFromUsePackage {
     package =
@@ -23,18 +42,19 @@ let
         })
       else
         emacs-pkg;
-    config = ./init.el;
-    defaultInitFile = pkgs.substituteAll {
-      name = "default.el";
-      src = ./init.el;
-      inherit (cfg) framesOnlyMode;
-    };
+    config = init-el;
+    defaultInitFile = true;
     alwaysEnsure = true;
     alwaysTangle = true;
     extraEmacsPackages =
-      epkgs: with epkgs; [
-        treesit-grammars.with-all-grammars
-      ];
+      epkgs:
+      with epkgs;
+      (
+        [
+          treesit-grammars.with-all-grammars
+        ]
+        ++ (config.programs.emacs.extraPackages epkgs)
+      );
   };
 in
 {
@@ -56,10 +76,7 @@ in
       package = emacs;
       defaultEditor = true;
       socketActivation.enable = true;
-      client = {
-        enable = true;
-        arguments = [ "-nw" ];
-      };
+      client.enable = true;
     };
 
   };

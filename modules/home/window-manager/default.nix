@@ -30,25 +30,6 @@ lib.importAll ./.
       ];
     };
     services = {
-      hyprpaper = {
-        enable = true;
-        settings =
-          let
-            wallpaper = ./pensacola-beach-dimmed.png;
-            wallpaper' = builtins.toString wallpaper;
-          in
-          {
-            ipc = "off";
-            splash = false;
-
-            preload = [
-              wallpaper'
-            ];
-            wallpaper = [
-              ", ${wallpaper'}"
-            ];
-          };
-      };
       gammastep = {
         enable = true;
         provider = "manual";

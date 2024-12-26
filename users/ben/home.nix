@@ -1,7 +1,6 @@
 {
   user,
   machine,
-  config,
   directory,
   pkgs,
   ...
@@ -102,6 +101,19 @@ in
           display = "side-by-side";
           background = "dark";
         };
+      };
+    };
+
+    stylix = {
+      enable = true;
+      image = ../../modules/home/window-manager/pensacola-beach-dimmed.png;
+      autoEnable = true;
+      targets.emacs.enable = true;
+      fonts.sizes = {
+        applications = 12;
+        desktop = 12;
+        popups = 12;
+        terminal = 12;
       };
     };
 

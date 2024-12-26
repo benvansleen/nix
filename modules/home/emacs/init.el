@@ -7,7 +7,12 @@
   :init
   (require 'no-littering))
 
-(set-face-attribute 'default nil :height 130)
+(defun remove-fringe ()
+  (set-face-attribute 'fringe nil :background nil))
+
+(remove-fringe)
+(add-hook 'server-after-make-frame-hook
+          #'remove-fringe)
 
 (setq create-lockfiles nil)
 (global-auto-revert-mode)
@@ -49,6 +54,9 @@
          (alist-get 'alpha-background default-frame-alist)
        100))))
 
+(use-package smart-cursor-color
+  :init
+  (smart-cursor-color-mode))
 
 (use-package ef-themes
   ;; :init
@@ -56,35 +64,10 @@
   )
 
 (use-package gruvbox-theme
-  :init
-  (load-theme 'gruvbox-dark-hard t)
+  ;; :init
+  ;; (load-theme 'gruvbox-dark-hard t)
   )
 
-;; (use-package mixed-pitch
-;;   :hook ((text-mode . mixed-pitch-mode))
-;;   :init
-;;   (defun my/set-fonts ()
-;;       (let ((fixed "Hack")
-;;             (variable "Iosevka")
-;;             (font-size 128))
-;;         (set-face-attribute 'default nil
-;;                             :font fixed
-;;                             :height font-size)
-;;         (set-face-attribute 'fixed-pitch nil
-;;                             :font fixed
-;;                             :height font-size)
-;;         (set-face-attribute 'variable-pitch
-;;                             ;; :font variable
-;;                             :font fixed
-;;                             :height font-size)
-;;         ))
-;;   (if (daemonp)
-;;       (add-hook 'after-make-frame-functions
-;;                 (lambda (frame)
-;;                   (with-selected-frame frame
-;;                     (my/set-fonts))))
-;;     (my/set-fonts))
-;;   )
 
 (use-package olivetti
   :init
@@ -428,21 +411,4 @@
   (add-to-list 'copilot-indentation-alist
                '(minibuffer-mode 0))
   (add-to-list 'copilot-indentation-alist
-               '(nix-ts-mode 2))
-  )
-
-
-(when @framesOnlyMode@
-  (use-package frames-only-mode
-    :config
-    (dolist (f '(embark-act
-                 vterm-toggle
-                 org-latex-export-to-pdf
-                 org-fragtog--post-cmd
-                 geiser-debug-debugger-quit
-                 git-gutter:revert-hunk
-                 git-gutter:stage-hunk
-                 corfu-doc-toggle))
-      (add-to-list 'frames-only-mode-use-window-functions f))
-    :init
-    (frames-only-mode)))
+               '(nix-ts-mode 2)))

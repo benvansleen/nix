@@ -34,9 +34,10 @@ in
   config = {
     modules.system = {
       display-manager.enable = mkDefault true;
-      fonts.enable = mkDefault true;
+      fonts.enable = mkDefault false;
       home-manager.enable = mkDefault true;
       sops.enable = mkDefault true;
+      stylix.enable = mkDefault true;
     };
 
     nix = {

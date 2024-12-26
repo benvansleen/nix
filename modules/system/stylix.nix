@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   lib,
   stylix,
   ...
@@ -19,6 +20,27 @@ in
   ];
 
   config = mkIf cfg.enable {
-    stylix.enable = true;
+    stylix = {
+      enable = true;
+      autoEnable = true;
+      homeManagerIntegration.autoImport = true;
+      image = ../home/window-manager/pensacola-beach-dimmed.png;
+      polarity = "dark";
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
+      fonts = with pkgs; {
+        serif = {
+          package = iosevka;
+          name = "Iosevka Etoile";
+        };
+        sansSerif = {
+          package = fira-code-nerdfont;
+          name = "Fira Code";
+        };
+        monospace = {
+          package = hack-font;
+          name = "Hack";
+        };
+      };
+    };
   };
 }

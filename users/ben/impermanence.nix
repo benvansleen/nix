@@ -29,7 +29,7 @@ in
     lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
       for f in ${toString persistFiles}; do
         echo "Removing $f"
-        rm $f
+        rm $f || true
       done
     ''
   );
