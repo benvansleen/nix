@@ -30,7 +30,7 @@ lib.importAll ./.
         enable = true;
         bindings = { };
         extraConfig = ''
-            set editing-mode vi
+          set editing-mode vi
           set keymap vi-command
           set bell-style none
           $if mode=vi
@@ -47,30 +47,11 @@ lib.importAll ./.
         '';
       };
 
-      broot = {
-        enable = true;
-        settings = {
-          modal = true;
-          verbs = [
-            {
-              key = ";";
-              execution = ":mode_input";
-            }
-            {
-              key = "q";
-              execution = ":quit";
-            }
-          ];
-        };
-      };
+      broot.enable = true;
 
       direnv = {
         enable = true;
         nix-direnv.enable = true;
-        config = {
-          global.hide_env_diff = true;
-          whitelist.prefix = [ "~/.config/nix" ];
-        };
       };
     };
   };

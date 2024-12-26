@@ -25,7 +25,7 @@ lib.importAll ./.
 
     wayland.windowManager.hyprland.settings = {
       exec-once = lib.map mkUwsmService [
-        "hyprpaper"
+        "hyprpaper" # Enabled by UWSM + stylix
         "gammastep"
       ];
     };
