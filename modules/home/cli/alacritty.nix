@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   inherit (lib) mkIf mkEnableOption;
@@ -10,6 +15,12 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Create `xterm` binary for `wofi` to launch cli apps
+    home.packages = [
+      (pkgs.writeShellScriptBin "xterm" ''
+        ${pkgs.alacritty}/bin/alacritty "$@"
+      '')
+    ];
     programs.alacritty = {
       enable = true;
       settings = {

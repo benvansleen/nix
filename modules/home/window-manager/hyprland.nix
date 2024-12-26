@@ -117,6 +117,8 @@ in
           "$mainMod SHIFT, 8, movetoworkspacesilent, 8"
           "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
           "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
+
+          "$mainMod, D, exec, ${pkgs.wofi}/bin/wofi --show drun"
         ];
 
         # Move/resize windows with mainMod + LMB/RMB and dragging
@@ -127,10 +129,7 @@ in
 
         input = {
           kb_layout = "us";
-          # kb_variant = null;
-          # kb_model = null;
           kb_options = "ctrl:nocaps";
-          # kb_rules = null;
           repeat_rate = 30;
           repeat_delay = 250;
           numlock_by_default = true;
@@ -162,8 +161,8 @@ in
         };
 
         decoration = {
-          active_opacity = 0.75;
-          inactive_opacity = 0.60;
+          active_opacity = 0.9;
+          inactive_opacity = 0.75;
           fullscreen_opacity = 1.0;
           dim_inactive = false;
           dim_strength = 0.1;
