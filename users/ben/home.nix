@@ -18,6 +18,7 @@ in
 {
   imports = [
     (import ./impermanence.nix (inputs // { inherit home-dir; }))
+    ./stylix.nix
     ./etc
   ];
 
@@ -71,53 +72,11 @@ in
       };
 
     programs = {
-      bottom = {
-        enable = true;
-        settings = {
-          styles.theme = "gruvbox";
-          tree = true;
-          enable_gpu = true;
-          processes.columns = [
-            "PID"
-            "Name"
-            "Mem%"
-            "CPU%"
-            "GPU%"
-            "User"
-            "State"
-            "R/s"
-            "W/s"
-            "T.Read"
-            "T.Write"
-          ];
-        };
-      };
+      bottom.enable = true;
       git = {
         enable = true;
         userName = user;
         userEmail = "benvansleen@gmail.com";
-        extraConfig = {
-          init.defaultBranch = "master";
-        };
-        difftastic = {
-          enable = true;
-          color = "auto";
-          display = "side-by-side";
-          background = "dark";
-        };
-      };
-    };
-
-    stylix = {
-      enable = true;
-      autoEnable = true;
-      image = ./etc/wallpapers/pensacola-beach-dimmed.png;
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
-      fonts.sizes = {
-        applications = 12;
-        desktop = 12;
-        popups = 12;
-        terminal = 12;
       };
     };
 
