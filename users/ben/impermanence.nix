@@ -3,7 +3,12 @@
 let
   inherit (inputs.lib) mkIf;
   inherit (inputs.config.modules.system) impermanence;
-  inherit (inputs.home-dir) root config data;
+  inherit (inputs.home-dir)
+    root
+    config
+    data
+    cache
+    ;
 
   persistFiles = [
     "${data}/zsh/history"
@@ -21,7 +26,9 @@ in
       "Downloads"
       "Pictures"
       "${data}/atuin"
-      ".mozilla" # For firefox-related data
+      # For firefox-related data
+      ".mozilla"
+      "${cache}/mozilla"
     ];
     files = persistFiles;
   };

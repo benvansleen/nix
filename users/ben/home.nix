@@ -12,6 +12,7 @@ let
     config = ".config";
     data = ".local/share";
     state = ".local/state";
+    cache = ".cache";
   };
 in
 {
