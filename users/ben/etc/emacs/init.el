@@ -24,7 +24,6 @@
       backup-directory-alist `(("." . ,cache-dir)))
 (setopt use-short-answers t)
 (setq ring-bell-function 'ignore)
-(set-face-attribute 'default nil :height 150)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
