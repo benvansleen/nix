@@ -34,6 +34,7 @@ in
   config = {
     modules.system = {
       display-manager.enable = mkDefault true;
+      firefox.enable = mkDefault true;
       fonts.enable = mkDefault false;
       home-manager.enable = mkDefault true;
       sops.enable = mkDefault true;

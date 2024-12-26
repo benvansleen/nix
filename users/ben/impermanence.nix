@@ -21,6 +21,7 @@ in
       "Downloads"
       "Pictures"
       "${data}/atuin"
+      ".mozilla" # For firefox-related data
     ];
     files = persistFiles;
   };

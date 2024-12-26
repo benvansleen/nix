@@ -27,6 +27,7 @@ in
         framesOnlyMode = true;
         nativeBuild = machine.powerful;
       };
+      firefox.enable = true;
       window-manager.enable = true;
     };
 
