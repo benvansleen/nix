@@ -18,6 +18,7 @@ in
 {
   imports = [
     (import ./impermanence.nix (inputs // { inherit home-dir; }))
+    ./etc
   ];
 
   config = {
@@ -25,6 +26,7 @@ in
       cli.enable = true;
       emacs = {
         enable = true;
+        init-el = ./etc/emacs/init.el;
         framesOnlyMode = true;
         nativeBuild = machine.powerful;
       };
@@ -108,9 +110,9 @@ in
 
     stylix = {
       enable = true;
-      image = ../../modules/home/window-manager/pensacola-beach-dimmed.png;
       autoEnable = true;
-      targets.emacs.enable = true;
+      image = ./etc/wallpapers/pensacola-beach-dimmed.png;
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
       fonts.sizes = {
         applications = 12;
         desktop = 12;

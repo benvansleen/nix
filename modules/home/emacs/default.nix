@@ -6,7 +6,12 @@
 }:
 
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib)
+    mkIf
+    mkEnableOption
+    mkOption
+    types
+    ;
   cfg = config.modules.home.emacs;
 
   init-el =
@@ -26,7 +31,7 @@ let
         :init
         (frames-only-mode))
     ''
-    + (builtins.readFile ./init.el);
+    + (builtins.readFile cfg.init-el);
 
   emacs-pkg = pkgs.emacs-pgtk;
   emacs = pkgs.emacsWithPackagesFromUsePackage {
@@ -61,6 +66,10 @@ in
 
   options.modules.home.emacs = {
     enable = mkEnableOption "emacs";
+    init-el = mkOption {
+      type = types.path;
+      description = "emacs init.el configuration";
+    };
     nativeBuild = mkEnableOption "emacs with native build flags";
     framesOnlyMode = mkEnableOption "emacs with frames-only-mode";
   };
