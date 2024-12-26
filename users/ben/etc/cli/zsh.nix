@@ -123,6 +123,9 @@ in
 
       # Use beam shape cursor on startup.
       echo -ne '\e[5 q'
+      preexec() {
+          echo -ne '\e[5 q'
+      }
     '';
 
   };
