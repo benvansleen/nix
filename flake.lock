@@ -233,6 +233,7 @@
       },
       "original": {
         "owner": "ghostty-org",
+        "ref": "main",
         "repo": "ghostty",
         "type": "github"
       }
