@@ -46,7 +46,7 @@
       disabled = false;
       heuristic = false;
       symbol = if config.modules.home.cli.ghostty.enable then "" else "❄️ ";
-      format = ''[\[$symbolnix shell\]]($style) '';
+      format = ''[\[($symbol)nix shell\]]($style) '';
       style = "dimmed blue";
     };
     format = lib.concatStrings [

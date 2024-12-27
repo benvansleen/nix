@@ -4,6 +4,7 @@
   config.modules.home.cli.ghostty = {
     enable = true;
     settings = {
+      useStylixTheme = true;
       options = {
         # Prevent "Xc x Yr" popup on each new surface
         resize-overlay = "never";

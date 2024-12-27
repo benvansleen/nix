@@ -414,3 +414,5 @@
                '(minibuffer-mode 0))
   (add-to-list 'copilot-indentation-alist
                '(nix-ts-mode 2)))
+
+(use-package rainbow-mode)
