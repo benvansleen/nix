@@ -4,6 +4,7 @@
   pkgs-unfree,
   lib,
   home-manager,
+  nix-index-database,
   ...
 }:
 
@@ -26,6 +27,7 @@ in
       useUserPackages = true;
       extraSpecialArgs = {
         pkgs = if config.machine.allowUnfree then pkgs-unfree else pkgs;
+        inherit nix-index-database;
       };
     };
   };

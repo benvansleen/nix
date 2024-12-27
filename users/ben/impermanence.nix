@@ -11,6 +11,7 @@ let
     config
     data
     cache
+    state
     ;
 in
 {
@@ -39,7 +40,11 @@ in
       replace-home-dirs =
         with builtins;
         map (
-          dir: replaceStrings [ "@config@" "@data@" "@cache@" ] [ "${config}" "${data}" "${cache}" ] dir
+          dir:
+          replaceStrings
+            [ "@config@" "@data@" "@cache@" "@state@" ]
+            [ "${config}" "${data}" "${cache}" "${state}" ]
+            dir
         );
       persistedFiles = replace-home-dirs cfg.persistedFiles;
       persistedDirectories = replace-home-dirs cfg.persistedDirectories;

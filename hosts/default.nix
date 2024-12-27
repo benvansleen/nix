@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  nix-index-database,
   nixpkgs,
   ...
 }:
@@ -17,10 +16,6 @@ let
     ;
 in
 {
-  imports = [
-    nix-index-database.nixosModules.nix-index
-  ];
-
   options.machine = {
     name = mkOption {
       type = types.str;
@@ -105,15 +100,8 @@ in
 
     networking.hostName = config.machine.name;
 
-    programs = {
-      command-not-found.enable = false;
-      bash.interactiveShellInit = ''
-        source ${pkgs.nix-index}/etc/profile.d/command-not-found.sh
-      '';
-
-      # Allow home.persistence.allowOther
-      fuse.userAllowOther = mkIf config.modules.system.impermanence.enable true;
-    };
+    # Allow home.persistence.allowOther
+    programs.fuse.userAllowOther = mkIf config.modules.system.impermanence.enable true;
 
     security = {
       sudo = {
