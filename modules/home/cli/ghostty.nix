@@ -80,7 +80,8 @@ in
         ''
       );
       file."${ghostty-config}/themes/stylix" = mkIf cfg.settings.useStylixTheme {
-        text = let
+        text =
+          let
             importYaml =
               file:
               builtins.fromJSON (
@@ -103,12 +104,12 @@ in
             palette = 4=#${theme.base0B}
             palette = 5=#${theme.base0C}
             palette = 6=#${theme.base0D}
-            palette = 7=#${theme.base0E}
+            palette = 7=#${theme.base04}
             palette = 8=#${theme.base0F}
             palette = 9=#${theme.base09}
             palette = 10=#${theme.base02}
             palette = 11=#${theme.base03}
-            palette = 12=#${theme.base04}
+            palette = 12=#${theme.base0E}
             palette = 13=#${theme.base05}
             palette = 14=#${theme.base06}
             palette = 15=#${theme.base07}
