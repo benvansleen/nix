@@ -38,8 +38,8 @@ in
 
     "$mainMod" = "SUPER";
     bind = [
-      # "$mainMod, Return, exec, ~/.config/guix/etc/sway/alacritty"
-      "$mainMod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
+      # "$mainMod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
+      "$mainMod, Return, exec, ${pkgs.ghostty}/bin/ghostty"
       # "$mainMod SHIFT, Return, exec, ~/.config/hypr/special-term"
       "$mainMod, E, exec, emacsclient -c"
       "$mainMod, Q, killactive, "

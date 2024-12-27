@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 
 {
   config.programs.starship.settings = {
@@ -45,8 +45,8 @@
     nix_shell = {
       disabled = false;
       heuristic = false;
-      symbol = "❄️";
-      format = ''[\[$symbol nix shell\]]($style) '';
+      symbol = if config.modules.home.cli.ghostty.enable then "" else "❄️ ";
+      format = ''[\[$symbolnix shell\]]($style) '';
       style = "dimmed blue";
     };
     format = lib.concatStrings [

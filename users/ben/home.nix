@@ -27,7 +27,11 @@ in
 
   config = {
     modules.home = {
-      cli.enable = true;
+      cli = {
+        enable = true;
+        alacritty.enableXtermAlias = false;
+        ghostty.enableXtermAlias = true;
+      };
       emacs = {
         enable = true;
         init-el = ./etc/emacs/init.el;
