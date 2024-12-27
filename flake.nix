@@ -99,6 +99,27 @@
         ];
       };
 
+      homeConfigurations = {
+        "ben@${nixosConfigurations.amd.config.machine.name}" = home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs { inherit overlays; };
+          modules = [
+            inputs.impermanence.homeManagerModules.impermanence
+            inputs.sops-nix.homeManagerModules.sops
+            inputs.stylix.homeManagerModules.stylix
+            ./modules/home
+
+            (import ./users/ben/home.nix {
+              user = "ben";
+              directory = "/home/ben";
+              systemConfig = nixosConfigurations.amd.config;
+            })
+          ];
+          extraSpecialArgs = {
+            inherit lib;
+          };
+        };
+      };
+
       packages = lib.eachSystem (
         { pkgs, ... }:
         rec {
@@ -127,6 +148,7 @@
             mkShell {
               buildInputs = [
                 self.checks.${system}.pre-commit-check.enabledPackages
+                nixfmt-rfc-style
                 sops
               ];
               shellHook =

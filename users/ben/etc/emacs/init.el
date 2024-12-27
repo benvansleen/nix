@@ -379,16 +379,13 @@
   (add-hook 'eglot-managed-mode-hook
 			#'flymake-mode)
 
-  (setq eglot-workspace-configuration
-		'(
-		  ;; https://kokada.dev/blog/make-nixd-module-completion-to-work-anywhere-with-flakes/
-		  (:nixd (:nixpkgs
-				  (:expr "import \"${flake.inputs.nixpkgs}\" { }"))
-				 (:formatting
-				  (:command '("nix" "fmt")))
-				 (:options
-				  ((:nixos (:expr "(let pkgs = import \"${inputs.nixpkgs}\" { }; in (pkgs.lib.evalModules { modules =  (import \"${inputs.nixpkgs}/nixos/modules/module-list.nix\") ++ [ ({...}: { nixpkgs.hostPlatform = builtins.currentSystem;} ) ] ; })).options"))
-				   (:home-manager (:expr "(let pkgs = import \"${inputs.nixpkgs}\" { }; lib = import \"${inputs.home-manager}/modules/lib/stdlib-extended.nix\" pkgs.lib; in (lib.evalModules { modules =  (import \"${inputs.home-manager}/modules/modules.nix\") { inherit lib pkgs; check = false; }; })).options"))))))))
+  (setq-default
+   ;; TODO: remove hardcoded path to flake
+   eglot-workspace-configuration
+   '(:nixd (:nixpkgs (:expr "import (builtins.getFlake \"/home/ben/.config/nix\").inputs.nixpkgs {}")
+            :formatting (:command "nixfmt")
+            :options (:nixos (:expr "(builtins.getFlake \"/home/ben/.config/nix\").nixosConfigurations.amd.options")
+                      :home-manager (:expr "(builtins.getFlake \"/home/ben/.config/nix\").homeConfigurations.\"ben@amd\".options"))))))
 
 
 (use-package nix-ts-mode
