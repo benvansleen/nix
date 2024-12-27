@@ -20,8 +20,23 @@ in
   options.modules.home.cli.ghostty = {
     enable = mkEnableOption "ghostty";
     settings = mkOption {
-      type = types.listOf types.str;
-      default = "";
+      description = "contents of ~/.config/ghostty/config";
+      type =
+        with types;
+        submodule {
+          options = {
+            options = mkOption {
+              description = "attrs of \"option = value\" definitions";
+              type = attrsOf str;
+              default = [ ];
+            };
+            keybinds = mkOption {
+              description = "list of \"trigger = action\" definitions";
+              type = attrsOf str;
+              default = [ ];
+            };
+          };
+        };
     };
     enableXtermAlias = mkEnableOption "enable xterm alias";
   };
@@ -40,7 +55,16 @@ in
           '')
         ]);
 
-      file."${config.xdg.configHome}/ghostty/config".text = lib.concatStringsSep "\n" cfg.settings;
+      file."${config.xdg.configHome}/ghostty/config".text =
+        with lib;
+        let
+          join = concatStringsSep "\n";
+          kvToString = mapAttrsToList (name: value: "${name}=${value}");
+        in
+        join [
+          (join (kvToString cfg.settings.options))
+          (join (map (bind: "keybind = ${bind}") (kvToString cfg.settings.keybinds)))
+        ];
     };
   };
 }
