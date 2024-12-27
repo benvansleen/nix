@@ -1,20 +1,27 @@
+{ config, ... }:
+
 {
   config.modules.home.cli.ghostty = {
     enable = true;
     settings = {
       options = {
+        # Prevent "Xc x Yr" popup on each new surface
+        resize-overlay = "never";
+
+        # No titles or tab bars! Clean window only!
+        window-decoration = "false";
+
         window-padding-x = "20";
         window-padding-y = "10";
 
-        window-decoration = "false";
         window-vsync = "false";
 
-        bold-is-bright = "true";
+        bold-is-bright = "false";
 
         # "font-family = Hack"
-        font-size = "14";
-        font-feature = "+calt +liga +dlig";
         # "theme = gruvbox-material"
+        font-size = toString config.stylix.fonts.sizes.terminal;
+        font-feature = "+calt +liga +dlig";
 
         cursor-invert-fg-bg = "true";
         cursor-opacity = "0.7";
