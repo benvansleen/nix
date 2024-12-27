@@ -2,6 +2,10 @@ inputs:
 
 [
   (import inputs.emacs-overlay)
+
+  (_final: prev: {
+    inherit (inputs.ghostty.packages.${prev.system}) ghostty;
+  })
 ]
 
 #     # Overlay 1: Use `self` and `super` to express

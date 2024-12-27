@@ -50,6 +50,12 @@
       };
     };
 
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
+      inputs.nixpkgs-stable.follows = "nixpkgs";
+      inputs.nixpkgs-unstable.follows = "nixpkgs";
+    };
+
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
