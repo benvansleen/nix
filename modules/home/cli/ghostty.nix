@@ -10,7 +10,6 @@ let
     mkIf
     mkOption
     mkEnableOption
-    mkDefault
     optionals
     types
     ;
@@ -41,22 +40,11 @@ in
           };
         };
     };
-    enableXtermAlias = mkEnableOption "enable xterm alias";
   };
 
   config = mkIf cfg.enable {
-    modules.home.cli.ghostty.enableXtermAlias = mkDefault true;
     home = {
-      packages =
-        with pkgs;
-        [
-          ghostty
-        ]
-        ++ (optionals cfg.enableXtermAlias [
-          (writeShellScriptBin "xterm" ''
-            ${ghostty}/bin/ghostty "$@"
-          '')
-        ]);
+      packages = with pkgs; [ ghostty ];
 
       file."${ghostty-config}/config".text =
         with lib;

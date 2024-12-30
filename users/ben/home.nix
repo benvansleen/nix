@@ -28,8 +28,10 @@ in
     modules.home = {
       cli = {
         enable = true;
-        alacritty.enableXtermAlias = false;
-        ghostty.enableXtermAlias = true;
+        gnome-xterm-compat = {
+          enable = true;
+          term = pkgs.ghostty;
+        };
       };
       emacs = {
         enable = true;

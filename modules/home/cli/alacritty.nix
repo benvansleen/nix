@@ -1,28 +1,19 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }:
 
 let
-  inherit (lib) mkIf mkEnableOption mkDefault;
+  inherit (lib) mkIf mkEnableOption;
   cfg = config.modules.home.cli.alacritty;
 in
 {
   options.modules.home.cli.alacritty = {
     enable = mkEnableOption "terminal";
-    enableXtermAlias = mkEnableOption "enable xterm alias";
   };
 
   config = mkIf cfg.enable {
-    # Create `xterm` binary for `wofi` to launch cli apps
-    modules.home.cli.alacritty.enableXtermAlias = mkDefault true;
-    home.packages = mkIf cfg.enableXtermAlias [
-      (pkgs.writeShellScriptBin "xterm" ''
-        ${pkgs.alacritty}/bin/alacritty "$@"
-      '')
-    ];
     programs.alacritty = {
       enable = true;
       settings = {
