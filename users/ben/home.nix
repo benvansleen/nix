@@ -21,7 +21,6 @@ in
 {
   imports = [
     (import ./impermanence.nix { inherit home-dir; })
-    ./stylix.nix
     ./etc
   ];
 
