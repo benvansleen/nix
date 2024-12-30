@@ -13,7 +13,7 @@ let
     types
     ;
   cfg = config.modules.home.window-manager;
-  mkUwsmService = service: "systemctl --user start --now ${service}.service";
+  startSystemdService = service: "systemctl --user start --now ${service}.service";
 in
 lib.importAll ./.
 // {
@@ -35,16 +35,66 @@ lib.importAll ./.
       };
     };
 
-    # hypridle
-    # hyprlock
+    programs = {
+      hyprlock = {
+        enable = true;
+        settings = {
+          hide_cursor = true;
+          grace = 3;
+          ignore_empty_input = true;
+
+          background = {
+            monitor = "";
+            blur_passes = 3;
+          };
+
+          input-field = {
+            monitor = "";
+            shadow_passes = 3;
+            outline_thickness = 2;
+            hide_input = false;
+            rounding = -1;
+          };
+        };
+      };
+    };
 
     wayland.windowManager.hyprland.settings = {
-      exec-once = lib.map mkUwsmService [
+      exec-once = lib.map startSystemdService [
+        "hypridle"
         "hyprpaper" # Enabled by UWSM + stylix
         "gammastep"
       ];
     };
     services = {
+      hypridle = {
+        enable = true;
+        settings = {
+          general = {
+            lock_cmd = "pidof hyprlock || ${lib.getExe pkgs.hyprlock}";
+            before_sleep_cmd = "loginctl lock-session";
+            after_sleep_cmd = "${pkgs.hyprland}/bin/hyprctl dispatch dpms on";
+            ignore_dbus_inhibit = false;
+            ignore_systemd_inhibit = false;
+          };
+
+          listener = [
+            {
+              timeout = 5 * 60; # 5 minutes
+              on-timeout = "loginctl lock-session";
+            }
+            {
+              timeout = 10 * 60; # 10 minutes
+              on-timeout = "${pkgs.hyprland}/bin/hyprctl dispatch dpms off";
+            }
+            {
+              timeout = 30 * 60; # 30 minutes
+              on-timeout = "systemctl suspend";
+            }
+          ];
+        };
+      };
+
       gammastep = {
         enable = true;
         provider = "manual";
