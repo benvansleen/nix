@@ -7,7 +7,7 @@
 
 let
   inherit (lib) mkIf;
-  user = "ben";
+  user = baseNameOf ./.;
   home-dir = "/home/${user}";
   if-using-sops = mkIf config.modules.system.sops.enable;
 in
