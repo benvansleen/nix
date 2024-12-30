@@ -37,10 +37,6 @@
       };
     };
 
-    hardware.graphics.extraPackages = with pkgs; [
-      amdvlk
-    ];
-
     networking = {
       # nftables.enable = true;
       networkmanager = {
