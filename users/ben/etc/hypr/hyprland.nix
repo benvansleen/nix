@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   systemConfig,
@@ -6,6 +7,7 @@
 }:
 
 let
+  inherit (config.modules.home.window-manager) terminal;
   direction = pkgs.writeShellApplication {
     name = "direction";
     text = ''
@@ -36,6 +38,8 @@ in
   config.wayland.windowManager.hyprland.settings =
     {
       env = [
+        # "AQ_DRM_DEVICES,/dev/dri/card1"
+
         "XDG_CURRENT_DESKTOP,Hyprland"
         "XDG_SESSION_TYPE,wayland"
         "GDK_BACKEND,wayland"
@@ -45,7 +49,7 @@ in
       "$mainMod" = "SUPER";
       bind = [
         # "$mainMod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
-        "$mainMod, Return, exec, ${pkgs.ghostty}/bin/ghostty"
+        "$mainMod, Return, exec, ${lib.getExe terminal}"
         # "$mainMod SHIFT, Return, exec, ~/.config/hypr/special-term"
         "$mainMod, E, exec, emacsclient -c"
         "$mainMod, Q, killactive, "

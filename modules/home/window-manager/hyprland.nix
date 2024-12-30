@@ -5,10 +5,7 @@
 }:
 
 let
-  inherit (lib)
-    mkIf
-    mkEnableOption
-    ;
+  inherit (lib) mkIf mkEnableOption;
   cfg = config.modules.home.window-manager.hyprland;
 
 in

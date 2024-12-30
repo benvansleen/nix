@@ -26,13 +26,7 @@ in
 
   config = {
     modules.home = {
-      cli = {
-        enable = true;
-        gnome-xterm-compat = {
-          enable = true;
-          term = pkgs.ghostty;
-        };
-      };
+      cli.enable = true;
       emacs = {
         enable = true;
         init-el = ./etc/emacs/init.el;
@@ -40,7 +34,10 @@ in
         nativeBuild = machine.powerful;
       };
       firefox.enable = true;
-      window-manager.enable = true;
+      window-manager = {
+        enable = true;
+        terminal = pkgs.ghostty;
+      };
     };
 
     nix.gc = {

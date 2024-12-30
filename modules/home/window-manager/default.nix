@@ -1,11 +1,17 @@
 {
   config,
+  pkgs,
   lib,
   ...
 }:
 
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib)
+    mkIf
+    mkEnableOption
+    mkOption
+    types
+    ;
   cfg = config.modules.home.window-manager;
   mkUwsmService = service: "systemctl --user start --now ${service}.service";
 in
@@ -13,11 +19,20 @@ lib.importAll ./.
 // {
   options.modules.home.window-manager = {
     enable = mkEnableOption "window-manager";
+    terminal = mkOption {
+      type = types.package;
+      description = "terminal emulator to use";
+      default = pkgs.alacritty;
+    };
   };
 
   config = mkIf cfg.enable {
     modules.home.window-manager = {
       hyprland.enable = true;
+      gnome-xterm-compat = {
+        enable = true;
+        inherit (cfg) terminal;
+      };
     };
 
     # hypridle

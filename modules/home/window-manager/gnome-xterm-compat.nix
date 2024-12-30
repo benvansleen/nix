@@ -12,12 +12,12 @@ let
     mkOption
     types
     ;
-  cfg = config.modules.home.cli.gnome-xterm-compat;
+  cfg = config.modules.home.window-manager.gnome-xterm-compat;
 in
 {
-  options.modules.home.cli.gnome-xterm-compat = {
+  options.modules.home.window-manager.gnome-xterm-compat = {
     enable = mkEnableOption "link terminal emulator to `xterm` for compatibility w/ gnome default launcher (e.g. for launching terminal apps via `wofi drun`)";
-    term = mkOption {
+    terminal = mkOption {
       type = types.package;
       description = "terminal emulator to link to `xterm`";
     };
@@ -26,7 +26,7 @@ in
   config = mkIf cfg.enable {
     home.packages = [
       (pkgs.writeShellScriptBin "xterm" ''
-        ${lib.getExe cfg.term} "$@"
+        ${lib.getExe cfg.terminal} "$@"
       '')
     ];
   };
