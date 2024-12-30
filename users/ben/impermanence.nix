@@ -1,5 +1,5 @@
-{ home-dir, systemConfig }:
-{ lib, ... }@inputs:
+{ home-dir, ... }:
+{ lib, systemConfig, ... }@inputs:
 
 let
   inherit (lib) mkIf mkOption types;

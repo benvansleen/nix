@@ -1,10 +1,10 @@
 {
   user,
-  systemConfig,
   directory,
 }:
 {
   pkgs,
+  systemConfig,
   ...
 }:
 
@@ -20,7 +20,7 @@ let
 in
 {
   imports = [
-    (import ./impermanence.nix { inherit home-dir systemConfig; })
+    (import ./impermanence.nix { inherit home-dir; })
     ./stylix.nix
     ./etc
   ];

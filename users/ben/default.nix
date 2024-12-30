@@ -17,7 +17,6 @@ lib.mkUser {
   extraHomeModules = [
     (import ./home.nix {
       inherit user;
-      systemConfig = config;
       directory = home-dir;
     })
   ];

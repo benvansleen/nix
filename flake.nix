@@ -117,7 +117,6 @@
             (import ./users/ben/home.nix {
               user = "ben";
               directory = "/home/ben";
-              systemConfig = nixosConfigurations.amd.config;
             })
           ];
           extraSpecialArgs = {

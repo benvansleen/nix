@@ -27,6 +27,7 @@ in
       useUserPackages = true;
       extraSpecialArgs = {
         pkgs = if config.machine.allowUnfree then pkgs-unfree else pkgs;
+        systemConfig = config;
         inherit nix-index-database;
       };
     };
