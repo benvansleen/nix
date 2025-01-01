@@ -416,3 +416,27 @@
                '(nix-ts-mode 2)))
 
 (use-package rainbow-mode)
+
+
+(use-package dashboard
+  :bind (:map dashboard-mode-map
+              ("<normal-state> f" . find-file)
+         :map evil-normal-state-map
+              ("SPC d" . dashboard-open))
+  :init
+  (dashboard-setup-startup-hook)
+  (setq dashboard-banner-logo-title "\n\n\n"
+        dashboard-center-content t
+        dashboard-show-shortcuts nil
+        dashboard-items '((projects . 5) (recents . 5))
+        dashboard-set-navigator t
+        ;; dashboard-set-footer nil
+        dashboard-page-separator "\n\n"
+        ;; dashboard-init-info ""
+        initial-buffer-choice (lambda ()
+                                (dashboard-refresh-buffer)
+                                (get-buffer "*dashboard*"))
+
+        ;; Defined in nix `modules.home.emacs.dashboard-img'
+        dashboard-startup-banner my/dashboard-img)
+  )

@@ -7,5 +7,11 @@
     ];
 
     impermanence.persistedDirectories = [ "@config@/emacs/var" ];
+
+    modules.home.emacs = {
+      init-el = ./init.el;
+      framesOnlyMode = true;
+      dashboard-img = ./floating-gnu-flute.png;
+    };
   };
 }

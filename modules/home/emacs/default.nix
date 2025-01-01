@@ -16,6 +16,9 @@ let
 
   init-el =
     config.programs.emacs.extraConfig
+    + ''
+      (defvar my/dashboard-img "${cfg.dashboard-img}")
+    ''
     + lib.optionalString cfg.framesOnlyMode ''
       (use-package frames-only-mode
         :config
@@ -72,6 +75,10 @@ in
     };
     nativeBuild = mkEnableOption "emacs with native build flags";
     framesOnlyMode = mkEnableOption "emacs with frames-only-mode";
+    dashboard-img = mkOption {
+      type = types.path;
+      description = "Path to the image to display in the dashboard";
+    };
   };
 
   config = mkIf cfg.enable {
