@@ -39,6 +39,7 @@
         home-manager.follows = "home-manager";
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
+        flake-compat.follows = "flake-compat";
       };
     };
 
@@ -52,8 +53,20 @@
 
     ghostty = {
       url = "github:ghostty-org/ghostty/main";
-      inputs.nixpkgs-stable.follows = "nixpkgs";
-      inputs.nixpkgs-unstable.follows = "nixpkgs";
+      inputs = {
+        nixpkgs-stable.follows = "nixpkgs";
+        nixpkgs-unstable.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+      };
+    };
+
+    hyprbar = {
+      url = "github:benvansleen/hyprbar";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+        pre-commit-hooks.follows = "pre-commit-hooks";
+      };
     };
 
     nix-index-database = {
@@ -63,14 +76,19 @@
 
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nixpkgs-stable.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-stable.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+      };
     };
 
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    flake-compat.url = "github:edolstra/flake-compat";
   };
 
   outputs =
