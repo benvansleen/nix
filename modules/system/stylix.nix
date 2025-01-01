@@ -23,7 +23,7 @@ in
     stylix = {
       enable = true;
       autoEnable = true;
-      homeManagerIntegration.autoImport = true;
+      homeManagerIntegration.autoImport = false;
       image = ../users/ben/etc/wallpapers/pensacola-beach-dimmed.png;
       polarity = "dark";
       base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";

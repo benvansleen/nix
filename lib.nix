@@ -4,15 +4,28 @@ lib: overlays:
 let
   nixFilesInDir =
     dir:
-    lib.mapAttrsToList (name: _: dir + ("/" + name)) (
-      lib.filterAttrs (
-        name: type:
-        !lib.hasPrefix "." name
-        && (
-          type == "directory" || (type == "regular" && lib.hasSuffix ".nix" name && name != "default.nix")
-        )
-      ) (builtins.readDir dir)
-    );
+    with lib;
+    let
+      allTrue = all id;
+    in
+    pipe dir [
+      builtins.readDir
+      (filterAttrs (
+        name: filetype:
+        allTrue [
+          (!hasPrefix "." name)
+          (
+            (filetype == "directory")
+            || allTrue [
+              (filetype == "regular")
+              (hasSuffix ".nix" name)
+              (name != "default.nix")
+            ]
+          )
+        ]
+      ))
+      (mapAttrsToList (name: _filetype: dir + ("/" + name)))
+    ];
 
   mkPkgs = cfg: import nixpkgs cfg;
 in
@@ -56,20 +69,27 @@ in
       extraHomeModules,
       extraConfig,
     }:
-    (
-      extraConfig
-      // {
-        home-manager = enable {
-          users.${user} = _: {
-            imports = [
-              inputs.impermanence.homeManagerModules.impermanence
-              inputs.sops-nix.homeManagerModules.sops
-              ./modules/home
-            ] ++ extraHomeModules;
-          };
+    let
+      allHomeModules =
+        with lib;
+        pipe inputs [
+          (filterAttrs (_moduleName: module: module ? homeManagerModules))
+          (mapAttrsToList (
+            moduleName:
+            { homeManagerModules, ... }:
+            homeManagerModules.default or homeManagerModules.${moduleName}
+              or homeManagerModules.${head (attrNames homeManagerModules)}
+          ))
+        ];
+    in
+    extraConfig
+    // {
+      home-manager = enable {
+        users.${user} = _: {
+          imports = allHomeModules ++ [ ./modules/home ] ++ extraHomeModules;
         };
-      }
-    );
+      };
+    };
 
   eachSystem =
     f:
