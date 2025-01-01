@@ -1,26 +1,55 @@
 {
   config,
+  pkgs,
   lib,
   ...
 }:
 
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib)
+    mkIf
+    mkEnableOption
+    mkOption
+    types
+    ;
   cfg = config.modules.home.firefox;
 in
 {
   options.modules.home.firefox = {
     enable = mkEnableOption "firefox";
+    browser-pkg = mkOption {
+      type = types.enum (
+        with pkgs;
+        [
+          firefox
+          floorp
+        ]
+      );
+      default = pkgs.firefox;
+      description = "the package to use as the default browser";
+    };
   };
 
   config = mkIf cfg.enable {
     impermanence.persistedDirectories = [
       ".mozilla"
       "@cache@/mozilla"
+
+      ".floorp"
+      "@cache@/floorp"
     ];
+
+    xdg.desktopEntries = {
+      browser = {
+        name = "browser";
+        exec = lib.getExe cfg.browser-pkg;
+        terminal = false;
+      };
+    };
 
     programs.firefox = {
       enable = true;
+      package = cfg.browser-pkg;
       profiles = {
         default = {
           id = 0;

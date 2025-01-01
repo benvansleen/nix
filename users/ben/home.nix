@@ -33,7 +33,10 @@ in
         framesOnlyMode = true;
         nativeBuild = machine.powerful;
       };
-      firefox.enable = true;
+      firefox = {
+        enable = true;
+        browser-pkg = pkgs.floorp;
+      };
       window-manager = {
         enable = true;
         terminal = pkgs.ghostty;
