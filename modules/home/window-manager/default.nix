@@ -60,9 +60,10 @@ lib.importAll ./.
     };
 
     wayland.windowManager.hyprland.settings = {
-      exec-once = lib.map startSystemdService [
+      exec = lib.map startSystemdService [
         "hypridle"
         "hyprpaper" # Enabled by UWSM + stylix
+        "hyprbar"
         "gammastep"
       ];
     };
