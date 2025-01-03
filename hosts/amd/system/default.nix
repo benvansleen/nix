@@ -39,6 +39,7 @@
 
     networking = {
       # nftables.enable = true;
+      firewall.enable = true;
       networkmanager = {
         enable = true;
         # wifi.backend = "iwd";
@@ -71,8 +72,8 @@
         };
       };
 
-      irqbalance.enable = true;
-      thermald.enable = true;
+      irqbalance.enable = false;
+      thermald.enable = false;
     };
 
     # Experimental
