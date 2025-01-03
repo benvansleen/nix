@@ -14,8 +14,6 @@ in
   options.modules.system.containers.enable = mkEnableOption "OCI containerization support";
 
   config = mkIf cfg.enable {
-    # networking.firewall.interfaces.podman1.allowedUDPPorts = [ 53 ];
-
     virtualisation = {
       oci-containers.backend = "podman";
       podman = {
