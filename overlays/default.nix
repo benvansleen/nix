@@ -3,8 +3,8 @@ inputs:
 [
   (import inputs.emacs-overlay)
 
-  (_final: prev: {
-    inherit (inputs.ghostty.packages.${prev.system}) ghostty;
+  (final: _prev: {
+    inherit (inputs.ghostty.packages.${final.system}) ghostty;
   })
 ]
 
