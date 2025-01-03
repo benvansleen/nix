@@ -6,7 +6,7 @@
   ];
 
   config = {
-    impermanence.persistedFiles = [ "@state@/comma-choices" ];
+    modules.home.impermanence.persistedFiles = [ "@state@/comma-choices" ];
 
     programs = {
       nix-index.enable = true;

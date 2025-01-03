@@ -10,7 +10,7 @@
 
 let
   inherit (systemConfig) machine;
-  home-dir = {
+  homeDir = {
     root = directory;
     config = ".config";
     data = ".local/share";
@@ -20,12 +20,21 @@ let
 in
 {
   imports = [
-    (import ./impermanence.nix { inherit home-dir; })
     ./etc
   ];
 
   config = {
     modules.home = {
+      impermanence = {
+        inherit homeDir;
+        persistedDirectories = [
+          "${homeDir.config}/nix"
+          "Code"
+          "Documents"
+          "Downloads"
+          "Pictures"
+        ];
+      };
       cli.enable = true;
       emacs = {
         enable = true;
@@ -51,7 +60,7 @@ in
 
     home = {
       username = user;
-      homeDirectory = home-dir.root;
+      homeDirectory = homeDir.root;
       packages = with pkgs; [
         bandwhich
         bottom
@@ -60,12 +69,12 @@ in
         nixd
       ];
 
-      file.".ssh/config".text = "IdentityFile ${home-dir.root}/.ssh/master";
+      file.".ssh/config".text = "IdentityFile ${homeDir.root}/.ssh/master";
     };
 
     xdg =
       let
-        inherit (home-dir)
+        inherit (homeDir)
           root
           config
           data
@@ -91,10 +100,10 @@ in
     sops = {
       defaultSopsFile = ./secrets.yaml;
       age.sshKeyPaths = [
-        "${home-dir.root}/.ssh/master"
+        "${homeDir.root}/.ssh/master"
       ];
       secrets.github_copilot = {
-        path = "${home-dir.config}/github-copilot/hosts.json";
+        path = "${homeDir.config}/github-copilot/hosts.json";
       };
     };
 

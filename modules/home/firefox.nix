@@ -31,7 +31,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    impermanence.persistedDirectories = [
+    modules.home.impermanence.persistedDirectories = [
       ".mozilla"
       "@cache@/mozilla"
 

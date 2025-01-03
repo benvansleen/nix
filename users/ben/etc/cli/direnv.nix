@@ -1,6 +1,6 @@
 {
   config = {
-    impermanence.persistedDirectories = [ "@data@/direnv" ];
+    modules.home.impermanence.persistedDirectories = [ "@data@/direnv" ];
 
     programs.direnv.config = {
       global.hide_env_diff = true;

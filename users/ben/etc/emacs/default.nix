@@ -6,7 +6,7 @@
       delta # required for `magit-delta`
     ];
 
-    impermanence.persistedDirectories = [ "@config@/emacs/var" ];
+    modules.home.impermanence.persistedDirectories = [ "@config@/emacs/var" ];
 
     modules.home.emacs = {
       init-el = ./init.el;
