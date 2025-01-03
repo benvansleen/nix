@@ -37,7 +37,7 @@
 (setq display-buffer-reuse-frames t)
 
 (add-to-list 'auto-mode-alist
-             '("\\.ts\\'" . typescript-ts-mode))
+             '("\\.tsx?\\'" . typescript-ts-mode))
 
 (use-package which-key
   :ensure nil
