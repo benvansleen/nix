@@ -8,6 +8,9 @@
 
 let
   inherit (config.modules.home.window-manager) terminal;
+  plugin-isEnabled =
+    plugin: lib.elem pkgs.hyprlandPlugins."${plugin}" config.wayland.windowManager.hyprland.plugins;
+
   direction = pkgs.writeShellApplication {
     name = "direction";
     text = ''
@@ -47,70 +50,74 @@ in
       ];
 
       "$mainMod" = "SUPER";
-      bind = [
-        # "$mainMod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
-        "$mainMod, Return, exec, ${lib.getExe terminal}"
-        # "$mainMod SHIFT, Return, exec, ~/.config/hypr/special-term"
-        "$mainMod, E, exec, emacsclient -c"
-        "$mainMod, Q, killactive, "
-        "$mainMod SHIFT, Q, exit, "
-        "$mainMod, F, fullscreen"
-        # "$mainMod SHIFT, F, fakefullscreen"
-        ", XF86Reload, exec, wlogout"
-        ", XF86RFKill, exec, wlogout"
-        "$mainMod SHIFT, E, exec, thunar"
-        "$mainMod SHIFT, SPACE, togglefloating, "
-        # bind = $mainMod, D, exec, wofi --show drun
-        "$mainMod, D, exec, nwggrid -server -o 0.7 -n 3"
-        "$mainMod, P, pseudo, # dwindle"
-        "$mainMod, I, togglesplit, # dwindle"
-        ''$mainMod SHIFT, S, exec, grim -g "''$(slurp)" - | swappy -f -''
-        # "$mainMod, B, exec, ~/.local/bin/eww open-many bar-0 bar-1 bar-2 --toggle"
+      bind =
+        [
+          # "$mainMod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
+          "$mainMod, Return, exec, ${lib.getExe terminal}"
+          # "$mainMod SHIFT, Return, exec, ~/.config/hypr/special-term"
+          "$mainMod, E, exec, emacsclient -c"
+          "$mainMod, Q, killactive, "
+          "$mainMod SHIFT, Q, exit, "
+          "$mainMod, F, fullscreen"
+          # "$mainMod SHIFT, F, fakefullscreen"
+          ", XF86Reload, exec, wlogout"
+          ", XF86RFKill, exec, wlogout"
+          "$mainMod SHIFT, E, exec, thunar"
+          "$mainMod SHIFT, SPACE, togglefloating, "
+          # bind = $mainMod, D, exec, wofi --show drun
+          "$mainMod, D, exec, nwggrid -server -o 0.7 -n 3"
+          "$mainMod, P, pseudo, # dwindle"
+          "$mainMod, I, togglesplit, # dwindle"
+          ''$mainMod SHIFT, S, exec, grim -g "''$(slurp)" - | swappy -f -''
+          # "$mainMod, B, exec, ~/.local/bin/eww open-many bar-0 bar-1 bar-2 --toggle"
 
-        "$mainMod, left, movefocus, l"
-        "$mainMod, right, movefocus, r"
-        "$mainMod, up, movefocus, u"
-        "$mainMod, down, movefocus, d"
-        "$mainMod, h, exec, ${direction-bin} l"
-        "$mainMod, l, exec, ${direction-bin} r"
-        "$mainMod, k, exec, ${direction-bin} u"
-        "$mainMod, j, exec, ${direction-bin} d"
+          "$mainMod, left, movefocus, l"
+          "$mainMod, right, movefocus, r"
+          "$mainMod, up, movefocus, u"
+          "$mainMod, down, movefocus, d"
+          "$mainMod, h, exec, ${direction-bin} l"
+          "$mainMod, l, exec, ${direction-bin} r"
+          "$mainMod, k, exec, ${direction-bin} u"
+          "$mainMod, j, exec, ${direction-bin} d"
 
-        "$mainMod SHIFT, h, movewindow, l"
-        "$mainMod SHIFT, l, movewindow, r"
-        "$mainMod SHIFT, k, movewindow, u"
-        "$mainMod SHIFT, j, movewindow, d"
+          "$mainMod SHIFT, h, movewindow, l"
+          "$mainMod SHIFT, l, movewindow, r"
+          "$mainMod SHIFT, k, movewindow, u"
+          "$mainMod SHIFT, j, movewindow, d"
 
-        "$mainMod, 1, workspace, 1"
-        "$mainMod, 2, workspace, 2"
-        "$mainMod, 3, workspace, 3"
-        "$mainMod, 4, workspace, 4"
-        "$mainMod, 5, workspace, 5"
-        "$mainMod, 6, workspace, 6"
-        "$mainMod, 7, workspace, 7"
-        "$mainMod, 8, workspace, 8"
-        "$mainMod, 9, workspace, 9"
-        "$mainMod, 0, workspace, 10"
-        "$mainMod, TAB, focuscurrentorlast"
-        "$mainMod, minus, togglespecialworkspace"
-        "$mainMod SHIFT, minus, exec, ${special-toggle}"
+          "$mainMod, 1, workspace, 1"
+          "$mainMod, 2, workspace, 2"
+          "$mainMod, 3, workspace, 3"
+          "$mainMod, 4, workspace, 4"
+          "$mainMod, 5, workspace, 5"
+          "$mainMod, 6, workspace, 6"
+          "$mainMod, 7, workspace, 7"
+          "$mainMod, 8, workspace, 8"
+          "$mainMod, 9, workspace, 9"
+          "$mainMod, 0, workspace, 10"
+          "$mainMod, TAB, focuscurrentorlast"
+          "$mainMod, minus, togglespecialworkspace"
+          "$mainMod SHIFT, minus, exec, ${special-toggle}"
 
-        "$mainMod, bracketright, workspace, e+1"
-        "$mainMod, bracketleft, workspace, e-1"
+          "$mainMod, bracketright, workspace, e+1"
+          "$mainMod, bracketleft, workspace, e-1"
 
-        "$mainMod SHIFT, 1, movetoworkspacesilent, 1"
-        "$mainMod SHIFT, 2, movetoworkspacesilent, 2"
-        "$mainMod SHIFT, 3, movetoworkspacesilent, 3"
-        "$mainMod SHIFT, 4, movetoworkspacesilent, 4"
-        "$mainMod SHIFT, 5, movetoworkspacesilent, 5"
-        "$mainMod SHIFT, 6, movetoworkspacesilent, 6"
-        "$mainMod SHIFT, 7, movetoworkspacesilent, 7"
-        "$mainMod SHIFT, 8, movetoworkspacesilent, 8"
-        "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
-        "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
+          "$mainMod SHIFT, 1, movetoworkspacesilent, 1"
+          "$mainMod SHIFT, 2, movetoworkspacesilent, 2"
+          "$mainMod SHIFT, 3, movetoworkspacesilent, 3"
+          "$mainMod SHIFT, 4, movetoworkspacesilent, 4"
+          "$mainMod SHIFT, 5, movetoworkspacesilent, 5"
+          "$mainMod SHIFT, 6, movetoworkspacesilent, 6"
+          "$mainMod SHIFT, 7, movetoworkspacesilent, 7"
+          "$mainMod SHIFT, 8, movetoworkspacesilent, 8"
+          "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
+          "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
 
-        "$mainMod, D, exec, ${pkgs.wofi}/bin/wofi --show drun"
-      ];
+          "$mainMod, D, exec, ${pkgs.wofi}/bin/wofi --show drun"
+        ]
+        ++ lib.optionals (plugin-isEnabled "hyprexpo") [
+          "$mainMod, grave, hyprexpo:expo, toggle"
+        ];
 
       # Move/resize windows with mainMod + LMB/RMB and dragging
       bindm = [
