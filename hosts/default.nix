@@ -100,8 +100,12 @@ in
 
     networking.hostName = config.machine.name;
 
-    # Allow home.persistence.allowOther
-    programs.fuse.userAllowOther = mkIf config.modules.system.impermanence.enable true;
+    programs = {
+      nh.flake = ../.;
+
+      # Allow home.persistence.allowOther
+      fuse.userAllowOther = mkIf config.modules.system.impermanence.enable true;
+    };
 
     security = {
       sudo = {
