@@ -29,7 +29,7 @@ let
 
   mkPkgs = cfg: import nixpkgs cfg;
 in
-{
+rec {
   importAll = dir: { imports = nixFilesInDir dir; };
 
   mkSystem =
@@ -100,4 +100,22 @@ in
         pkgs = nixpkgs.legacyPackages.${system};
       }
     );
+
+  optimizeWithFlag =
+    pkg: flag:
+    pkg.overrideAttrs (old: {
+      NIX_CFLAGS_COMPILE = (old.NIX_CFLAGS_COMPILE or "") + " ${flag}";
+    });
+  optimizeWithFlags = pkg: flags: lib.foldl (pkg: flag: optimizeWithFlag pkg flag) pkg flags;
+  optimizeForThisHost =
+    pkg: extraFlags:
+    optimizeWithFlags pkg (
+      [
+        "-O3"
+        "-march=native"
+        "-fPIC"
+      ]
+      ++ extraFlags
+    );
+  withDebuggingCompiled = pkg: optimizeWithFlag pkg "-DDEBUG";
 }
