@@ -28,6 +28,7 @@ in
 
   config = {
     modules.system = {
+      containers.enable = mkDefault true;
       display-manager.enable = mkDefault true;
       firefox.enable = mkDefault true;
       fonts.enable = mkDefault false;
