@@ -54,33 +54,43 @@ in
     };
 
     persistedFiles = mkOption {
-      type = types.listOf types.str;
+      type = with types; listOf str;
       default = [ ];
       description = "Files to persist";
     };
 
     persistedDirectories = mkOption {
-      type = types.listOf types.str;
+      type =
+        with types;
+        listOf (oneOf [
+          str
+          (attrsOf str)
+        ]);
       default = [ ];
       description = "Directories to persist";
     };
   };
 
   config =
+    with lib;
     let
-      replace-home-dirs =
-        with builtins;
-        map (
-          dir:
-          replaceStrings [ "@config@" "@data@" "@state@" "@cache@" ] (with cfg.homeDir; [
-            "${cfg.homeDir.config}"
-            "${data}"
-            "${state}"
-            "${cache}"
-          ]) dir
-        );
-      files = replace-home-dirs cfg.persistedFiles;
-      directories = replace-home-dirs cfg.persistedDirectories;
+      replace-home-dir = replaceStrings [ "@config@" "@data@" "@state@" "@cache@" ] (
+        with cfg.homeDir;
+        [
+          "${cfg.homeDir.config}"
+          "${data}"
+          "${state}"
+          "${cache}"
+        ]
+      );
+      files = map replace-home-dir cfg.persistedFiles;
+      directories = map (
+        dir:
+        let
+          dir' = if isAttrs dir then dir else { directory = dir; };
+        in
+        dir' // { directory = replace-home-dir dir'.directory; }
+      ) cfg.persistedDirectories;
     in
     mkIf systemUsesImpermanence {
       home.persistence.${cfg.persistDir} = {
@@ -90,10 +100,10 @@ in
       };
 
       home.activation."rm-persisted-files" = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
-          for f in ${toString config.home.persistence.${cfg.persistDir}.files}; do
-              echo "Removing $f"
-              rm $f || true
-          done
-        '';
+        for f in ${toString config.home.persistence.${cfg.persistDir}.files}; do
+            echo "Removing $f"
+            rm $f || true
+        done
+      '';
     };
 }
