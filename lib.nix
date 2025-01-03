@@ -62,6 +62,19 @@ rec {
       }
     );
 
+  allHomeModules =
+    with lib;
+    [ ./modules/home ]
+    ++ (pipe inputs [
+      (filterAttrs (_moduleName: module: module ? homeManagerModules))
+      (mapAttrsToList (
+        moduleName:
+        { homeManagerModules, ... }:
+        homeManagerModules.default or homeManagerModules.${moduleName}
+          or homeManagerModules.${head (attrNames homeManagerModules)}
+      ))
+    ]);
+
   mkUser =
     {
       enable,
@@ -69,24 +82,11 @@ rec {
       extraHomeModules,
       extraConfig,
     }:
-    let
-      allHomeModules =
-        with lib;
-        pipe inputs [
-          (filterAttrs (_moduleName: module: module ? homeManagerModules))
-          (mapAttrsToList (
-            moduleName:
-            { homeManagerModules, ... }:
-            homeManagerModules.default or homeManagerModules.${moduleName}
-              or homeManagerModules.${head (attrNames homeManagerModules)}
-          ))
-        ];
-    in
     extraConfig
     // {
       home-manager = enable {
         users.${user} = _: {
-          imports = allHomeModules ++ [ ./modules/home ] ++ extraHomeModules;
+          imports = allHomeModules ++ extraHomeModules;
         };
       };
     };

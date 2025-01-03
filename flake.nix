@@ -108,7 +108,7 @@
         _final: _prev: home-manager.lib // (import ./lib.nix lib overlays inputs)
       );
     in
-    rec {
+    {
 
       nixosConfigurations = {
         amd = lib.mkSystem "x86_64-linux" [
@@ -123,25 +123,24 @@
         ];
       };
 
-      homeConfigurations = {
-        "ben@${nixosConfigurations.amd.config.machine.name}" = home-manager.lib.homeManagerConfiguration {
-          pkgs = import nixpkgs { inherit overlays; };
-          modules = [
-            inputs.impermanence.homeManagerModules.impermanence
-            inputs.sops-nix.homeManagerModules.sops
-            inputs.stylix.homeManagerModules.stylix
-            ./modules/home
-
-            (import ./users/ben/home.nix {
-              user = "ben";
-              directory = "/home/ben";
-            })
-          ];
-          extraSpecialArgs = {
-            inherit lib;
+      homeConfigurations =
+        let
+          amd = self.nixosConfigurations.amd.config;
+        in
+        {
+          "ben@${amd.machine.name}" = home-manager.lib.homeManagerConfiguration {
+            inherit (amd.home-manager.extraSpecialArgs) pkgs;
+            modules = lib.allHomeModules ++ [
+              (import ./users/ben/home.nix {
+                user = "ben";
+                directory = "/home/ben";
+              })
+            ];
+            extraSpecialArgs = amd.home-manager.extraSpecialArgs // {
+              inherit lib;
+            };
           };
         };
-      };
 
       packages = lib.eachSystem (
         { pkgs, ... }:
@@ -154,10 +153,10 @@
           set-user-password = run.set-password-for pkgs "./secrets/user-password.sops";
           set-root-password = run.set-password-for pkgs "./secrets/root-password.sops";
 
-          iso = nixosConfigurations.iso.config.system.build.isoImage;
+          iso = self.nixosConfigurations.iso.config.system.build.isoImage;
           test-iso = import ./hosts/iso/run.nix {
             inherit pkgs;
-            iso = nixosConfigurations.iso.config.system.build.isoImage;
+            iso = self.nixosConfigurations.iso.config.system.build.isoImage;
           };
 
         }
