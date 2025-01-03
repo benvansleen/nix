@@ -40,14 +40,10 @@ let
   emacs = pkgs.emacsWithPackagesFromUsePackage {
     package =
       if cfg.nativeBuild then
-        emacs-pkg.overrideAttrs (_oldAttrs: {
-          NIX_CFLAGS_COMPILE = lib.concatStringsSep " " [
-            "-O3"
-            "-march=native"
-            "-pipe"
-            "-fomit-frame-pointer"
-          ];
-        })
+        lib.optimizeForThisHost emacs-pkg [
+          "-pipe"
+          "-fomit-frame-pointer"
+        ]
       else
         emacs-pkg;
     config = init-el;
