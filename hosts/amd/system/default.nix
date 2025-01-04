@@ -10,6 +10,10 @@
       enable = true;
       persistRoot = "/persist";
     };
+    modules.system.searx = {
+      enable = true;
+      port = 8888;
+    };
 
     nix.settings = {
       cores = lib.mkForce 12;
