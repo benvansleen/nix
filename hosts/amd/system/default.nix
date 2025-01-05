@@ -1,18 +1,28 @@
 {
+  config,
   pkgs,
   lib,
   ...
 }:
 
+let
+  if-using-sops = lib.mkIf config.modules.system.sops.enable;
+in
 {
   config = {
-    modules.system.impermanence = {
-      enable = true;
-      persistRoot = "/persist";
-    };
-    modules.system.searx = {
-      enable = true;
-      port = 8888;
+    modules.system = {
+      impermanence = {
+        enable = true;
+        persistRoot = "/persist";
+      };
+      tailscale = {
+        enable = true;
+        authKeyFile = if-using-sops config.sops.secrets.tailscale_auth_key.path;
+      };
+      searx = {
+        enable = true;
+        port = 8888;
+      };
     };
 
     nix.settings = {
@@ -43,7 +53,6 @@
 
     networking = {
       # nftables.enable = true;
-      firewall.enable = true;
       networkmanager = {
         enable = true;
         # wifi.backend = "iwd";

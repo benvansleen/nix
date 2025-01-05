@@ -99,7 +99,19 @@ in
       };
     };
 
-    networking.hostName = config.machine.name;
+    networking = {
+      hostName = config.machine.name;
+      firewall =
+        {
+          enable = true;
+        }
+        // lib.optionalAttrs config.modules.system.tailscale.enable {
+          trustedInterfaces = [ "tailscale0" ];
+          # close all ports; only accessible via tailnet
+          allowedTCPPorts = lib.mkForce [ ];
+          allowedUDPPorts = lib.mkForce [ ];
+        };
+    };
 
     programs = {
       nh.flake = ../.;

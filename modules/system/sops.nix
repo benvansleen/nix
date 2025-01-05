@@ -35,10 +35,13 @@ in
           # From https://github.com/profiluefter/nixos-config/blob/09a56c8096c7cbc00b0fbd7f7c75d6451af8f267/sops.nix
           hostKeyPath
         ];
-      secrets.root-password = {
-        sopsFile = ../../secrets/root-password.sops;
-        format = "binary";
-        neededForUsers = true;
+      secrets = {
+        root-password = {
+          sopsFile = ../../secrets/root-password.sops;
+          format = "binary";
+          neededForUsers = true;
+        };
+        tailscale_auth_key = { };
       };
     };
   };
