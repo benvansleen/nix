@@ -61,13 +61,16 @@ lib.importAll ./.
       };
     };
 
+    hyprbar.enable = true;
     wayland.windowManager.hyprland.settings = {
-      exec = lib.map startSystemdService [
-        "hypridle"
-        "hyprpaper" # Enabled by UWSM + stylix
-        "hyprbar"
-        "gammastep"
-      ];
+      exec = lib.map startSystemdService (
+        [
+          "hypridle"
+          "hyprpaper" # Enabled by UWSM + stylix
+          "gammastep"
+        ]
+        ++ lib.optionals config.hyprbar.enable [ "hyprbar" ]
+      );
     };
     services = {
       hypridle = {

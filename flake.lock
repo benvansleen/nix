@@ -324,11 +324,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1735764891,
-        "narHash": "sha256-9cAImmSJ8lGS70GHSUe67/6iIUqTwqzSrM7Gn7PnDjQ=",
+        "lastModified": 1736111950,
+        "narHash": "sha256-ncE0h4xm0O+pl0bMFz9eQqXzizZN9Xw+3DL3vx4k0Ag=",
         "owner": "benvansleen",
         "repo": "hyprbar",
-        "rev": "66351ed56a298c18404a337ad1cc79625d812152",
+        "rev": "820802aab60ed2943ae2cf7e6c6370288291c312",
         "type": "github"
       },
       "original": {
