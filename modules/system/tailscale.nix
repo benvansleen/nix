@@ -41,18 +41,17 @@ in
 
       # make sure tailscale is running before trying to connect
       after = [
-        "network-pre.target"
-        "tailscale.service"
+        "tailscaled.service"
       ];
       wants = [
-        "network-pre.target"
-        "tailscale.service"
+        "tailscaled.service"
       ];
+      wantedBy = [ "multi-user.target" ];
 
       serviceConfig.Type = "oneshot";
       script = with pkgs; ''
         # wait for tailscaled to settle
-        sleep 2
+        # sleep 2
 
         # check if we are already authenticated
         status="$(${lib.getExe tailscale} status --json | ${lib.getExe jq} -r .BackendState)"

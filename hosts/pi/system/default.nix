@@ -46,6 +46,7 @@ lib.importAll ./.
       wants = [
         "tailscale-autoconnect.service"
       ];
+      wantedBy = [ "multi-user.target" ];
       serviceConfig.Type = "exec";
       script = with pkgs; ''
         ${lib.getExe tailscale} serve ${toString config.modules.system.searx.port}
