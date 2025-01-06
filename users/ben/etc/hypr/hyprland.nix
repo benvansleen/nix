@@ -218,22 +218,28 @@ in
         disable_hyprland_logo = true;
       };
     }
-    // lib.optionalAttrs (systemConfig.machine.name == "amd") {
-      monitor = [
-        "DP-4, 1920x1080, 0x0, 1, transform, 3"
-        "HDMI-A-2, 1920x1080, 1080x0, 1"
-      ];
-      workspace = [
-        "1, monitor:DP-4"
-        "2, monitor:DP-4"
-        "3, monitor:DP-4"
-        "4, monitor:DP-4"
-        "5, monitor:HDMI-A-2"
-        "6, monitor:HDMI-A-2"
-        "7, monitor:HDMI-A-2"
-        "8, monitor:HDMI-A-2"
-        "9, monitor:HDMI-A-2"
-      ];
+    // lib.optionalAttrs (systemConfig.machine.name == "amd") (
+      let
+        left = "DP-10";
+        right = "DP-8";
+      in
+      {
+        monitor = [
+          "${left}, 1920x1080, 0x0, 1, transform, 3"
+          "${right}, 1920x1080, 1080x0, 1"
+        ];
+        workspace = [
+          "1, monitor:${left}"
+          "2, monitor:${left}"
+          "3, monitor:${left}"
+          "4, monitor:${left}"
+          "5, monitor:${right}"
+          "6, monitor:${right}"
+          "7, monitor:${right}"
+          "8, monitor:${right}"
+          "9, monitor:${right}"
+        ];
 
-    };
+      }
+    );
 }
