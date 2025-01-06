@@ -18,12 +18,10 @@ in
       mkdir -p /etc/pihole
       mkdir -p /etc/dnsmasq.d
     '';
-    sops.templates."pihole.env" = {
-      content = ''
-        TZ=America/New_York
-        WEBPASSWORD=${config.sops.placeholder.pihole_webpassword}
-      '';
-    };
+    sops.templates."pihole.env".content = ''
+      TZ=America/New_York
+      WEBPASSWORD=${config.sops.placeholder.pihole_webpassword}
+    '';
     virtualisation.oci-containers.containers = {
       pi-hole = {
         image = "pihole/pihole:latest";

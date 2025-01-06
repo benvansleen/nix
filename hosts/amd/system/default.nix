@@ -17,7 +17,7 @@ in
       };
       tailscale = {
         enable = true;
-        authKeyFile = if-using-sops config.sops.secrets.tailscale_auth_key.path;
+        authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
       };
       searx = {
         enable = true;
