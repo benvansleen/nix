@@ -30,6 +30,10 @@ in
   };
 
   config = mkIf cfg.enable {
+    modules.system.impermanence.persistedDirectories = [
+      "/var/lib/tailscale"
+    ];
+
     environment.systemPackages = with pkgs; [
       tailscale
     ];

@@ -6,17 +6,31 @@
 }:
 
 let
-  inherit (lib) mkIf mkEnableOption mkOption;
+  inherit (lib)
+    mkIf
+    mkEnableOption
+    mkOption
+    types
+    ;
   cfg = config.modules.system.impermanence;
 in
 {
   options.modules.system.impermanence = {
     enable = mkEnableOption "impermanence";
     persistRoot = mkOption {
-      type = lib.types.str;
+      type = types.str;
       default = "/";
       example = "/nix/persist";
       description = "where to mount persistent storage";
+    };
+    persistedDirectories = mkOption {
+      type = with types; listOf str;
+      default = [ ];
+      example = [
+        "/var/log"
+        "/var/lib/bluetooth"
+      ];
+      description = "additional directories to persist";
     };
   };
 
@@ -39,7 +53,7 @@ in
         "/var/lib/systemd"
         "/var/log/journal"
         "/etc/NetworkManager/system-connections"
-      ];
+      ] ++ cfg.persistedDirectories;
       files = [
         "/etc/machine-id"
         # "/etc/passwd"
