@@ -47,9 +47,11 @@ lib.importAll ./.
         "tailscale-autoconnect.service"
       ];
       wantedBy = [ "multi-user.target" ];
-      serviceConfig.Type = "exec";
+      serviceConfig.Type = "oneshot";
       script = with pkgs; ''
-        ${lib.getExe tailscale} serve ${toString config.modules.system.searx.port}
+        # Wait for `tailscale up` to settle
+        sleep 2
+        ${lib.getExe tailscale} serve --bg --set-path / localhost:${toString config.modules.system.searx.port}
       '';
     };
 

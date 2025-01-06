@@ -29,7 +29,7 @@ in
       runInUwsgi = false;
       settings = {
         server = {
-          bind_address = "::1";
+          bind_address = "localhost";
           inherit (cfg) port;
           secret_key = "TODO";
         };
