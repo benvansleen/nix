@@ -24,6 +24,7 @@ in
     };
     allowUnfree = mkEnableOption "Allow unfree nixpkgs";
     powerful = mkEnableOption "Powerful machine configuration";
+    desktop = mkEnableOption "Desktop machine configuration; enable gui apps";
   };
 
   config = {
@@ -156,6 +157,7 @@ in
       };
     };
 
+    users.mutableUsers = false;
     users.users.root = {
       hashedPassword = null;
       hashedPasswordFile = mkIf config.modules.system.sops.enable config.sops.secrets.root-password.path;

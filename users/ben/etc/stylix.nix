@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, systemConfig, ... }:
 
 {
   stylix = {
-    enable = true;
+    enable = systemConfig.machine.desktop;
     autoEnable = true;
     image = ./wallpapers/pensacola-beach-dimmed.png;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";

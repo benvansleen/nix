@@ -22,6 +22,11 @@ in
       default = "";
       description = "Path to the Tailscale authentication key file";
     };
+    tailscale-up-extra-args = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "Extra arguments to pass to tailscale up";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -57,7 +62,7 @@ in
           exit 0
         fi
 
-        ${lib.getExe tailscale} up --auth-key "file:${cfg.authKeyFile}"
+        ${lib.getExe tailscale} up --auth-key "file:${cfg.authKeyFile}" ${lib.concatStringsSep " " cfg.tailscale-up-extra-args}
       '';
     };
   };

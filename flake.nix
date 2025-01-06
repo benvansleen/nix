@@ -114,6 +114,9 @@
         amd = lib.mkSystem "x86_64-linux" [
           ./hosts/amd
         ];
+        pi = lib.mkSystem "aarch64-linux" [
+          ./hosts/pi
+        ];
         qemu = lib.mkSystem "x86_64-linux" [
           ./hosts/qemu
         ];

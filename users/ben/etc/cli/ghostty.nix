@@ -2,7 +2,6 @@
 
 {
   config.modules.home.cli.ghostty = {
-    enable = true;
     settings = {
       useStylixTheme = true;
       options = {

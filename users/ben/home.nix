@@ -37,17 +37,17 @@ in
       };
       cli.enable = true;
       emacs = {
-        enable = true;
+        enable = systemConfig.machine.desktop;
         init-el = ./etc/emacs/init.el;
         framesOnlyMode = true;
         nativeBuild = machine.powerful;
       };
       firefox = {
-        enable = true;
+        enable = systemConfig.machine.desktop;
         browser-pkg = pkgs.floorp;
       };
       window-manager = {
-        enable = true;
+        enable = systemConfig.machine.desktop;
         terminal = pkgs.ghostty;
       };
     };

@@ -42,6 +42,7 @@ in
           neededForUsers = true;
         };
         tailscale_auth_key = { };
+        pihole_webpassword = { };
       };
     };
   };

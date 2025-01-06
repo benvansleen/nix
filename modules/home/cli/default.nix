@@ -1,5 +1,6 @@
 {
   config,
+  systemConfig,
   pkgs,
   lib,
   ...
@@ -17,7 +18,8 @@ lib.importAll ./.
 
   config = mkIf cfg.enable {
     modules.home.cli = {
-      alacritty.enable = true;
+      alacritty.enable = systemConfig.machine.desktop;
+      ghostty.enable = systemConfig.machine.desktop;
       zsh.enable = true;
     };
 
