@@ -5,7 +5,6 @@
 
 keys:
   - &master age16ckghl2xua7qgun5xvz7l4h9g4rd8u09azxndurv7x3en6qq74aqh55227
-  - &qemu age1dj7a33nw06fg635y54t2x97mjjvec2yulx2ne3e54xa79a3d59ws8g0lw9
   - &amd age144yp573ar5t9ecealclv408mdnaskxp8xv8h96pn70frtx6lffjqmzt2du
   - &pi age19l0yr2d6jp5c5gnaf4tr2hlcvg6gpql0fy9llrm4dfd9rxd8m3rqnl0w7m
 
@@ -14,7 +13,6 @@ creation_rules:
     key_groups:
       - age:
           - *master
-          - *qemu
           - *amd 
           - *pi
 
