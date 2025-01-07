@@ -29,8 +29,10 @@ lib.importAll ./.
         enable = true;
         authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
         tailscale-up-extra-args = [
-          "--ssh"
           "--accept-dns=false"
+          "--ssh"
+          "--exit-node=us-qas-wg-101.mullvad.ts.net."
+          "--exit-node-allow-lan-access"
         ];
       };
     };

@@ -18,11 +18,11 @@ in
       tailscale = {
         enable = true;
         authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
+        tailscale-up-extra-args = [
+          "--exit-node=us-qas-wg-101.mullvad.ts.net."
+        ];
       };
-      searx = {
-        enable = true;
-        port = 8888;
-      };
+      searx.enable = false;
     };
 
     nix.settings = {

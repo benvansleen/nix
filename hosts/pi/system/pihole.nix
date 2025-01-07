@@ -14,14 +14,11 @@ in
 
   config = mkIf cfg.enable {
     services.resolved.enable = false;
-    environment.etc."resolv.conf".text = ''
-      nameserver 127.0.0.1
-      nameserver 1.1.1.1
-    '';
 
     virtualisation.oci-containers.containers = {
       pi-hole = {
-        image = "cbcrowe/pihole-unbound:latest";
+        # image = "cbcrowe/pihole-unbound:latest";
+        image = "pihole/pihole:latest";
         ports = [
           "53:53/tcp"
           "53:53/udp"
@@ -29,7 +26,7 @@ in
           "80:80/tcp" # For pihole dashboard
         ];
         environment = {
-          PIHOLE_DNS_ = "127.0.0.1#5335";
+          # PIHOLE_DNS_ = "127.0.0.1#5335";
           TZ = "America/New_York";
           DNSSEC = "true";
           DNSMASQ_LISTENING = "single";

@@ -134,6 +134,7 @@ in
     services = {
       dbus.implementation = "broker";
       fstrim.enable = true;
+      openssh.settings.PermitRootLogin = "no";
       pipewire = {
         enable = true;
         alsa.enable = true;

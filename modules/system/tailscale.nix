@@ -38,8 +38,10 @@ in
       tailscale
     ];
 
-    services.tailscale.enable = true;
+    # https://github.com/tailscale/tailscale/issues/4432
+    networking.firewall.checkReversePath = "loose";
 
+    services.tailscale.enable = true;
     systemd.services.tailscale-autoconnect = {
       description = "Automatically connect to Tailscale VPN";
 
