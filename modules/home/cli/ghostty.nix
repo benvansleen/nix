@@ -13,12 +13,12 @@ let
     optionals
     types
     ;
-  cfg = config.modules.home.cli.ghostty;
+  cfg = config.modules.cli.ghostty;
 
   ghostty-config = "${config.xdg.configHome}/ghostty";
 in
 {
-  options.modules.home.cli.ghostty = {
+  options.modules.cli.ghostty = {
     enable = mkEnableOption "ghostty";
     settings = mkOption {
       description = "contents of ~/.config/ghostty/config";

@@ -6,9 +6,9 @@
       delta # required for `magit-delta`
     ];
 
-    modules.home.impermanence.persistedDirectories = [ "@config@/emacs/var" ];
+    modules.impermanence.persistedDirectories = [ "@config@/emacs/var" ];
 
-    modules.home.emacs = {
+    modules.emacs = {
       init-el = ./init.el;
       framesOnlyMode = true;
       dashboard-img = ./floating-gnu-flute.png;

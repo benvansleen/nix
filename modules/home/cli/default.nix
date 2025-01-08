@@ -8,16 +8,16 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.modules.home.cli;
+  cfg = config.modules.cli;
 in
 lib.importAll ./.
 // {
-  options.modules.home.cli = {
+  options.modules.cli = {
     enable = mkEnableOption "cli";
   };
 
   config = mkIf cfg.enable {
-    modules.home.cli = {
+    modules.cli = {
       alacritty.enable = systemConfig.machine.desktop;
       ghostty.enable = systemConfig.machine.desktop;
       zsh.enable = true;

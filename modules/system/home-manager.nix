@@ -10,10 +10,10 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.modules.system.home-manager;
+  cfg = config.modules.home-manager;
 in
 {
-  options.modules.system.home-manager = {
+  options.modules.home-manager = {
     enable = mkEnableOption "home-manager";
   };
 

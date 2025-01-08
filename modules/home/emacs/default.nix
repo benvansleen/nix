@@ -12,7 +12,7 @@ let
     mkOption
     types
     ;
-  cfg = config.modules.home.emacs;
+  cfg = config.modules.emacs;
 
   init-el =
     config.programs.emacs.extraConfig
@@ -63,7 +63,7 @@ let
 in
 {
 
-  options.modules.home.emacs = {
+  options.modules.emacs = {
     enable = mkEnableOption "emacs";
     init-el = mkOption {
       type = types.path;

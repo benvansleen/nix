@@ -7,7 +7,7 @@
 }:
 
 let
-  inherit (config.modules.home.window-manager) terminal;
+  inherit (config.modules.window-manager) terminal;
   plugin-isEnabled =
     plugin: lib.elem pkgs.hyprlandPlugins."${plugin}" config.wayland.windowManager.hyprland.plugins;
 

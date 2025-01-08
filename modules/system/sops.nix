@@ -7,12 +7,12 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.modules.system.sops;
-  impermanence-cfg = config.modules.system.impermanence;
+  cfg = config.modules.sops;
+  impermanence-cfg = config.modules.impermanence;
   inherit (impermanence-cfg) persistRoot;
 in
 {
-  options.modules.system.sops = {
+  options.modules.sops = {
     enable = mkEnableOption "sops";
   };
 

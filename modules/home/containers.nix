@@ -2,14 +2,14 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = systemConfig.modules.system.containers;
+  cfg = systemConfig.modules.containers;
 in
 {
-  options.modules.home.containers.enable = mkEnableOption "rootless OCI containerization support";
+  options.modules.containers.enable = mkEnableOption "rootless OCI containerization support";
 
   config = mkIf cfg.enable {
     services.podman.enable = true;
-    modules.home.impermanence.persistedDirectories = [
+    modules.impermanence.persistedDirectories = [
       {
         directory = "@data@/containers";
         method = "symlink";

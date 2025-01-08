@@ -45,7 +45,7 @@
     nix_shell = {
       disabled = false;
       heuristic = false;
-      symbol = if config.modules.home.cli.ghostty.enable then "" else "❄️ ";
+      symbol = if config.modules.cli.ghostty.enable then "" else "❄️ ";
       format = ''[\[($symbol)nix shell\]]($style) '';
       style = "dimmed blue";
     };

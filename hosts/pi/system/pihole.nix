@@ -7,10 +7,10 @@ let
     mkOption
     types
     ;
-  cfg = config.modules.system.pihole;
+  cfg = config.modules.pihole;
 in
 {
-  options.modules.system.pihole = {
+  options.modules.pihole = {
     enable = mkEnableOption "pihole";
     web-ui-port = mkOption {
       type = types.port;

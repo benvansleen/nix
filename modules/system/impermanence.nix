@@ -12,10 +12,10 @@ let
     mkOption
     types
     ;
-  cfg = config.modules.system.impermanence;
+  cfg = config.modules.impermanence;
 in
 {
-  options.modules.system.impermanence = {
+  options.modules.impermanence = {
     enable = mkEnableOption "impermanence";
     persistRoot = mkOption {
       type = types.str;

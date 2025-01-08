@@ -9,11 +9,11 @@ let
   inherit (lib) mkIf;
   user = baseNameOf ./.;
   home-dir = "/home/${user}";
-  if-using-sops = mkIf config.modules.system.sops.enable;
+  if-using-sops = mkIf config.modules.sops.enable;
 in
 lib.mkUser {
   inherit user;
-  enable = mkIf config.modules.system.home-manager.enable;
+  enable = mkIf config.modules.home-manager.enable;
   extraHomeModules = [
     (import ./home.nix {
       inherit user;

@@ -7,7 +7,7 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.modules.system.firefox;
+  cfg = config.modules.firefox;
 
   lock-false = {
     Value = false;
@@ -19,7 +19,7 @@ let
   };
 in
 {
-  options.modules.system.firefox = {
+  options.modules.firefox = {
     enable = mkEnableOption "firefox";
   };
 

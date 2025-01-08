@@ -16,7 +16,7 @@
     ./disko-config.nix
   ];
 
-  modules.system.impermanence.enable = true;
+  modules.impermanence.enable = true;
 
   nix.settings.max-jobs = 4;
 

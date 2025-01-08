@@ -1,8 +1,6 @@
-_:
-
 {
   config = {
-    modules.home.impermanence.persistedDirectories = [ "@data@/atuin" ];
+    modules.impermanence.persistedDirectories = [ "@data@/atuin" ];
 
     programs.atuin.settings = {
       style = "compact";

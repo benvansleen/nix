@@ -5,7 +5,7 @@ let
 in
 {
   config = mkIf config.programs.zoxide.enable {
-    modules.home.impermanence.persistedDirectories = [ "@data@/zoxide" ];
+    modules.impermanence.persistedDirectories = [ "@data@/zoxide" ];
 
     programs.zsh.shellAliases = mkIf config.programs.zoxide.enableZshIntegration {
       cd = "z";

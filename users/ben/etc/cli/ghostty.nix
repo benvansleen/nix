@@ -1,7 +1,7 @@
 { config, ... }:
 
 {
-  config.modules.home.cli.ghostty = {
+  config.modules.cli.ghostty = {
     settings = {
       useStylixTheme = true;
       options = {

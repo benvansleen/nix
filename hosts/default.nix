@@ -28,7 +28,7 @@ in
   };
 
   config = {
-    modules.system = {
+    modules = {
       containers.enable = mkDefault true;
       display-manager.enable = mkDefault true;
       firefox.enable = mkDefault true;
@@ -106,7 +106,7 @@ in
         {
           enable = true;
         }
-        // lib.optionalAttrs config.modules.system.tailscale.enable {
+        // lib.optionalAttrs config.modules.tailscale.enable {
           trustedInterfaces = [ "tailscale0" ];
           # close all ports; only accessible via tailnet
           allowedTCPPorts = lib.mkForce [ ];
@@ -118,7 +118,7 @@ in
       nh.flake = ../.;
 
       # Allow home.persistence.allowOther
-      fuse.userAllowOther = mkIf config.modules.system.impermanence.enable true;
+      fuse.userAllowOther = mkIf config.modules.impermanence.enable true;
     };
 
     security = {
@@ -161,7 +161,7 @@ in
     users.mutableUsers = false;
     users.users.root = {
       hashedPassword = null;
-      hashedPasswordFile = mkIf config.modules.system.sops.enable config.sops.secrets.root-password.path;
+      hashedPasswordFile = mkIf config.modules.sops.enable config.sops.secrets.root-password.path;
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINioMpgKUSAxRhCf7rpH7n1OJgpGog2Uxm+jYfCwS4PL benvansleen@gmail.com"
       ];

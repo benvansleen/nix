@@ -7,15 +7,15 @@
 
 let
   inherit (lib) mkIf mkEnableOption mkDefault;
-  cfg = config.modules.home.cli.zsh;
+  cfg = config.modules.cli.zsh;
 in
 {
-  options.modules.home.cli.zsh = {
+  options.modules.cli.zsh = {
     enable = mkEnableOption "zsh";
   };
 
   config = mkIf cfg.enable {
-    modules.home.cli.starship.enable = mkDefault true;
+    modules.cli.starship.enable = mkDefault true;
 
     programs = {
       atuin = {
@@ -41,7 +41,7 @@ in
         enableZshIntegration = false;
       };
 
-      starship.enableZshIntegration = mkIf config.modules.home.cli.starship.enable true;
+      starship.enableZshIntegration = mkIf config.modules.cli.starship.enable true;
 
       zoxide = {
         enable = true;

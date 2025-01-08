@@ -6,11 +6,11 @@
 }:
 
 let
-  if-using-sops = lib.mkIf config.modules.system.sops.enable;
+  if-using-sops = lib.mkIf config.modules.sops.enable;
 in
 {
   config = {
-    modules.system = {
+    modules = {
       impermanence = {
         enable = true;
         persistRoot = "/persist";

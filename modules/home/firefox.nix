@@ -12,10 +12,10 @@ let
     mkOption
     types
     ;
-  cfg = config.modules.home.firefox;
+  cfg = config.modules.firefox;
 in
 {
-  options.modules.home.firefox = {
+  options.modules.firefox = {
     enable = mkEnableOption "firefox";
     browser-pkg = mkOption {
       type = types.enum (
@@ -31,7 +31,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    modules.home.impermanence.persistedDirectories = [
+    modules.impermanence.persistedDirectories = [
       ".mozilla"
       "@cache@/mozilla"
 

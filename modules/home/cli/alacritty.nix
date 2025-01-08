@@ -6,10 +6,10 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.modules.home.cli.alacritty;
+  cfg = config.modules.cli.alacritty;
 in
 {
-  options.modules.home.cli.alacritty = {
+  options.modules.cli.alacritty = {
     enable = mkEnableOption "terminal";
   };
 

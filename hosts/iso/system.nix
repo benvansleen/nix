@@ -6,7 +6,7 @@
 
 {
   config = {
-    modules.system = {
+    modules = {
       display-manager.enable = false;
       impermanence.enable = false;
       sops.enable = false;

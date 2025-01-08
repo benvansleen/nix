@@ -6,11 +6,11 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.modules.system.caddy;
+  cfg = config.modules.caddy;
 
 in
 {
-  options.modules.system.caddy.enable = mkEnableOption "caddy";
+  options.modules.caddy.enable = mkEnableOption "caddy";
 
   imports = [
     (lib.tailscale-oci-container {
@@ -72,14 +72,14 @@ in
           @searx host searx.net.${domain}
           handle @searx {
             encode zstd gzip
-            reverse_proxy ${pi}:${toString config.modules.system.searx.port}
+            reverse_proxy ${pi}:${toString config.modules.searx.port}
           }
 
           @pihole host pihole.net.${domain}
           handle @pihole {
             encode zstd gzip
             redir / /admin{uri}
-            reverse_proxy ${pi}:${toString config.modules.system.pihole.web-ui-port}
+            reverse_proxy ${pi}:${toString config.modules.pihole.web-ui-port}
           }
 
           handle {

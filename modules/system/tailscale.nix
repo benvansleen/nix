@@ -12,10 +12,10 @@ let
     mkOption
     types
     ;
-  cfg = config.modules.system.tailscale;
+  cfg = config.modules.tailscale;
 in
 {
-  options.modules.system.tailscale = {
+  options.modules.tailscale = {
     enable = mkEnableOption "tailscale";
     authKeyFile = mkOption {
       type = types.str;
@@ -30,7 +30,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    modules.system.impermanence.persistedDirectories = [
+    modules.impermanence.persistedDirectories = [
       "/var/lib/tailscale"
     ];
 

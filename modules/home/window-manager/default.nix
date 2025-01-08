@@ -12,12 +12,12 @@ let
     mkOption
     types
     ;
-  cfg = config.modules.home.window-manager;
+  cfg = config.modules.window-manager;
   startSystemdService = service: "systemctl --user start --now ${service}.service";
 in
 lib.importAll ./.
 // {
-  options.modules.home.window-manager = {
+  options.modules.window-manager = {
     enable = mkEnableOption "window-manager";
     terminal = mkOption {
       type = types.package;
@@ -27,7 +27,7 @@ lib.importAll ./.
   };
 
   config = mkIf cfg.enable {
-    modules.home.window-manager = {
+    modules.window-manager = {
       hyprland.enable = true;
       gnome-xterm-compat = {
         enable = true;

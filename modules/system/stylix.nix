@@ -8,10 +8,10 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.modules.system.stylix;
+  cfg = config.modules.stylix;
 in
 {
-  options.modules.system.stylix = {
+  options.modules.stylix = {
     enable = mkEnableOption "stylix";
   };
 

@@ -7,10 +7,10 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.modules.system.display-manager;
+  cfg = config.modules.display-manager;
 in
 {
-  options.modules.system.display-manager = {
+  options.modules.display-manager = {
     enable = mkEnableOption "display-manager";
   };
 

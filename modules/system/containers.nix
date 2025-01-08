@@ -7,11 +7,11 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.modules.system.containers;
-  inherit (config.modules.system) impermanence;
+  cfg = config.modules.containers;
+  inherit (config.modules) impermanence;
 in
 {
-  options.modules.system.containers.enable = mkEnableOption "OCI containerization support";
+  options.modules.containers.enable = mkEnableOption "OCI containerization support";
 
   config = mkIf cfg.enable {
     virtualisation = {

@@ -7,13 +7,13 @@
 
 let
   inherit (lib) mkIf mkOption types;
-  inherit (systemConfig.modules.system) impermanence;
+  inherit (systemConfig.modules) impermanence;
 
   systemUsesImpermanence = impermanence.enable;
-  cfg = config.modules.home.impermanence;
+  cfg = config.modules.impermanence;
 in
 {
-  options.modules.home.impermanence = {
+  options.modules.impermanence = {
     homeDir = mkOption {
       description = "Home directory structure";
       type =

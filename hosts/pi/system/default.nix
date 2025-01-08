@@ -1,12 +1,12 @@
 { config, lib, ... }:
 
 let
-  if-using-sops = lib.mkIf config.modules.system.sops.enable;
+  if-using-sops = lib.mkIf config.modules.sops.enable;
 in
 lib.importAll ./.
 // {
   config = {
-    modules.system = {
+    modules = {
       caddy.enable = true;
       containers.enable = true;
       display-manager.enable = false;

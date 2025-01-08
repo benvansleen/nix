@@ -24,7 +24,7 @@ in
   ];
 
   config = {
-    modules.home = {
+    modules = {
       impermanence = {
         inherit homeDir;
         persistedDirectories = [

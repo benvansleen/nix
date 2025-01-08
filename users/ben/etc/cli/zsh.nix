@@ -11,7 +11,7 @@ let
 in
 {
   config = {
-    modules.home.impermanence.persistedFiles = [ "@data@/zsh/history" ];
+    modules.impermanence.persistedFiles = [ "@data@/zsh/history" ];
 
     programs.zsh = {
       shellAliases = {

@@ -8,11 +8,11 @@
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = config.modules.home.window-manager.hyprland;
+  cfg = config.modules.window-manager.hyprland;
 
 in
 {
-  options.modules.home.window-manager.hyprland = {
+  options.modules.window-manager.hyprland = {
     enable = mkEnableOption "hyprland";
   };
 

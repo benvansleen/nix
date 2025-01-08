@@ -12,10 +12,10 @@ let
     mkOption
     types
     ;
-  cfg = config.modules.system.searx;
+  cfg = config.modules.searx;
 in
 {
-  options.modules.system.searx = {
+  options.modules.searx = {
     enable = mkEnableOption "searx";
     port = mkOption {
       type = types.port;
