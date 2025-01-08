@@ -22,16 +22,33 @@ in
     };
   };
   config = mkIf cfg.enable {
+    sops.templates."searxng.env".content = ''
+      SEARXNG_SECRET=${config.sops.placeholder.searx_secretkey}
+    '';
+
+    services.uwsgi.instance.vassals.searx.env = [
+      "SEARXNG_SECRET='FIXME: https://github.com/NixOS/nixpkgs/issues/292652'"
+    ];
     services.searx = {
       enable = true;
       package = pkgs.searxng;
       redisCreateLocally = false;
-      runInUwsgi = false;
+      runInUwsgi = true;
+      uwsgiConfig = {
+        disable-logging = false;
+        http = ":8888";
+        socket = "/run/searx/searx.sock";
+        chmod-socket = "660";
+        enable-threads = true;
+        workers = "%k";
+        threads = 4;
+      };
+
+      environmentFile = config.sops.templates."searxng.env".path;
       settings = {
         server = {
-          bind_address = "localhost";
+          bind_address = "0.0.0.0";
           inherit (cfg) port;
-          secret_key = "TODO";
         };
         search.formats = [
           "html"
@@ -100,7 +117,7 @@ in
           "piped".disabled = true;
           "qwant images".disabled = true;
           "qwant videos".disabled = true;
-          "qwant".disabled = false;
+          "qwant".disabled = true;
           "rumble".disabled = true;
           "sepiasearch".disabled = true;
           "startpage".disabled = true;

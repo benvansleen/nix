@@ -51,9 +51,9 @@ rec {
           inherit pkgs pkgs-unfree;
         } // inputs;
         modules = [
-          ./modules/system
-          ./hosts
-          ./users
+          ../modules/system
+          ../hosts
+          ../users
 
           {
             environment.etc.nixos.source = ./.;
@@ -64,7 +64,7 @@ rec {
 
   allHomeModules =
     with lib;
-    [ ./modules/home ]
+    [ ../modules/home ]
     ++ (pipe inputs [
       (filterAttrs (_moduleName: module: module ? homeManagerModules))
       (mapAttrsToList (
@@ -119,3 +119,4 @@ rec {
     );
   withDebuggingCompiled = pkg: optimizeWithFlag pkg "-DDEBUG";
 }
+// (import ./tailscale.nix { inherit lib; })

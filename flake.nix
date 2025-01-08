@@ -103,9 +103,7 @@
       treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
       run = import ./run;
       overlays = import ./overlays inputs;
-      lib = nixpkgs.lib.extend (
-        _final: _prev: home-manager.lib // (import ./lib.nix lib overlays inputs)
-      );
+      lib = nixpkgs.lib.extend (_final: _prev: home-manager.lib // (import ./lib lib overlays inputs));
     in
     {
 

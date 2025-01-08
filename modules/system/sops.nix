@@ -42,6 +42,9 @@ in
           neededForUsers = true;
         };
         tailscale_authkey = { };
+        cloudflare_caddy_api_token = { };
+        tailscale_sidecar_authkey = { };
+        searx_secretkey = { };
         pihole_webpassword = { };
       };
     };

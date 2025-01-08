@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 
 let
   if-using-sops = lib.mkIf config.modules.system.sops.enable;
@@ -12,13 +7,14 @@ lib.importAll ./.
 // {
   config = {
     modules.system = {
+      caddy.enable = true;
       containers.enable = true;
       display-manager.enable = false;
       firefox.enable = false;
       fonts.enable = false;
       home-manager.enable = true;
       impermanence.enable = false;
-      pi-hole.enable = true;
+      pihole.enable = true;
       searx = {
         enable = true;
         port = 8888;
@@ -39,23 +35,6 @@ lib.importAll ./.
 
     services.openssh.enable = true;
     networking.wireless.enable = false;
-
-    systemd.services.tailscale-serve-searx = {
-      description = "Serve searx over tailscale";
-      after = [
-        "tailscale-autoconnect.service"
-      ];
-      wants = [
-        "tailscale-autoconnect.service"
-      ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig.Type = "oneshot";
-      script = with pkgs; ''
-        # Wait for `tailscale up` to settle
-        sleep 2
-        ${lib.getExe tailscale} serve --bg --set-path / localhost:${toString config.modules.system.searx.port}
-      '';
-    };
 
     system.stateVersion = "23.11";
   };
