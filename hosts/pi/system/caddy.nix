@@ -42,7 +42,10 @@ in
 
     sops.templates."Caddyfile".content =
       let
-        domain = "benvansleen.dev";
+        primary = "vansleen.dev";
+        primary-subdomain = "ben";
+        secondary = "benvansleen.dev";
+        secondary-subdomain = "net";
         pi = "100.85.59.37";
       in
       ''
@@ -56,26 +59,26 @@ in
           }
         }
 
-        ${domain} {
+        ${primary} {
           import cloudflare
-          redir https://net.${domain}
+          redir https://${primary-subdomain}.${primary}
         }
 
-        net.${domain} {
+        ${primary-subdomain}.${primary} {
           import cloudflare
-          redir https://searx.net.${domain}
+          redir https://searx.${primary-subdomain}.${primary}
         }
 
-        *.net.${domain} {
+        *.${primary-subdomain}.${primary} {
           import cloudflare
 
-          @searx host searx.net.${domain}
+          @searx host searx.${primary-subdomain}.${primary}
           handle @searx {
             encode zstd gzip
             reverse_proxy ${pi}:${toString config.modules.searx.port}
           }
 
-          @pihole host pihole.net.${domain}
+          @pihole host pihole.${primary-subdomain}.${primary}
           handle @pihole {
             encode zstd gzip
             redir / /admin{uri}
@@ -85,6 +88,21 @@ in
           handle {
             abort
           }
+        }
+
+        ${secondary} {
+          import cloudflare
+          redir https://${primary}
+        }
+
+        ${secondary-subdomain}.${secondary} {
+          import cloudflare
+          redir https://${primary}
+        }
+
+        *.${secondary-subdomain}.${secondary} {
+          import cloudflare
+          redir https://${primary}
         }
       '';
     environment.etc."/caddy/conf/Caddyfile" = {
