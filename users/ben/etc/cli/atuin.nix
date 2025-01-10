@@ -3,7 +3,7 @@
     modules.impermanence.persistedDirectories = [ "@data@/atuin" ];
 
     programs.atuin.settings = {
-      style = "compact";
+      style = "auto";
       keymap_mode = "vim-insert";
       enter_accept = true;
       prefers_reduced_motion = true;
