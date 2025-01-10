@@ -29,6 +29,7 @@ lib.importAll ./.
           "--ssh"
           "--exit-node=us-qas-wg-101.mullvad.ts.net."
           "--exit-node-allow-lan-access"
+          "--advertise-routes=192.168.1.0/24"
         ];
       };
     };
