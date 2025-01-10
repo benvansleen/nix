@@ -11,6 +11,31 @@ in
 {
   config = {
     modules = {
+      clonix = {
+        enable = true;
+        deployments = [
+          rec {
+            deploymentName = "backup-${config.machine.name}";
+            local = {
+              dir = "/persist";
+              exclude = [
+                "**/llama/models/"
+              ];
+            };
+            targetDir = "${lib.constants.backup-path}/${deploymentName}";
+            remote = {
+              enable = true;
+              ipOrHostname = "pi";
+              user.name = "root";
+            };
+            timer = {
+              enable = true;
+              OnCalendar = "daily";
+              Persistent = true;
+            };
+          }
+        ];
+      };
       impermanence = {
         enable = true;
         persistRoot = "/persist";

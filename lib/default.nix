@@ -2,6 +2,8 @@ lib: overlays:
 { nixpkgs, systems, ... }@inputs:
 
 let
+  constants = import ./constants.nix;
+
   nixFilesInDir =
     dir:
     with lib;
@@ -30,6 +32,8 @@ let
   mkPkgs = cfg: import nixpkgs cfg;
 in
 rec {
+  inherit constants;
+
   importAll = dir: { imports = nixFilesInDir dir; };
 
   mkSystem =
@@ -137,4 +141,4 @@ rec {
     }:
     if config.machine.powerful then optimizeForThisHost { inherit pkg extraFlags; } else pkg;
 }
-// (import ./tailscale.nix { inherit lib; })
+// (import ./tailscale.nix { inherit lib constants; })

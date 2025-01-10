@@ -110,6 +110,26 @@
         "type": "github"
       }
     },
+    "clonix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1736553224,
+        "narHash": "sha256-w/QxUvMfkdAm1SXsOq7fHNYHzVx4y+IUc8oDyK2kCF4=",
+        "owner": "benvansleen",
+        "repo": "clonix",
+        "rev": "0d606cc85d3117c853a20f27b9acf28ece311660",
+        "type": "github"
+      },
+      "original": {
+        "owner": "benvansleen",
+        "repo": "clonix",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -452,6 +472,7 @@
     },
     "root": {
       "inputs": {
+        "clonix": "clonix",
         "disko": "disko",
         "emacs-overlay": "emacs-overlay",
         "flake-compat": "flake-compat",
