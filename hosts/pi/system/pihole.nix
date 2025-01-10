@@ -20,10 +20,19 @@ in
   };
 
   config = mkIf cfg.enable {
+    # DO NOT TOUCH DNS CONFIG
+    # will likely break tailscale magicDNS, caddy, and other services
+    modules.tailscale.tailscale-up-extra-args = [
+      "--accept-dns=true"
+    ];
     services.resolved.enable = false;
+    environment.etc."resolv.conf".text = ''
+      nameserver 127.0.0.1
+    '';
 
     virtualisation.oci-containers.containers = {
       pihole = {
+        hostname = "pihole";
         # image = "cbcrowe/pihole-unbound:latest";
         image = "pihole/pihole:latest";
         ports = [

@@ -33,10 +33,10 @@ in
       enable = true;
       package = pkgs.searxng;
       redisCreateLocally = false;
-      runInUwsgi = true;
+      runInUwsgi = false;
       uwsgiConfig = {
         disable-logging = false;
-        http = ":8888";
+        http = ":${toString cfg.port}";
         socket = "/run/searx/searx.sock";
         chmod-socket = "660";
         enable-threads = true;

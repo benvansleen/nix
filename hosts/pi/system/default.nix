@@ -25,10 +25,9 @@ lib.importAll ./.
         enable = true;
         authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
         tailscale-up-extra-args = [
-          "--accept-dns=false"
           "--ssh"
-          "--exit-node=us-qas-wg-101.mullvad.ts.net."
-          "--exit-node-allow-lan-access"
+          "--exit-node=us-qas-wg-101.mullvad.ts.net." # Ashburn, VA
+          "--exit-node-allow-lan-access" # Necessary for pihole DNS
           "--advertise-routes=192.168.1.0/24"
         ];
       };

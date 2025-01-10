@@ -3,7 +3,9 @@
 let
   inherit (lib) mkIf;
 in
-{
+rec {
+  constants.tailscale-domain = "clouded-mimosa.ts.net";
+  tailscale-host = host: "${host}.${constants.tailscale-domain}";
   tailscale-oci-container =
     {
       enable ? true,
@@ -36,6 +38,18 @@ in
             image = "tailscale/tailscale:latest";
             inherit (container) hostname;
             environment = {
+              # In the event of podman overwriting magicDNS config,
+              ## 1. `podman exec` into container
+              ## 2. Set `/etc/resolv.conf` to
+              ### ```
+              ### nameserver <podman0-bridge-ip>
+              ### nameserver 100.100.100.100
+              ### search dns.podman <tailscale-domain>
+              ### ```
+              ## 3. Restart container
+              ## 4. Verify that `tailscale` has ovewritten `/etc/resolv.conf`
+              TS_ACCEPT_DNS = "true";
+
               TS_STATE_DIR = "/var/lib/tailscale";
               TS_USERSPACE = "false";
             };
@@ -48,7 +62,8 @@ in
             extraOptions = [
               "--device=/dev/net/tun"
               "--cap-add=net_admin"
-              "--pull=always"
+              "--pull=newer"
+              "--network=bridge"
             ];
 
             inherit dependsOn;

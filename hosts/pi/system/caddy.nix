@@ -42,11 +42,11 @@ in
 
     sops.templates."Caddyfile".content =
       let
+        inherit (lib) tailscale-host;
         primary = "vansleen.dev";
         primary-subdomain = "ben";
         secondary = "benvansleen.dev";
         secondary-subdomain = "net";
-        pi = "100.85.59.37";
       in
       ''
         {
@@ -75,14 +75,14 @@ in
           @searx host searx.${primary-subdomain}.${primary}
           handle @searx {
             encode zstd gzip
-            reverse_proxy ${pi}:${toString config.modules.searx.port}
+            reverse_proxy ${tailscale-host "pi"}:${toString config.modules.searx.port}
           }
 
           @pihole host pihole.${primary-subdomain}.${primary}
           handle @pihole {
             encode zstd gzip
             redir / /admin{uri}
-            reverse_proxy ${pi}:${toString config.modules.pihole.web-ui-port}
+            reverse_proxy ${tailscale-host "pi"}:${toString config.modules.pihole.web-ui-port}
           }
 
           handle {
