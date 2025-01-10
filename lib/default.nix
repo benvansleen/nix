@@ -54,10 +54,6 @@ rec {
           ../modules/system
           ../hosts
           ../users
-
-          {
-            environment.etc.nixos.source = ./.;
-          }
         ] ++ extraModules;
       }
     );

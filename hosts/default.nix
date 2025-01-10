@@ -63,6 +63,8 @@ in
     };
 
     environment = {
+      etc.nixos.source = ../.;
+
       systemPackages = with pkgs; [
         bat
         bottom
