@@ -92,7 +92,6 @@
     }@inputs:
     let
       treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-      run = import ./run;
       overlays = import ./overlays inputs;
       lib = nixpkgs.lib.extend (_final: _prev: home-manager.lib // (import ./lib lib overlays inputs));
     in
@@ -135,14 +134,16 @@
 
       packages = lib.eachSystem (
         { pkgs, ... }:
+        let
+          run = pkgs.callPackage ./run { };
+        in
         rec {
           default = rebuild;
 
-          rebuild = run.rebuild pkgs;
-          install = run.install-nixos pkgs;
+          inherit (run) rebuild;
+          install = run.install-nixos;
 
-          set-user-password = run.set-password-for pkgs "./secrets/user-password.sops";
-          set-root-password = run.set-password-for pkgs "./secrets/root-password.sops";
+          root.set-password = run.set-password-for "root";
 
           iso = self.nixosConfigurations.iso.config.system.build.isoImage;
           test-iso = import ./hosts/iso/run.nix {
@@ -151,6 +152,9 @@
           };
 
         }
+        // (lib.eachUser (user: {
+          set-password = run.set-password-for user;
+        }))
       );
 
       devShells = lib.eachSystem (

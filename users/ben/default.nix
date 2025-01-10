@@ -23,7 +23,7 @@ lib.mkUser {
   extraConfig = {
     sops.secrets = if-using-sops {
       user-password = {
-        sopsFile = ../../secrets/user-password.sops;
+        sopsFile = ./password.sops;
         format = "binary";
         neededForUsers = true;
       };

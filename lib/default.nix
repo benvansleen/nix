@@ -89,13 +89,25 @@ rec {
 
   eachSystem =
     f:
-    nixpkgs.lib.genAttrs (import systems) (
+    lib.genAttrs (import systems) (
       system:
       f {
         inherit system;
         pkgs = nixpkgs.legacyPackages.${system};
       }
     );
+
+  eachUser =
+    f:
+    with lib;
+    let
+      users = pipe ../users [
+        builtins.readDir
+        (filterAttrs (_name: filetype: (filetype == "directory")))
+        (mapAttrsToList (name: _filetype: name))
+      ];
+    in
+    genAttrs users f;
 
   optimizeWithFlag =
     pkg: flag:
