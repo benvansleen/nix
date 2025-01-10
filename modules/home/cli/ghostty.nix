@@ -20,6 +20,11 @@ in
 {
   options.modules.cli.ghostty = {
     enable = mkEnableOption "ghostty";
+    package = mkOption {
+      description = "ghostty package";
+      type = types.package;
+      default = pkgs.ghostty;
+    };
     settings = mkOption {
       description = "contents of ~/.config/ghostty/config";
       type =
@@ -44,7 +49,7 @@ in
 
   config = mkIf cfg.enable {
     home = {
-      packages = with pkgs; [ ghostty ];
+      packages = [ cfg.package ];
 
       file."${ghostty-config}/config".text =
         with lib;

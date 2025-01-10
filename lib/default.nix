@@ -104,7 +104,10 @@ rec {
     });
   optimizeWithFlags = pkg: flags: lib.foldl (pkg: flag: optimizeWithFlag pkg flag) pkg flags;
   optimizeForThisHost =
-    pkg: extraFlags:
+    {
+      pkg,
+      extraFlags ? [ ],
+    }:
     optimizeWithFlags pkg (
       [
         "-O3"
@@ -114,5 +117,12 @@ rec {
       ++ extraFlags
     );
   withDebuggingCompiled = pkg: optimizeWithFlag pkg "-DDEBUG";
+  optimizeForThisHostIfPowerful =
+    {
+      config,
+      pkg,
+      extraFlags ? [ ],
+    }:
+    if config.machine.powerful then optimizeForThisHost { inherit pkg extraFlags; } else pkg;
 }
 // (import ./tailscale.nix { inherit lib; })

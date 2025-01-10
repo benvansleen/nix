@@ -1,5 +1,6 @@
 {
   config,
+  systemConfig,
   pkgs,
   lib,
   ...
@@ -38,14 +39,14 @@ let
 
   emacs-pkg = pkgs.emacs-pgtk;
   emacs = pkgs.emacsWithPackagesFromUsePackage {
-    package =
-      if cfg.nativeBuild then
-        lib.optimizeForThisHost emacs-pkg [
-          "-pipe"
-          "-fomit-frame-pointer"
-        ]
-      else
-        emacs-pkg;
+    package = lib.optimizeForThisHostIfPowerful {
+      config = systemConfig;
+      pkg = emacs-pkg;
+      extraFlags = [
+        "-pipe"
+        "-fomit-frame-pointer"
+      ];
+    };
     config = init-el;
     defaultInitFile = true;
     alwaysEnsure = true;
@@ -69,7 +70,6 @@ in
       type = types.path;
       description = "emacs init.el configuration";
     };
-    nativeBuild = mkEnableOption "emacs with native build flags";
     framesOnlyMode = mkEnableOption "emacs with frames-only-mode";
     dashboard-img = mkOption {
       type = types.path;

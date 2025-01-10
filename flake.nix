@@ -51,15 +51,6 @@
       };
     };
 
-    ghostty = {
-      url = "github:ghostty-org/ghostty/main";
-      inputs = {
-        nixpkgs-stable.follows = "nixpkgs";
-        nixpkgs-unstable.follows = "nixpkgs";
-        flake-compat.follows = "flake-compat";
-      };
-    };
-
     hyprbar = {
       url = "github:benvansleen/hyprbar";
       inputs = {

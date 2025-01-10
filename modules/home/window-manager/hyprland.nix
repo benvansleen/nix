@@ -19,8 +19,10 @@ in
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
       enable = true;
-      package =
-        if systemConfig.machine.powerful then lib.optimizeForThisHost pkgs.hyprland [ ] else pkgs.hyprland;
+      package = lib.optimizeForThisHostIfPowerful {
+        config = systemConfig;
+        pkg = pkgs.hyprland;
+      };
       systemd.enable = false; # Conflicts with UWSM
       plugins = with pkgs.hyprlandPlugins; [
         hyprexpo

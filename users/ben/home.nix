@@ -9,7 +9,6 @@
 }:
 
 let
-  inherit (systemConfig) machine;
   homeDir = {
     root = directory;
     config = ".config";
@@ -40,7 +39,6 @@ in
         enable = systemConfig.machine.desktop;
         init-el = ./etc/emacs/init.el;
         framesOnlyMode = true;
-        nativeBuild = machine.powerful;
       };
       firefox = {
         enable = systemConfig.machine.desktop;
