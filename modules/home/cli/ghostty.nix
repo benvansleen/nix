@@ -90,22 +90,22 @@ in
                 config.stylix.base16Scheme;
           in
           ''
-            palette = 0=#${theme.base00}
-            palette = 1=#${theme.base08}
-            palette = 2=#${theme.base09}
-            palette = 3=#${theme.base0A}
-            palette = 4=#${theme.base0B}
-            palette = 5=#${theme.base0C}
-            palette = 6=#${theme.base0D}
-            palette = 7=#${theme.base04}
-            palette = 8=#${theme.base0F}
-            palette = 9=#${theme.base09}
-            palette = 10=#${theme.base02}
-            palette = 11=#${theme.base03}
-            palette = 12=#${theme.base0E}
-            palette = 13=#${theme.base05}
-            palette = 14=#${theme.base06}
-            palette = 15=#${theme.base07}
+            palette = 0=${theme.base00}
+            palette = 1=${theme.base08}
+            palette = 2=${theme.base09}
+            palette = 3=${theme.base0A}
+            palette = 4=${theme.base0B}
+            palette = 5=${theme.base0C}
+            palette = 6=${theme.base0D}
+            palette = 7=${theme.base04}
+            palette = 8=${theme.base0F}
+            palette = 9=${theme.base09}
+            palette = 10=${theme.base02}
+            palette = 11=${theme.base03}
+            palette = 12=${theme.base0E}
+            palette = 13=${theme.base05}
+            palette = 14=${theme.base06}
+            palette = 15=${theme.base07}
             background = ${theme.base00}
             foreground = ${theme.base05}
             cursor-color = ${theme.base05}
