@@ -1,5 +1,6 @@
 {
   config,
+  pkgs-stable,
   lib,
   ...
 }:
@@ -8,106 +9,106 @@ let
   inherit (lib) mkIf mkEnableOption;
   cfg = config.modules.caddy;
 
+  # Build currently breaks w/ caddy-v2.9.0
+  # https://github.com/tailscale/caddy-tailscale/pull/83
+  my-caddy = pkgs-stable.caddy.withPlugins {
+    plugins = [
+      "github.com/tailscale/caddy-tailscale@f21c01b660c896bdd6bacc37178dc00d9af282b4"
+      "github.com/caddy-dns/cloudflare@89f16b99c18ef49c8bb470a82f895bce01cbaece"
+    ];
+    hash = "sha256-KCOjtpWe8vw/vMFx56KcM12owBzWnkCwkNiwNc/adAs=";
+  };
 in
 {
   options.modules.caddy.enable = mkEnableOption "caddy";
 
-  imports = [
-    (lib.tailscale-oci-container {
-      inherit (cfg) enable;
-      inherit config;
-      container = {
-        hostname = "caddy";
-        image = "caddybuilds/caddy-cloudflare:latest";
-        volumes = [
-          "/etc/caddy/conf:/etc/caddy"
-          "/etc/caddy/site:/srv"
-          "/etc/caddy/data:/data"
-          "/etc/caddy/config:/config"
-        ];
-      };
-
-      ## Otherwise, podman & pihole will fight for :53
-      dependsOn = [ "pihole" ];
-    })
-  ];
-
   config = mkIf cfg.enable {
-    system.activationScripts.mk-caddy-state-dirs.text = ''
-      mkdir -p /etc/caddy/conf
-      mkdir -p /etc/caddy/site
-      mkdir -p /etc/caddy/data
-      mkdir -p /etc/caddy/config
+    environment.systemPackages = [ my-caddy ];
+    sops.templates."caddy.env".content = ''
+      TS_AUTHKEY=${config.sops.placeholder.tailscale_sidecar_authkey}
+      CLOUDFLARE_TOKEN=${config.sops.placeholder.cloudflare_caddy_api_token}
     '';
-
-    sops.templates."Caddyfile".content =
+    services.caddy =
       let
-        inherit (lib) tailscale-host;
-        primary = "vansleen.dev";
-        primary-subdomain = "ben";
-        secondary = "benvansleen.dev";
-        secondary-subdomain = "net";
-      in
-      ''
-        {
-          email benvansleen@gmail.com
-        }
-
-        (cloudflare) {
-          tls {
-            dns cloudflare ${config.sops.placeholder.cloudflare_caddy_api_token}
-          }
-        }
-
-        ${primary} {
-          import cloudflare
-          redir https://${primary-subdomain}.${primary}
-        }
-
-        ${primary-subdomain}.${primary} {
-          import cloudflare
-          redir https://searx.${primary-subdomain}.${primary}
-        }
-
-        *.${primary-subdomain}.${primary} {
-          import cloudflare
-
-          @searx host searx.${primary-subdomain}.${primary}
-          handle @searx {
+        services = {
+          searx = ''
             encode zstd gzip
-            reverse_proxy ${tailscale-host "pi"}:${toString config.modules.searx.port}
-          }
-
-          @pihole host pihole.${primary-subdomain}.${primary}
-          handle @pihole {
+            reverse_proxy pi:${toString config.modules.searx.port}
+          '';
+          pihole = ''
             encode zstd gzip
             redir / /admin{uri}
-            reverse_proxy ${tailscale-host "pi"}:${toString config.modules.pihole.web-ui-port}
+            reverse_proxy pi:${toString config.modules.pihole.web-ui-port}
+          '';
+        };
+
+        tailscale = host: config: ''
+          :443 {
+            bind tailscale/${host}
+            tls {
+              get_certificate tailscale
+            }
+            ${config}
           }
+        '';
+        cloudflare = config: ''
+          import cloudflare
+          ${config}
+        '';
+      in
+      {
+        enable = true;
+        enableReload = false;
+        package = my-caddy;
+        inherit (lib.constants) email;
+        dataDir = "/var/lib/caddy";
+        logDir = "/var/log/caddy";
 
-          handle {
-            abort
+        environmentFile = config.sops.templates."caddy.env".path;
+        globalConfig = ''
+          tailscale {
+            auth_key {$TS_AUTHKEY}
+            webui true
           }
-        }
+        '';
+        extraConfig =
+          ''
+            (cloudflare) {
+              tls {
+                dns cloudflare {$CLOUDFLARE_TOKEN}
+              }
+            }
+          ''
+          + (
+            with lib;
+            pipe services [
+              (mapAttrsToList tailscale)
+              (concatStringsSep "\n")
+            ]
+          );
+        virtualHosts = {
+          "searx.ben.vansleen.dev" = {
+            serverAliases = [
+              "ben.vansleen.dev"
+              "benvansleen.dev"
+              "net.benvansleen.dev"
+              "searx.net.benvansleen.dev"
+            ];
+            extraConfig = cloudflare services.searx;
+          };
 
-        ${secondary} {
-          import cloudflare
-          redir https://${primary}
-        }
+          "pihole.ben.vansleen.dev" = {
+            serverAliases = [
+              "pihole.net.benvansleen.dev"
+            ];
+            extraConfig = cloudflare services.pihole;
+          };
+        };
+      };
 
-        ${secondary-subdomain}.${secondary} {
-          import cloudflare
-          redir https://${primary}
-        }
-
-        *.${secondary-subdomain}.${secondary} {
-          import cloudflare
-          redir https://${primary}
-        }
-      '';
-    environment.etc."/caddy/conf/Caddyfile" = {
-      mode = "0400";
-      source = config.sops.templates."Caddyfile".path;
-    };
+    modules.impermanence.persistedDirectories = with config.services.caddy; [
+      logDir
+      dataDir
+    ];
   };
 }
