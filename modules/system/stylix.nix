@@ -33,7 +33,7 @@ in
           name = "Iosevka Etoile";
         };
         sansSerif = {
-          package = fira-code-nerdfont;
+          package = nerd-fonts.fira-code;
           name = "Fira Code";
         };
         monospace = {

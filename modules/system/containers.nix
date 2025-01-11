@@ -11,7 +11,10 @@ let
   inherit (config.modules) impermanence;
 in
 {
-  options.modules.containers.enable = mkEnableOption "OCI containerization support";
+  options.modules.containers = {
+    enable = mkEnableOption "OCI containerization support";
+    disable-podman-dns = mkEnableOption "disable DNS in podman";
+  };
 
   config = mkIf cfg.enable {
     virtualisation = {
@@ -19,7 +22,7 @@ in
       podman = {
         enable = true;
         dockerCompat = true;
-        defaultNetwork.settings.dns_enabled = true;
+        defaultNetwork.settings.dns_enabled = !cfg.disable-podman-dns;
         autoPrune = {
           enable = true;
           dates = "weekly";

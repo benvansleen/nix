@@ -20,7 +20,7 @@ in
       packages = with pkgs; [
         iosevka
         hack-font
-        fira-code-nerdfont
+        nerd-fonts.fira-code
       ];
 
       fontconfig = {

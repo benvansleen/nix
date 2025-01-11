@@ -1,5 +1,10 @@
 lib: overlays:
-{ nixpkgs, systems, ... }@inputs:
+{
+  nixpkgs,
+  nixpkgs-stable,
+  systems,
+  ...
+}@inputs:
 
 let
   constants = import ./constants.nix;
@@ -28,8 +33,6 @@ let
       ))
       (mapAttrsToList (name: _filetype: dir + ("/" + name)))
     ];
-
-  mkPkgs = cfg: import nixpkgs cfg;
 in
 rec {
   inherit constants;
@@ -41,8 +44,8 @@ rec {
     (
       let
         pkgs-config = { inherit system overlays; };
-        pkgs = mkPkgs pkgs-config;
-        pkgs-unfree = mkPkgs (
+        pkgs-stable = import nixpkgs-stable pkgs-config;
+        pkgs-unfree = import nixpkgs (
           pkgs-config
           // {
             config.allowUnfree = true;
@@ -52,9 +55,12 @@ rec {
       lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit pkgs pkgs-unfree;
+          inherit pkgs-stable pkgs-unfree;
         } // inputs;
         modules = [
+          {
+            nixpkgs.config = pkgs-config;
+          }
           ../modules/system
           ../hosts
           ../users

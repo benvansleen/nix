@@ -25,7 +25,6 @@ in
       };
       systemd.enable = false; # Conflicts with UWSM
       plugins = with pkgs.hyprlandPlugins; [
-        hyprexpo
       ];
     };
   };

@@ -28,6 +28,7 @@ in
     services.resolved.enable = false;
     environment.etc."resolv.conf".text = ''
       nameserver 127.0.0.1
+      nameserver 1.1.1.1
     '';
 
     virtualisation.oci-containers.containers = {
@@ -53,6 +54,9 @@ in
         volumes = [
           "/etc/pihole:/etc/pihole"
           "/etc/dnsmasq.d:/etc/dnsmasq.d"
+        ];
+        extraOptions = [
+          "--pull=newer"
         ];
       };
     };

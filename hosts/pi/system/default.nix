@@ -8,7 +8,10 @@ lib.importAll ./.
   config = {
     modules = {
       caddy.enable = true;
-      containers.enable = true;
+      containers = {
+        enable = true;
+        disable-podman-dns = true;
+      };
       display-manager.enable = false;
       firefox.enable = false;
       fonts.enable = false;
