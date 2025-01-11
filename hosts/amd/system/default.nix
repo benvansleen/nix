@@ -30,7 +30,7 @@ in
             };
             timer = {
               enable = true;
-              OnCalendar = "daily";
+              OnCalendar = "hourly";
               Persistent = true;
             };
           }
