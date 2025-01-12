@@ -31,14 +31,25 @@ in
     services.caddy =
       let
         services = {
-          searx = ''
+          grafana = ''
+            tailscale_auth
             encode zstd gzip
-            reverse_proxy pi:${toString config.modules.searx.port}
+            reverse_proxy pi:${toString config.modules.grafana.port} {
+              header_up X-Webauth-User {http.auth.user.tailscale_user}
+            }
           '';
           pihole = ''
             encode zstd gzip
             redir / /admin{uri}
             reverse_proxy pi:${toString config.modules.pihole.web-ui-port}
+          '';
+          prometheus = ''
+            encode zstd gzip
+            reverse_proxy pi:${toString config.modules.prometheus.server.port}
+          '';
+          searx = ''
+            encode zstd gzip
+            reverse_proxy pi:${toString config.modules.searx.port}
           '';
         };
 
@@ -86,24 +97,52 @@ in
               (concatStringsSep "\n")
             ]
           );
-        virtualHosts = {
-          "searx.ben.vansleen.dev" = {
-            serverAliases = [
-              "ben.vansleen.dev"
-              "benvansleen.dev"
-              "net.benvansleen.dev"
-              "searx.net.benvansleen.dev"
-            ];
-            extraConfig = cloudflare services.searx;
-          };
+        virtualHosts =
+          let
+            primary = {
+              domain = "vansleen.dev";
+              subdomain = "ben";
+            };
+            secondary = {
+              domain = "benvansleen.dev";
+              subdomain = "net";
+            };
+          in
+          {
+            "grafana.${primary.subdomain}.${primary.domain}" = {
+              serverAliases = [
+                "grafana.${secondary.subdomain}.${secondary.domain}"
+              ];
+              extraConfig = cloudflare ''
+                redir / https://grafana.${lib.constants.tailscale-domain}
+              '';
+            };
 
-          "pihole.ben.vansleen.dev" = {
-            serverAliases = [
-              "pihole.net.benvansleen.dev"
-            ];
-            extraConfig = cloudflare services.pihole;
+            "pihole.${primary.subdomain}.${primary.domain}" = {
+              serverAliases = [
+                "pihole.${secondary.subdomain}.${secondary.domain}"
+              ];
+              extraConfig = cloudflare services.pihole;
+            };
+
+            "prometheus.${primary.subdomain}.${primary.domain}" = {
+              serverAliases = [
+                "prometheus.${secondary.subdomain}.${secondary.domain}"
+              ];
+              extraConfig = cloudflare services.prometheus;
+            };
+
+            "searx.${primary.subdomain}.${primary.domain}" = {
+              serverAliases = [
+                "${primary.subdomain}.${primary.domain}"
+                "${secondary.domain}"
+                "${secondary.subdomain}.${secondary.domain}"
+                "searx.${secondary.subdomain}.${secondary.domain}"
+              ];
+              extraConfig = cloudflare services.searx;
+            };
+
           };
-        };
       };
 
     modules.impermanence.persistedDirectories = with config.services.caddy; [

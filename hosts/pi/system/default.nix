@@ -15,9 +15,31 @@ lib.importAll ./.
       display-manager.enable = false;
       firefox.enable = false;
       fonts.enable = false;
+      grafana.enable = true;
       home-manager.enable = true;
       impermanence.enable = false;
       pihole.enable = true;
+      prometheus = {
+        client.enable = true;
+        server = {
+          enable = true;
+          scrapeConfigs = [
+            {
+              job_name = "home";
+              static_configs = [
+                {
+                  targets = [
+                    # TODO: fix when moving to colmena
+                    "pi:${toString config.modules.prometheus.client.port}"
+                    "amd:${toString config.modules.prometheus.client.port}"
+                  ];
+                }
+              ];
+              scrape_interval = "15s";
+            }
+          ];
+        };
+      };
       searx = {
         enable = true;
         port = 8888;
