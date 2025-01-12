@@ -13,6 +13,36 @@ lib.importAll ./.
   config = {
     modules = {
       caddy.enable = true;
+      clonix = {
+        enable = true;
+        deployments = [
+          rec {
+            deploymentName = "backup-${config.machine.name}";
+            local = {
+              dir = "/";
+              exclude = [
+                "/bin"
+                "/boot"
+                "/dev"
+                "/lib"
+                "/mnt"
+                "/nix"
+                "/proc"
+                "/run"
+                "/sys"
+                "/usr"
+              ];
+            };
+            targetDir = "${lib.constants.backup-path}/${deploymentName}";
+            remote.enable = false;
+            timer = {
+              enable = true;
+              OnCalendar = "hourly";
+              Persistent = true;
+            };
+          }
+        ];
+      };
       containers = {
         enable = true;
         disable-podman-dns = true;
