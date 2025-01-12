@@ -31,19 +31,20 @@ in
       nameserver 1.1.1.1
     '';
 
+    # Must open ports to use pihole for LAN
+    networking.firewall = {
+      allowedTCPPorts = lib.mkForce [ 53 ];
+      allowedUDPPorts = lib.mkForce [ 53 ];
+    };
+
     virtualisation.oci-containers.containers = {
       pihole = {
         hostname = "pihole";
-        # image = "cbcrowe/pihole-unbound:latest";
         image = "pihole/pihole:latest";
-        ports = [
-          "53:53/tcp"
-          "53:53/udp"
-          "67:67/udp" # For DHCP
-          "${toString cfg.web-ui-port}:80/tcp" # For pihole dashboard
-        ];
         environment = {
-          # PIHOLE_DNS_ = "127.0.0.1#5335";
+          PIHOLE_DNS_ = "127.0.0.1#${toString config.modules.unbound.port}";
+          PIHOLE_INTERFACE = "end0"; # rpi4 uses `end0` instead of `eth0`
+          WEB_PORT = toString cfg.web-ui-port;
           TZ = "America/New_York";
           DNSSEC = "true";
           DNSMASQ_LISTENING = "single";
@@ -57,6 +58,7 @@ in
         ];
         extraOptions = [
           "--pull=newer"
+          "--network=host"
         ];
       };
     };

@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   if-using-sops = lib.mkIf config.modules.sops.enable;
@@ -37,6 +42,18 @@ lib.importAll ./.
               ];
               scrape_interval = "15s";
             }
+            {
+              job_name = "dns";
+              static_configs = [
+                {
+                  targets = [
+                    # TODO: fix when moving to colmena
+                    "pi:${toString config.modules.unbound.prometheusPort}"
+                  ];
+                }
+              ];
+              scrape_interval = "15s";
+            }
           ];
         };
       };
@@ -56,7 +73,16 @@ lib.importAll ./.
           "--advertise-routes=192.168.1.0/24"
         ];
       };
+      unbound = {
+        enable = true;
+        port = 5335;
+        num-threads = 4;
+      };
     };
+
+    environment.systemPackages = with pkgs; [
+      dig
+    ];
 
     services.openssh.enable = true;
     networking.wireless.enable = false;
