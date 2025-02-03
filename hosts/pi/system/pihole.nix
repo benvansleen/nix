@@ -23,7 +23,7 @@ in
     # DO NOT TOUCH DNS CONFIG
     # will likely break tailscale magicDNS, caddy, and other services
     modules.tailscale.tailscale-up-extra-args = [
-      "--accept-dns=true"
+      "--accept-dns=true" # Verify tailscale overwrites /etc/resolv.conf!
     ];
     services.resolved.enable = false;
     environment.etc."resolv.conf".text = ''
@@ -46,8 +46,9 @@ in
           PIHOLE_INTERFACE = "end0"; # rpi4 uses `end0` instead of `eth0`
           WEB_PORT = toString cfg.web-ui-port;
           TZ = "America/New_York";
-          DNSSEC = "true";
-          DNSMASQ_LISTENING = "single";
+          DNSSEC = mkIf config.modules.unbound.enable "false";
+          CACHE_SIZE = mkIf config.modules.unbound.enable "0";
+          DNSMASQ_LISTENING = "all";
         };
         environmentFiles = [
           config.sops.templates."pihole.env".path
@@ -58,6 +59,10 @@ in
         ];
         extraOptions = [
           "--pull=newer"
+
+          # If facing any issues with DNS resolution on pihole startup,
+          # ensure `Permit all origins` is set in web ui
+          # TODO: verify that this issue is fixed by `DNSMASQ_LISTENING`
           "--network=host"
         ];
       };
