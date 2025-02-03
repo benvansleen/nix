@@ -54,6 +54,10 @@
         "ctrl+alt+h" = "goto_split:left";
 
         "ctrl+alt+o" = "toggle_tab_overview";
+
+        # C-c copies to cliboard IFF there is text available
+        # to copy. Otherwise, pass C-c to process
+        "performable:ctrl+c" = "copy_to_clipboard";
       };
     };
   };
