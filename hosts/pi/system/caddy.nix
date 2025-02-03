@@ -38,6 +38,10 @@ in
               header_up X-Webauth-User {http.auth.user.tailscale_user}
             }
           '';
+          maybe = ''
+            encode zstd gzip
+            reverse_proxy pi:${toString config.modules.maybe.port}
+          '';
           pihole = ''
             encode zstd gzip
             redir / /admin{uri}
@@ -116,6 +120,14 @@ in
               extraConfig = cloudflare ''
                 redir / https://grafana.${lib.constants.tailscale-domain}
               '';
+            };
+
+            "maybe.${primary.subdomain}.${primary.domain}" = {
+              serverAliases = [
+                "maybe.${primary.domain}"
+                "maybe.${secondary.subdomain}.${secondary.domain}"
+              ];
+              extraConfig = cloudflare services.maybe;
             };
 
             "pihole.${primary.subdomain}.${primary.domain}" = {
