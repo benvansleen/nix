@@ -53,6 +53,7 @@ lib.importAll ./.
       grafana.enable = true;
       home-manager.enable = true;
       impermanence.enable = false;
+      maybe.enable = true;
       pihole.enable = true;
       prometheus = {
         client.enable = true;
