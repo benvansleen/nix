@@ -9,14 +9,14 @@ let
   inherit (lib) mkIf mkEnableOption;
   cfg = config.modules.caddy;
 
-  # Build currently breaks w/ caddy-v2.9.0
+  # Build currently (Jan 2025) breaks w/ caddy-v2.9.0
   # https://github.com/tailscale/caddy-tailscale/pull/83
   my-caddy = pkgs-stable.caddy.withPlugins {
     plugins = [
       "github.com/tailscale/caddy-tailscale@f21c01b660c896bdd6bacc37178dc00d9af282b4"
       "github.com/caddy-dns/cloudflare@89f16b99c18ef49c8bb470a82f895bce01cbaece"
     ];
-    hash = "sha256-KCOjtpWe8vw/vMFx56KcM12owBzWnkCwkNiwNc/adAs=";
+    hash = "sha256-JhRVwDKhrhpdw+xBMWPo9pktn9AvGSqekSfl8IFLf94=";
   };
 in
 {
