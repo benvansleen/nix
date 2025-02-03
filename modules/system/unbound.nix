@@ -46,6 +46,23 @@ in
               "0.0.0.0/0 allow" # Allow anyone to make DNS requests
             ];
             extended-statistics = true;
+
+            # Performance settings
+            prefetch = true;
+            cache-min-ttl = 3600;
+            msg-cache-slabs = cfg.num-threads;
+            rrset-cache-slabs = cfg.num-threads;
+            infra-cache-slabs = cfg.num-threads;
+            key-cache-slabs = cfg.num-threads;
+
+            rrset-cache-size = "256m";
+            msg-cache-size = "128m";
+
+            outgoing-range = (1024 / cfg.num-threads) - 50;
+
+            so-rcvbuf = "4m";
+            so-sndbuf = "4m";
+            so-reuseport = true;
           };
           remote-control = {
             control-enable = true;
