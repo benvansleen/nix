@@ -1,6 +1,7 @@
 {
   user,
   directory,
+  secrets,
 }:
 {
   pkgs,
@@ -100,14 +101,8 @@ in
       };
     };
 
-    sops = {
-      defaultSopsFile = ./secrets.yaml;
-      age.sshKeyPaths = [
-        "${homeDir.root}/.ssh/master"
-      ];
-      secrets.github_copilot = {
-        path = "${homeDir.config}/github-copilot/hosts.json";
-      };
+    sops = secrets "${homeDir.root}/.ssh/master" // {
+      secrets.github_copilot.path = "${homeDir.config}/github-copilot/hosts.json";
     };
 
     home.stateVersion = "24.11";

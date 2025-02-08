@@ -3,6 +3,7 @@
   pkgs,
   lib,
   nixpkgs,
+  secrets,
   ...
 }:
 
@@ -34,7 +35,10 @@ in
       firefox.enable = mkDefault true;
       fonts.enable = mkDefault false;
       home-manager.enable = mkDefault true;
-      sops.enable = mkDefault true;
+      sops = {
+        enable = mkDefault true;
+        system-secrets = secrets.system;
+      };
       stylix.enable = mkDefault true;
     };
 

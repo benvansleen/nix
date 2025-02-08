@@ -499,10 +499,34 @@
         "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable",
         "pre-commit-hooks": "pre-commit-hooks",
+        "secrets": "secrets",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "systems": "systems",
         "treefmt-nix": "treefmt-nix"
+      }
+    },
+    "secrets": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1739041642,
+        "narHash": "sha256-VaWJqKFcSUCyVx557qmLXPrfJ+OLafKMp2ing9WS2qQ=",
+        "ref": "refs/heads/master",
+        "rev": "0a863b3935633fbaad92feb5cd7f8ce93392a1a8",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/benvansleen/secrets.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/benvansleen/secrets.git"
       }
     },
     "sops-nix": {

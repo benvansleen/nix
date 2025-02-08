@@ -1,6 +1,4 @@
 {
-  description = "NixOS config";
-
   nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"
@@ -14,6 +12,13 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
     systems.url = "github:nix-systems/default";
+    secrets = {
+      url = "git+ssh://git@github.com/benvansleen/secrets.git";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
+    };
 
     nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
 
@@ -172,13 +177,8 @@
               buildInputs = [
                 self.checks.${system}.pre-commit-check.enabledPackages
                 nixfmt-rfc-style
-                sops
               ];
-              shellHook =
-                self.checks.${system}.pre-commit-check.shellHook
-                + ''
-                  export SOPS_AGE_KEY=$(${ssh-to-age}/bin/ssh-to-age -i ~/.ssh/master -private-key)
-                '';
+              inherit (self.checks.${system}.pre-commit-check) shellHook;
             };
         }
 

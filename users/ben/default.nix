@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  secrets,
   ...
 }:
 
@@ -18,15 +19,11 @@ lib.mkUser {
     (import ./home.nix {
       inherit user;
       directory = home-dir;
+      secrets = secrets.${user};
     })
   ];
   extraConfig = {
     sops.secrets = if-using-sops {
-      user-password = {
-        sopsFile = ./password.sops;
-        format = "binary";
-        neededForUsers = true;
-      };
       ssh_master_pem = {
         path = "${home-dir}/.ssh/master";
         owner = user;
@@ -52,7 +49,7 @@ lib.mkUser {
     users.users.${user} = {
       isNormalUser = true;
       shell = pkgs.zsh;
-      hashedPasswordFile = if-using-sops config.sops.secrets.user-password.path;
+      hashedPasswordFile = if-using-sops config.sops.secrets."${user}-password".path;
       home = home-dir;
 
       description = "Ben Van Sleen";

@@ -3,6 +3,7 @@ lib: overlays:
   nixpkgs,
   nixpkgs-stable,
   systems,
+  secrets,
   ...
 }@inputs:
 
@@ -55,7 +56,7 @@ rec {
       lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit pkgs-stable pkgs-unfree;
+          inherit pkgs-stable pkgs-unfree secrets;
         } // inputs;
         modules = [
           {
