@@ -98,15 +98,7 @@ rec {
       };
     };
 
-  eachSystem =
-    f:
-    lib.genAttrs (import systems) (
-      system:
-      f {
-        inherit system;
-        pkgs = nixpkgs.legacyPackages.${system};
-      }
-    );
+  eachSystem = f: lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
 
   eachUser =
     f:

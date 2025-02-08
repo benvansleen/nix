@@ -144,7 +144,7 @@
         };
 
       packages = lib.eachSystem (
-        { pkgs, ... }:
+        pkgs:
         let
           run = pkgs.callPackage ./run { };
         in
@@ -168,43 +168,38 @@
         }))
       );
 
-      devShells = lib.eachSystem (
-        { pkgs, system }:
-        {
-          default =
-            with pkgs;
-            mkShell {
-              buildInputs = [
-                self.checks.${system}.pre-commit-check.enabledPackages
-                nixfmt-rfc-style
-              ];
-              inherit (self.checks.${system}.pre-commit-check) shellHook;
-            };
-        }
+      devShells = lib.eachSystem (pkgs: {
+        default =
+          with pkgs;
+          mkShell {
+            buildInputs = [
+              self.checks.${system}.pre-commit-check.enabledPackages
+              nixfmt-rfc-style
+            ];
+            inherit (self.checks.${system}.pre-commit-check) shellHook;
+          };
+      }
 
       );
 
-      formatter = lib.eachSystem ({ pkgs, ... }: (treefmtEval pkgs).config.build.wrapper);
-      checks = lib.eachSystem (
-        { system, pkgs }:
-        {
-          pre-commit-check = pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              deadnix.enable = true;
-              ripsecrets.enable = true;
-              statix.enable = true;
-              nix-fmt = {
-                enable = true;
-                name = "nix fmt";
-                entry = "${pkgs.nix}/bin/nix fmt";
-                language = "system";
-                stages = [ "pre-commit" ];
-              };
+      formatter = lib.eachSystem (pkgs: (treefmtEval pkgs).config.build.wrapper);
+      checks = lib.eachSystem (pkgs: {
+        pre-commit-check = pre-commit-hooks.lib.${pkgs.system}.run {
+          src = ./.;
+          hooks = {
+            deadnix.enable = true;
+            ripsecrets.enable = true;
+            statix.enable = true;
+            nix-fmt = {
+              enable = true;
+              name = "nix fmt";
+              entry = "${pkgs.nix}/bin/nix fmt";
+              language = "system";
+              stages = [ "pre-commit" ];
             };
           };
-        }
-      );
+        };
+      });
 
     };
 }
