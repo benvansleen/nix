@@ -1,6 +1,6 @@
 {
   config,
-  pkgs-stable,
+  pkgs,
   lib,
   ...
 }:
@@ -11,12 +11,12 @@ let
 
   # Build currently (Jan 2025) breaks w/ caddy-v2.9.0
   # https://github.com/tailscale/caddy-tailscale/pull/83
-  my-caddy = pkgs-stable.caddy.withPlugins {
+  my-caddy = pkgs.caddy.withPlugins {
     plugins = [
-      "github.com/tailscale/caddy-tailscale@f21c01b660c896bdd6bacc37178dc00d9af282b4"
-      "github.com/caddy-dns/cloudflare@89f16b99c18ef49c8bb470a82f895bce01cbaece"
+      "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
+      "github.com/caddy-dns/cloudflare@v0.0.0-20240703190432-89f16b99c18e"
     ];
-    hash = "sha256-JhRVwDKhrhpdw+xBMWPo9pktn9AvGSqekSfl8IFLf94=";
+    hash = "sha256-x9QMAmgIkKJRzcp5Hsg9MmMXTRemXQz72oSTcH85SWc=";
   };
 in
 {
