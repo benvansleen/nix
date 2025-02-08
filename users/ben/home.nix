@@ -4,6 +4,7 @@
 }:
 {
   pkgs,
+  lib,
   systemConfig,
   ...
 }:
@@ -26,13 +27,17 @@ in
     modules = {
       impermanence = {
         inherit homeDir;
-        persistedDirectories = [
-          "${homeDir.config}/nix"
-          "Code"
-          "Documents"
-          "Downloads"
-          "Pictures"
-        ];
+        persistedDirectories =
+          [
+            "${homeDir.config}/nix"
+            "Code"
+            "Documents"
+            "Downloads"
+            "Pictures"
+          ]
+          ++ lib.optionals systemConfig.services.hardware.openrgb.enable [
+            "${homeDir.config}/OpenRGB"
+          ];
       };
       cli.enable = true;
       emacs = {
