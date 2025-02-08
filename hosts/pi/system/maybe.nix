@@ -38,8 +38,11 @@ in
             RAILS_ASSUME_SSL = "false";
             DB_HOST = "localhost";
             SYNTH_API_KEY = "";
-            inherit POSTGRES_DB POSTGRES_USER POSTGRES_PASSWORD;
+            inherit POSTGRES_DB POSTGRES_USER;
           };
+          environmentFiles = [
+            config.sops.templates."maybe.env".path
+          ];
           volumes = [
             "app-storage:/rails/storage"
           ];
@@ -55,8 +58,11 @@ in
         maybe-postgres = {
           image = "postgres:16";
           environment = {
-            inherit POSTGRES_DB POSTGRES_USER POSTGRES_PASSWORD;
+            inherit POSTGRES_DB POSTGRES_USER;
           };
+          environmentFiles = [
+            config.sops.templates."maybe.env".path
+          ];
           volumes = [
             "postgres-data:/var/lib/postgresql/data"
           ];
@@ -65,5 +71,10 @@ in
           ];
         };
       };
+
+    sops.templates."maybe.env".content = ''
+      POSTGRES_PASSWORD=${config.sops.placeholder.maybe_postgres_password}
+      SECRET_KEY_BASE=${config.sops.placeholder.maybe_secret_key_base}
+    '';
   };
 }
