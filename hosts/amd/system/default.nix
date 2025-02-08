@@ -52,9 +52,12 @@ in
       searx.enable = false;
     };
 
-    nix.settings = {
-      cores = lib.mkForce 12;
-      max-jobs = 6;
+    nix = {
+      gc.automatic = lib.mkForce false;
+      settings = {
+        cores = lib.mkForce 12;
+        max-jobs = 6;
+      };
     };
 
     boot = {
