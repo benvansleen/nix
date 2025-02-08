@@ -58,7 +58,7 @@
     nodev."/" = {
       fsType = "tmpfs";
       mountOptions = [
-        "size=8G"
+        "size=64G"
         "defaults"
         "mode=755"
       ];
