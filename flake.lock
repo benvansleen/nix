@@ -516,11 +516,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1739041642,
-        "narHash": "sha256-VaWJqKFcSUCyVx557qmLXPrfJ+OLafKMp2ing9WS2qQ=",
+        "lastModified": 1739046787,
+        "narHash": "sha256-blYOZj7aIuodA14h4nG3RCcTWXE9GCPHbwNaqw8fm5E=",
         "ref": "refs/heads/master",
-        "rev": "0a863b3935633fbaad92feb5cd7f8ce93392a1a8",
-        "revCount": 1,
+        "rev": "efa6d3a816005ee4d00a801b8ead3faeb57c8b6b",
+        "revCount": 4,
         "type": "git",
         "url": "ssh://git@github.com/benvansleen/secrets.git"
       },

@@ -48,7 +48,7 @@
             hash=$(${pkgs.mkpasswd}/bin/mkpasswd "$password" -m sha-512)
             ${pkgs.sops}/bin/sops set "$PASSWORD_FILE" '["data"]' "\"$hash\""
             echo "Password will update after next system rebuild"
-            echo "Be sure to push to the `secrets` remote repository"
+            echo "Be sure to push to the \`secrets\` remote repository"
         else
             echo "$PASSWORD_FILE not found!"
         fi
