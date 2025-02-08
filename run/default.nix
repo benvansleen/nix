@@ -4,6 +4,7 @@
   rebuild = pkgs.writeShellApplication {
     name = "rebuild";
     text = ''
+      nix flake update secrets
       ${pkgs.nh}/bin/nh os "''${1:-switch}" .
     '';
   };
@@ -22,7 +23,10 @@
   set-password-for =
     user:
     let
-      file = if user == "root" then "./secrets/root-password.sops" else "./users/${user}/password.sops";
+      file =
+        if user == "root" then "./secrets/root-password.sops" else "./secrets/users/${user}/password.sops";
+      keyfile = if user == "root" then "/etc/ssh/ssh_host_ed25519_key" else "~/.ssh/master";
+      need-privileged-execution = if user == "root" then "sudo" else "";
     in
     pkgs.writeShellApplication {
       name = "set-password";
@@ -37,11 +41,14 @@
             exit 1
         fi
 
+        SOPS_AGE_KEY=$(${need-privileged-execution} ${pkgs.ssh-to-age}/bin/ssh-to-age -i ${keyfile} -private-key)
+        export SOPS_AGE_KEY
         if [ -e $PASSWORD_FILE ]
         then
             hash=$(${pkgs.mkpasswd}/bin/mkpasswd "$password" -m sha-512)
             ${pkgs.sops}/bin/sops set "$PASSWORD_FILE" '["data"]' "\"$hash\""
             echo "Password will update after next system rebuild"
+            echo "Be sure to push to the `secrets` remote repository"
         else
             echo "$PASSWORD_FILE not found!"
         fi
