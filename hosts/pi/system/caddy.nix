@@ -9,8 +9,6 @@ let
   inherit (lib) mkIf mkEnableOption;
   cfg = config.modules.caddy;
 
-  # Build currently (Jan 2025) breaks w/ caddy-v2.9.0
-  # https://github.com/tailscale/caddy-tailscale/pull/83
   my-caddy = pkgs.caddy.withPlugins {
     plugins = [
       "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
