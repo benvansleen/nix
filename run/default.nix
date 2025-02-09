@@ -23,8 +23,7 @@
   set-password-for =
     user:
     let
-      file =
-        if user == "root" then "./secrets/root-password.sops" else "./secrets/users/${user}/password.sops";
+      file = "./secrets/users/${user}/password.sops";
       keyfile = if user == "root" then "/etc/ssh/ssh_host_ed25519_key" else "~/.ssh/master";
       need-privileged-execution = if user == "root" then "sudo" else "";
     in
