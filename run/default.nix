@@ -1,11 +1,34 @@
-{ pkgs, ... }:
+{ pkgs, colmena, ... }:
 
+let
+  colmena-bin = "RUST_LOG=error ${
+    colmena.packages.${pkgs.system}.colmena
+  }/bin/colmena --experimental-flake-eval";
+in
 {
   rebuild = pkgs.writeShellApplication {
     name = "rebuild";
     text = ''
       nix flake update secrets
-      ${pkgs.nh}/bin/nh os "''${1:-switch}" .
+      ${colmena-bin} apply-local "''${1:-switch}" --sudo
+    '';
+  };
+
+  apply = pkgs.writeShellApplication {
+    name = "apply";
+    text = ''
+      nix flake update secrets
+      ${colmena-bin} apply "''${1:-switch}" --evaluator streaming
+
+      # Toggle tailscale dns resolution to prevent /etc/resolv.conf from being clobbered by nix
+      ${colmena-bin} exec --on pi "tailscale set --accept-dns=false && tailscale set --accept-dns=true"
+    '';
+  };
+
+  build = pkgs.writeShellApplication {
+    name = "build";
+    text = ''
+      ${colmena-bin} build
     '';
   };
 
@@ -53,5 +76,4 @@
         fi
       '';
     };
-
 }

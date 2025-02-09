@@ -39,6 +39,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    colmena = {
+      url = "github:zhaofengli/colmena";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        stable.follows = "nixpkgs-stable";
+        flake-compat.follows = "flake-compat";
+      };
+    };
+
     stylix = {
       url = "github:danth/stylix/release-24.11";
       inputs = {
@@ -97,6 +106,7 @@
       self,
       nixpkgs,
       home-manager,
+      colmena,
       pre-commit-hooks,
       treefmt-nix,
       ...
@@ -107,14 +117,10 @@
       lib = nixpkgs.lib.extend (_final: _prev: home-manager.lib // (import ./lib lib overlays inputs));
     in
     {
+      colmena = import ./hive { inherit inputs lib overlays; };
+      colmenaHive = colmena.lib.makeHive self.outputs.colmena;
 
       nixosConfigurations = {
-        amd = lib.mkSystem "x86_64-linux" [
-          ./hosts/amd
-        ];
-        pi = lib.mkSystem "aarch64-linux" [
-          ./hosts/pi
-        ];
         qemu = lib.mkSystem "x86_64-linux" [
           ./hosts/qemu
         ];
@@ -146,12 +152,13 @@
       packages = lib.eachSystem (
         pkgs:
         let
-          run = pkgs.callPackage ./run { };
+          run = pkgs.callPackage ./run { inherit colmena; };
         in
         rec {
           default = rebuild;
 
-          inherit (run) rebuild;
+          inherit (run) rebuild apply build;
+
           install = run.install-nixos;
 
           root.set-password = run.set-password-for "root";
@@ -175,6 +182,7 @@
             buildInputs = [
               self.checks.${system}.pre-commit-check.enabledPackages
               nixfmt-rfc-style
+              colmena.packages.${pkgs.system}.colmena
             ];
             inherit (self.checks.${system}.pre-commit-check) shellHook;
           };
@@ -200,6 +208,5 @@
           };
         };
       });
-
     };
 }
