@@ -6,7 +6,12 @@
 }:
 
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib)
+    mkIf
+    mkEnableOption
+    mkOption
+    types
+    ;
   cfg = config.modules.caddy;
 
   my-caddy = pkgs.caddy.withPlugins {
@@ -14,11 +19,18 @@ let
       "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
       "github.com/caddy-dns/cloudflare@v0.0.0-20240703190432-89f16b99c18e"
     ];
-    hash = "sha256-DVjTuzDC6ZCrYasOGupA5JGFTsz1Q0BcDoaTnCGwfoU=";
+    hash = "sha256-x9QMAmgIkKJRzcp5Hsg9MmMXTRemXQz72oSTcH85SWc=";
   };
 in
 {
-  options.modules.caddy.enable = mkEnableOption "caddy";
+  options.modules.caddy = {
+    enable = mkEnableOption "caddy";
+    admin-port = mkOption {
+      type = types.port;
+      default = 2019;
+      description = "port where caddy admin information is available";
+    };
+  };
 
   config = mkIf cfg.enable {
     environment.systemPackages = [ my-caddy ];
@@ -69,7 +81,7 @@ in
           ${config}
         '';
       in
-      {
+      rec {
         enable = true;
         enableReload = false;
         package = my-caddy;
@@ -78,10 +90,27 @@ in
         logDir = "/var/log/caddy";
 
         environmentFile = config.sops.templates."caddy.env".path;
+        logFormat = ''
+          output file ${logDir}/caddy_main.log {
+            roll_size 100MiB
+            roll_keep 5
+            roll_keep_for 100d
+          }
+          format json
+          level INFO
+        '';
+
+        # TODO: restrict `admin :2019` to just tailnet ips
+        # https://caddy.community/t/access-metrics-when-using-dockerized-caddy/16496
         globalConfig = ''
           tailscale {
             auth_key {$TS_AUTHKEY}
             webui true
+          }
+
+          admin :${toString cfg.admin-port}
+          servers {
+            metrics
           }
         '';
         extraConfig =

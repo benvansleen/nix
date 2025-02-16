@@ -34,5 +34,9 @@ in
         };
       };
     };
+
+    modules.impermanence.persistedDirectories = with config.services.grafana; [
+      dataDir
+    ];
   };
 }

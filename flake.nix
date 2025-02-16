@@ -157,7 +157,12 @@
         rec {
           default = rebuild;
 
-          inherit (run) rebuild apply build;
+          inherit (run)
+            all
+            rebuild
+            apply
+            build
+            ;
 
           install = run.install-nixos;
 

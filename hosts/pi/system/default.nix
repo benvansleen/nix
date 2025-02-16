@@ -85,6 +85,19 @@ lib.importAll ./.
               ];
               scrape_interval = "15s";
             }
+            {
+              # https://github.com/Malfhas/caddy-grafana
+              job_name = "caddy";
+              static_configs = [
+                {
+                  targets = [
+                    # TODO: fix when moving to colmena
+                    "pi:${toString config.modules.caddy.admin-port}"
+                  ];
+                }
+              ];
+              scrape_interval = "15s";
+            }
           ];
         };
       };

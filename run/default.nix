@@ -6,6 +6,15 @@ let
   }/bin/colmena --experimental-flake-eval";
 in
 {
+  all = pkgs.writeShellApplication {
+    name = "all";
+    text = ''
+      nix run .#build
+      nix run .#rebuild
+      nix run .#apply
+    '';
+  };
+
   rebuild = pkgs.writeShellApplication {
     name = "rebuild";
     text = ''
@@ -18,7 +27,7 @@ in
     name = "apply";
     text = ''
       nix flake update secrets
-      ${colmena-bin} apply "''${1:-switch}" --evaluator streaming
+      ${colmena-bin} apply "''${1:-switch}"
 
       # Toggle tailscale dns resolution to prevent /etc/resolv.conf from being clobbered by nix
       ${colmena-bin} exec --on pi "tailscale set --accept-dns=false && tailscale set --accept-dns=true"
