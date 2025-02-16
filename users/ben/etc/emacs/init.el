@@ -402,28 +402,28 @@
   :mode "\\.nix\\'")
 
 
-(use-package copilot
-  :bind (:map global-map
-              ("M-:" . nil)
-              :map evil-normal-state-map
-              ("M-:" . eval-expression)
-              :map evil-insert-state-map
-              ("M-;" . copilot-accept-completion)
-              ("M-:" . copilot-accept-completion-by-word)
-              ("C-M-;" . copilot-next-completion))
+;; (use-package copilot
+;;   :bind (:map global-map
+;;               ("M-:" . nil)
+;;               :map evil-normal-state-map
+;;               ("M-:" . eval-expression)
+;;               :map evil-insert-state-map
+;;               ("M-;" . copilot-accept-completion)
+;;               ("M-:" . copilot-accept-completion-by-word)
+;;               ("C-M-;" . copilot-next-completion))
 
-  :hook ((text-mode . copilot-mode)
-         (prog-mode . copilot-mode))
+;;   :hook ((text-mode . copilot-mode)
+;;          (prog-mode . copilot-mode))
 
-  :config
-  (add-to-list 'copilot-indentation-alist
-               '(emacs-lisp-mode 2))
-  (add-to-list 'copilot-indentation-alist
-               '(text-mode 0))
-  (add-to-list 'copilot-indentation-alist
-               '(minibuffer-mode 0))
-  (add-to-list 'copilot-indentation-alist
-               '(nix-ts-mode 2)))
+;;   :config
+;;   (add-to-list 'copilot-indentation-alist
+;;                '(emacs-lisp-mode 2))
+;;   (add-to-list 'copilot-indentation-alist
+;;                '(text-mode 0))
+;;   (add-to-list 'copilot-indentation-alist
+;;                '(minibuffer-mode 0))
+;;   (add-to-list 'copilot-indentation-alist
+;;                '(nix-ts-mode 2)))
 
 (use-package rainbow-mode)
 

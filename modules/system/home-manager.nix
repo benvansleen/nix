@@ -1,8 +1,5 @@
 {
   config,
-  pkgs,
-  pkgs-stable,
-  pkgs-unfree,
   lib,
   home-manager,
   nix-index-database,
@@ -27,9 +24,8 @@ in
       useGlobalPkgs = true;
       useUserPackages = true;
       extraSpecialArgs = {
-        pkgs = if config.machine.allowUnfree then pkgs-unfree else pkgs;
         systemConfig = config;
-        inherit pkgs-stable nix-index-database;
+        inherit nix-index-database;
       };
     };
   };

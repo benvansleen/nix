@@ -1,11 +1,9 @@
-lib: overlays:
+lib:
 {
   nixpkgs,
-  nixpkgs-stable,
   systems,
-  secrets,
   ...
-}@inputs:
+}@specialArgs:
 
 let
   constants = import ./constants.nix;
@@ -42,37 +40,19 @@ rec {
 
   mkSystem =
     system: extraModules:
-    (
-      let
-        pkgs-config = { inherit system overlays; };
-        pkgs-stable = import nixpkgs-stable pkgs-config;
-        pkgs-unfree = import nixpkgs (
-          pkgs-config
-          // {
-            config.allowUnfree = true;
-          }
-        );
-      in
-      lib.nixosSystem {
-        inherit system;
-        specialArgs = {
-          inherit pkgs-stable pkgs-unfree secrets;
-        } // inputs;
-        modules = [
-          {
-            nixpkgs.config = pkgs-config;
-          }
-          ../modules/system
-          ../hosts
-          ../users
-        ] ++ extraModules;
-      }
-    );
+    (lib.nixosSystem {
+      inherit system specialArgs;
+      modules = [
+        ../modules/system
+        ../hosts
+        ../users
+      ] ++ extraModules;
+    });
 
   allHomeModules =
     with lib;
     [ ../modules/home ]
-    ++ (pipe inputs [
+    ++ (pipe specialArgs [
       (filterAttrs (_moduleName: module: module ? homeManagerModules))
       (mapAttrsToList (
         moduleName:

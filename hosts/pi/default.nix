@@ -6,6 +6,6 @@ lib.importAll ./.
     name = "pi";
     desktop = false;
     powerful = false;
-    allowUnfree = true;
+    allowUnfree = false;
   };
 }

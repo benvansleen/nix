@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  systemConfig,
   ...
 }:
 
@@ -15,9 +16,6 @@ in
 
     programs.zsh = {
       shellAliases = {
-        # by default, nixpkgs#<pkg> is a zsh glob pattern
-        nix = "noglob nix";
-
         "nh search" = "nh search --flake ${flake}";
         os-rebuild-test = ''
           ${pkgs.nh}/bin/nh os test ${flake}
@@ -34,8 +32,9 @@ in
         tree = "${pkgs.eza}/bin/eza --tree";
       };
 
-      zsh-abbr = mkIf pkgs.config.allowUnfree {
+      zsh-abbr = mkIf systemConfig.machine.allowUnfree {
         enable = true;
+        package = pkgs.unfree.zsh-abbr;
         abbreviations = {
           q = "exit";
           cls = "clear";
@@ -120,7 +119,6 @@ in
         WORDCHARS='*?-.[]~=&;!#$%^(){}<>'
 
         unsetopt BEEP
-        setopt extendedglob
         setopt nomatch
         setopt menucomplete
         setopt interactivecomments

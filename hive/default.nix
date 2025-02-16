@@ -5,7 +5,7 @@
 }:
 
 let
-  inherit (inputs) nixpkgs nixpkgs-stable;
+  inherit (inputs) nixpkgs;
 in
 {
   meta =
@@ -13,35 +13,18 @@ in
       nixpkgs-config = system: {
         inherit system overlays;
       };
-
-      specialArgs =
-        system:
-        {
-          inherit lib;
-          pkgs-stable = import nixpkgs-stable (nixpkgs-config system);
-          pkgs-unfree = import nixpkgs (
-            (nixpkgs-config system)
-            // {
-              config.allowUnfree = true;
-            }
-          );
-        }
-        // inputs;
     in
     {
+      specialArgs = {
+        inherit lib;
+      } // inputs;
       nixpkgs = import nixpkgs (nixpkgs-config "x86_64-linux");
-      specialArgs = specialArgs "x86_64-linux";
-
       nodeNixpkgs = {
         pi = import nixpkgs (nixpkgs-config "aarch64-linux");
       };
-      nodeSpecialArgs = {
-        pi = specialArgs "aarch64-linux";
-      };
-
     };
 
-  defaults = _: {
+  defaults = {
     imports = [
       ../modules/system
       ../hosts
@@ -49,7 +32,7 @@ in
     ];
   };
 
-  amd = _: {
+  amd = {
     imports = [
       ../hosts/amd
     ];
@@ -60,12 +43,11 @@ in
     };
   };
 
-  pi = _: {
+  pi = {
     imports = [
       ../hosts/pi
     ];
     deployment = {
-      targetHost = "pi";
       buildOnTarget = false;
     };
   };

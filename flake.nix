@@ -113,41 +113,12 @@
     }@inputs:
     let
       treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-      overlays = import ./overlays inputs;
-      lib = nixpkgs.lib.extend (_final: _prev: home-manager.lib // (import ./lib lib overlays inputs));
+      overlays = import ./overlays (inputs // { inherit (nixpkgs) lib; });
+      lib = nixpkgs.lib.extend (_final: _prev: home-manager.lib // (import ./lib lib inputs));
     in
     {
       colmena = import ./hive { inherit inputs lib overlays; };
       colmenaHive = colmena.lib.makeHive self.outputs.colmena;
-
-      nixosConfigurations = {
-        qemu = lib.mkSystem "x86_64-linux" [
-          ./hosts/qemu
-        ];
-        iso = lib.mkSystem "x86_64-linux" [
-          "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-          ./hosts/iso
-        ];
-      };
-
-      homeConfigurations =
-        let
-          amd = self.nixosConfigurations.amd.config;
-        in
-        {
-          "ben@${amd.machine.name}" = home-manager.lib.homeManagerConfiguration {
-            inherit (amd.home-manager.extraSpecialArgs) pkgs;
-            modules = lib.allHomeModules ++ [
-              (import ./users/ben/home.nix {
-                user = "ben";
-                directory = "/home/ben";
-              })
-            ];
-            extraSpecialArgs = amd.home-manager.extraSpecialArgs // {
-              inherit lib;
-            };
-          };
-        };
 
       packages = lib.eachSystem (
         pkgs:
