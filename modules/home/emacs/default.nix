@@ -37,7 +37,7 @@ let
     ''
     + (builtins.readFile cfg.init-el);
 
-  emacs-pkg = pkgs.emacs-pgtk;
+  emacs-pkg = pkgs.emacs-unstable-pgtk;
   emacs = pkgs.emacsWithPackagesFromUsePackage {
     package = lib.optimizeForThisHostIfPowerful {
       config = systemConfig;

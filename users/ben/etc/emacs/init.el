@@ -1,3 +1,6 @@
+;;; -*- lexical-binding: t; -*-
+
+
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
