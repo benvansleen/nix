@@ -285,6 +285,16 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
+(when (>= emacs-major-version 30)
+  (use-package completion-preview
+    :ensure nil ;; built-in mode
+    :hook
+    (minibuffer-setup . (lambda ()
+                          (when global-completion-preview-mode
+                            (global-completion-preview-mode -1))))
+    (minibuffer-exit . (lambda ()
+                         (global-completion-preview-mode)))))
+
 (use-package savehist
   :ensure nil
   :init
