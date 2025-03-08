@@ -38,17 +38,6 @@ rec {
 
   importAll = dir: { imports = nixFilesInDir dir; };
 
-  mkSystem =
-    system: extraModules:
-    (lib.nixosSystem {
-      inherit system specialArgs;
-      modules = [
-        ../modules/system
-        ../hosts
-        ../users
-      ] ++ extraModules;
-    });
-
   allHomeModules =
     with lib;
     [ ../modules/home ]
