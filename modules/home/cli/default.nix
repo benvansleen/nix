@@ -20,6 +20,10 @@ lib.importAll ./.
     modules.cli = {
       alacritty.enable = systemConfig.machine.desktop;
       ghostty.enable = systemConfig.machine.desktop;
+      tmux = {
+        enable = systemConfig.machine.desktop;
+        enable-resurrect = systemConfig.machine.desktop;
+      };
       zsh.enable = true;
     };
 

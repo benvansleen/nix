@@ -1,10 +1,17 @@
-{ config, ... }:
+{ config, lib, ... }:
 
+let
+  inherit (lib) mkIf;
+in
 {
   config.modules.cli.ghostty = {
     settings = {
       useStylixTheme = true;
       options = {
+        command = mkIf config.modules.cli.tmux.enable "tmux new-session -A -s master";
+        confirm-close-surface = mkIf config.modules.cli.tmux.enable "false";
+        app-notifications = mkIf config.modules.cli.tmux.enable "no-clipboard-copy";
+
         # Prevent "Xc x Yr" popup on each new surface
         resize-overlay = "never";
 
