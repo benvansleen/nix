@@ -6,12 +6,34 @@ let
   }/bin/colmena --experimental-flake-eval";
 in
 {
+  rebuild-diff = pkgs.writers.writeBabashkaBin "rebuild-diff-closures" { } ''
+    (ns script
+      (:require [babashka.process :refer [shell]]
+                [babashka.fs :as fs]
+                [clojure.string :as str]))
+
+    (let [current-generation
+          (-> (shell {:out :string} "readlink /nix/var/nix/profiles/system")
+              :out
+              (#(str/split % #"-"))
+              second
+              Integer/parseInt)
+          to-path #(str "/nix/var/nix/profiles/system-" % "-link")
+          previous-generation (to-path (- current-generation 1))]
+      (when (fs/exists? previous-generation)
+        (println (str "Version "
+                      previous-generation " -> " current-generation ":"))
+        (shell "nix store diff-closures"
+               previous-generation
+               (to-path current-generation))))
+  '';
+
   all = pkgs.writeShellApplication {
     name = "all";
     text = ''
       nix run .#build
-      nix run .#rebuild
-      nix run .#apply
+      nix run .#rebuild -- "''${1:-switch}"
+      nix run .#apply -- "''${1:-switch}"
     '';
   };
 
@@ -20,6 +42,7 @@ in
     text = ''
       nix flake update secrets
       ${colmena-bin} apply-local "''${1:-switch}" --sudo
+      nix run .#rebuild-diff
     '';
   };
 

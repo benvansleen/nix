@@ -131,6 +131,7 @@
           inherit (run)
             all
             rebuild
+            rebuild-diff
             apply
             build
             ;
