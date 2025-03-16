@@ -56,7 +56,7 @@ lib.importAll ./.
       broot.enable = true;
 
       direnv = {
-        enable = true;
+        enable = systemConfig.machine.desktop;
         nix-direnv.enable = true;
       };
     };
