@@ -8,7 +8,7 @@ in
     settings = {
       useStylixTheme = true;
       options = {
-        command = mkIf config.modules.cli.tmux.enable "tmux new-session -A -s master";
+        command = mkIf config.modules.cli.tmux.enable "tmux-attach-to-last-session";
         confirm-close-surface = mkIf config.modules.cli.tmux.enable "false";
         app-notifications = mkIf config.modules.cli.tmux.enable "no-clipboard-copy";
 

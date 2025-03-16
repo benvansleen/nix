@@ -132,5 +132,29 @@ in
         set -sg escape-time 5
       '';
     };
+
+    home.packages = [
+      (pkgs.writeShellApplication {
+        name = "tmux-attach-to-last-session";
+        text =
+          let
+            tmux-bin = lib.getExe pkgs.tmux;
+          in
+          ''
+            if tmux info &> /dev/null; then
+                function get_last_tmux_session() {
+                    ${tmux-bin} list-sessions -F \
+                      "#{session_created}|#{session_id}" \
+                      | sort -r \
+                      | head -n1 \
+                      | cut -d'|' -f2
+                }
+                ${tmux-bin} attach-session -t "$(get_last_tmux_session)"
+            else
+                ${tmux-bin} new-session -A -s master
+            fi
+          '';
+      })
+    ];
   };
 }
