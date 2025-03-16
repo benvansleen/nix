@@ -49,6 +49,7 @@ in
           DNSSEC = mkIf config.modules.unbound.enable "false";
           CACHE_SIZE = mkIf config.modules.unbound.enable "0";
           DNSMASQ_LISTENING = "all";
+          FTLCONF_webserver_session_timeout = "604800";
         };
         environmentFiles = [
           config.sops.templates."pihole.env".path
