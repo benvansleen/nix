@@ -1,6 +1,6 @@
 {
   config,
-  systemConfig,
+  osConfig,
   pkgs,
   lib,
   ...
@@ -18,11 +18,11 @@ lib.importAll ./.
 
   config = mkIf cfg.enable {
     modules.cli = {
-      alacritty.enable = systemConfig.machine.desktop;
-      ghostty.enable = systemConfig.machine.desktop;
+      alacritty.enable = osConfig.machine.desktop;
+      ghostty.enable = osConfig.machine.desktop;
       tmux = {
-        enable = systemConfig.machine.desktop;
-        enable-resurrect = systemConfig.machine.desktop;
+        enable = osConfig.machine.desktop;
+        enable-resurrect = osConfig.machine.desktop;
       };
       zsh.enable = true;
     };
@@ -56,7 +56,7 @@ lib.importAll ./.
       broot.enable = true;
 
       direnv = {
-        enable = systemConfig.machine.desktop;
+        enable = osConfig.machine.desktop;
         nix-direnv.enable = true;
       };
     };

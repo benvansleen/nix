@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  systemConfig,
+  osConfig,
   ...
 }:
 
@@ -32,7 +32,7 @@ in
         tree = "${pkgs.eza}/bin/eza --tree";
       };
 
-      zsh-abbr = mkIf systemConfig.machine.allowUnfree {
+      zsh-abbr = mkIf osConfig.machine.allowUnfree {
         enable = true;
         package = pkgs.unfree.zsh-abbr;
         abbreviations = {

@@ -24,7 +24,6 @@ in
       useGlobalPkgs = true;
       useUserPackages = true;
       extraSpecialArgs = {
-        systemConfig = config;
         inherit nix-index-database;
       };
     };

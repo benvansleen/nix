@@ -6,7 +6,7 @@
 {
   pkgs,
   lib,
-  systemConfig,
+  osConfig,
   ...
 }:
 
@@ -36,22 +36,22 @@ in
             "Downloads"
             "Pictures"
           ]
-          ++ lib.optionals systemConfig.services.hardware.openrgb.enable [
+          ++ lib.optionals osConfig.services.hardware.openrgb.enable [
             "${homeDir.config}/OpenRGB"
           ];
       };
       cli.enable = true;
       emacs = {
-        enable = systemConfig.machine.desktop;
+        enable = osConfig.machine.desktop;
         init-el = ./etc/emacs/init.el;
         framesOnlyMode = true;
       };
       firefox = {
-        enable = systemConfig.machine.desktop;
+        enable = osConfig.machine.desktop;
         browser-pkg = pkgs.floorp;
       };
       window-manager = {
-        enable = systemConfig.machine.desktop;
+        enable = osConfig.machine.desktop;
         terminal = pkgs.ghostty;
       };
     };

@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  systemConfig,
+  osConfig,
   ...
 }:
 
@@ -218,7 +218,7 @@ in
         disable_hyprland_logo = true;
       };
     }
-    // lib.optionalAttrs (systemConfig.machine.name == "amd") (
+    // lib.optionalAttrs (osConfig.machine.name == "amd") (
       let
         left = "DP-10";
         right = "DP-8";

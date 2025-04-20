@@ -1,13 +1,13 @@
 {
   config,
   lib,
-  systemConfig,
+  osConfig,
   ...
 }:
 
 let
   inherit (lib) mkIf mkOption types;
-  inherit (systemConfig.modules) impermanence;
+  inherit (osConfig.modules) impermanence;
 
   systemUsesImpermanence = impermanence.enable;
   cfg = config.modules.impermanence;

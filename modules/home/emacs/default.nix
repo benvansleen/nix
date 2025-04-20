@@ -1,6 +1,6 @@
 {
   config,
-  systemConfig,
+  osConfig,
   pkgs,
   lib,
   ...
@@ -40,7 +40,7 @@ let
   emacs-pkg = pkgs.emacs-unstable-pgtk;
   emacs = pkgs.emacsWithPackagesFromUsePackage {
     package = lib.optimizeForThisHostIfPowerful {
-      config = systemConfig;
+      config = osConfig;
       pkg = emacs-pkg;
       extraFlags = [
         "-pipe"

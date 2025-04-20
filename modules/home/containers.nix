@@ -1,8 +1,8 @@
-{ lib, systemConfig, ... }:
+{ lib, osConfig, ... }:
 
 let
   inherit (lib) mkIf mkEnableOption;
-  cfg = systemConfig.modules.containers;
+  cfg = osConfig.modules.containers;
 in
 {
   options.modules.containers.enable = mkEnableOption "rootless OCI containerization support";

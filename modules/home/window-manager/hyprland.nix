@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  systemConfig,
+  osConfig,
   ...
 }:
 
@@ -20,7 +20,7 @@ in
     wayland.windowManager.hyprland = {
       enable = true;
       package = lib.optimizeForThisHostIfPowerful {
-        config = systemConfig;
+        config = osConfig;
         pkg = pkgs.hyprland;
       };
       systemd.enable = false; # Conflicts with UWSM
