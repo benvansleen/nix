@@ -67,7 +67,8 @@ in
           exit 0
         fi
 
-        ${lib.getExe tailscale} up --auth-key "file:${cfg.authKeyFile}" ${lib.concatStringsSep " " cfg.tailscale-up-extra-args}
+        ${lib.getExe tailscale} up --auth-key "file:${cfg.authKeyFile}"
+        ${lib.getExe tailscale} set ${lib.concatStringsSep " " cfg.tailscale-up-extra-args}
       '';
     };
   };
