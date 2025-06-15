@@ -111,22 +111,26 @@ in
     modules.impermanence.persistedFiles = [ "@data@/zsh/history" ];
 
     programs.zsh = {
-      shellAliases = {
-        "nh search" = "nh search --flake ${flake}";
-        os-rebuild-test = ''
-          ${pkgs.nh}/bin/nh os test ${flake}
-        '';
-        os-rebuild = ''
-          ${pkgs.nh}/bin/nh os switch ${flake}
-        '';
+      shellAliases =
+        with lib;
+        with pkgs;
+        {
+          "nh search" = "nh search --flake ${flake}";
+          os-rebuild-test = ''
+            ${getExe nh} os test ${flake}
+          '';
+          os-rebuild = ''
+            ${getExe nh} os switch ${flake}
+          '';
 
-        htop = "${pkgs.bottom}/bin/btm -b";
-        ps = "${pkgs.procs}/bin/procs";
-        grep = "${pkgs.ripgrep}/bin/rg";
-        find = "${pkgs.fd}/bin/fd";
-        cat = "${pkgs.bat}/bin/bat";
-        tree = "${pkgs.eza}/bin/eza --tree";
-      };
+          htop = "${getExe bottom} -b";
+          ps = "${getExe procs}";
+          grep = "${getExe ripgrep}";
+          find = "${getExe fd}fd";
+          cat = "${getExe bat}";
+          tree = "${getExe eza} --tree";
+          du = "${getExe dust}";
+        };
 
       zsh-abbr = mkIf osConfig.machine.allowUnfree {
         enable = true;
