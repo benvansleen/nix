@@ -6,9 +6,7 @@
 }:
 
 let
-  colmena-bin = "RUST_LOG=error ${
-    lib.getExe colmena.packages.${pkgs.system}.colmena
-  } --experimental-flake-eval";
+  colmena-bin = "RUST_LOG=error ${lib.getExe colmena.packages.${pkgs.system}.colmena}";
 in
 {
   rebuild-diff = pkgs.writers.writeBabashkaBin "rebuild-diff-closures" { } ''
@@ -28,7 +26,7 @@ in
       (when (fs/exists? previous-generation)
         (println (str "Version "
                       previous-generation " -> " current-generation ":"))
-        (shell "nix store diff-closures"
+        (shell "${lib.getExe pkgs.dix}"
                previous-generation
                (to-path current-generation))))
   '';
