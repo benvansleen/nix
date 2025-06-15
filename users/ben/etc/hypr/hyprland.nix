@@ -40,6 +40,7 @@ in
 {
   config.wayland.windowManager.hyprland.settings =
     {
+      ecosystem.no_update_news = true;
       env = [
         # "AQ_DRM_DEVICES,/dev/dri/card1"
 
