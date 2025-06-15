@@ -15,6 +15,7 @@ with inputs;
         allowUnfreePredicate =
           pkg:
           builtins.elem (lib.getName pkg) [
+            "keymapp"
             "zsh-abbr"
           ];
       };

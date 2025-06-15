@@ -40,6 +40,7 @@ in
         system-secrets = secrets.system;
       };
       stylix.enable = mkDefault true;
+      zsa.enable = mkDefault true;
     };
 
     nix = {
