@@ -122,8 +122,6 @@ in
     };
 
     programs = {
-      nh.flake = ../.;
-
       # Allow home.persistence.allowOther
       fuse.userAllowOther = mkIf config.modules.impermanence.enable true;
     };
