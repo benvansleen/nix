@@ -113,16 +113,17 @@ lib.importAll ./.
         authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
         tailscale-up-extra-args = [
           "--ssh"
-          "--exit-node=us-qas-wg-101.mullvad.ts.net." # Ashburn, VA
-          "--exit-node-allow-lan-access" # Necessary for pihole DNS
+          "--accept-risk=lose-ssh"
+          "--exit-node=us-hou-wg-001.mullvad.ts.net"
           "--advertise-routes=192.168.1.0/24"
         ];
       };
       unbound = {
-        enable = true;
+        enable = false; # currently using mullvad upstream dns
         port = 5335;
         num-threads = 4;
       };
+      zsa.enable = false;
     };
 
     environment.systemPackages = with pkgs; [

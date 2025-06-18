@@ -28,6 +28,8 @@ in
 
   config = mkIf cfg.enable {
     services = {
+
+      # CANNOT RESOLVE DNS REQUESTS WHEN BEHIND MULLVAD VPN
       unbound = {
         enable = true;
         checkconf = false;
@@ -35,8 +37,23 @@ in
         resolveLocalQueries = true;
         stateDir = "/var/lib/unbound";
         settings = {
+          # forward-zone = {
+          #   # name = "clouded-mimosa.ts.net.";
+          #   forward-addr = [
+          #     "100.100.100.100"
+          #   ];
+          #   forward-first = true;
+          # };
+
           server = {
             inherit (cfg) port num-threads;
+            verbosity = 2;
+            log-queries = true;
+            log-replies = true;
+            log-servfail = true;
+            qname-minimisation = true;
+            edns-buffer-size = 1232;
+
             interface = [
               "0.0.0.0"
               "::0"

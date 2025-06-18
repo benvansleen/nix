@@ -54,9 +54,6 @@ in
     text = ''
       nix flake update secrets
       ${colmena-bin} apply "''${1:-switch}"
-
-      # Toggle tailscale dns resolution to prevent /etc/resolv.conf from being clobbered by nix
-      ${colmena-bin} exec --on pi "tailscale set --accept-dns=false && tailscale set --accept-dns=true"
     '';
   };
 

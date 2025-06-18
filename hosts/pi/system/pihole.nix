@@ -26,10 +26,6 @@ in
       "--accept-dns=true" # Verify tailscale overwrites /etc/resolv.conf!
     ];
     services.resolved.enable = false;
-    environment.etc."resolv.conf".text = ''
-      nameserver 127.0.0.1
-      nameserver 1.1.1.1
-    '';
 
     # Must open ports to use pihole for LAN
     networking.firewall = {
@@ -42,7 +38,7 @@ in
         hostname = "pihole";
         image = "pihole/pihole:latest";
         environment = {
-          PIHOLE_DNS_ = "127.0.0.1#${toString config.modules.unbound.port}";
+          PIHOLE_DNS_ = "100.64.0.3"; # mullvad dns
           PIHOLE_INTERFACE = "end0"; # rpi4 uses `end0` instead of `eth0`
           WEB_PORT = toString cfg.web-ui-port;
           TZ = "America/New_York";
