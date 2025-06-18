@@ -35,6 +35,7 @@ lib.importAll ./.
             };
             targetDir = "${lib.constants.backup-path}/${deploymentName}";
             remote.enable = false;
+            should-propagate-file-deletion = true;
             timer = {
               enable = true;
               OnCalendar = "hourly";

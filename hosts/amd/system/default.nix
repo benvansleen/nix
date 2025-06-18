@@ -19,6 +19,8 @@ in
               dir = "/persist";
               exclude = [
                 "**/llama/models/"
+                "**/.cache/"
+                "**/.local/"
               ];
             };
             targetDir = "${lib.constants.backup-path}/${deploymentName}";
@@ -27,6 +29,7 @@ in
               ipOrHostname = "pi";
               user.name = "root";
             };
+            should-propagate-file-deletion = true;
             timer = {
               enable = true;
               OnCalendar = "hourly";

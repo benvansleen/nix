@@ -17,9 +17,9 @@ let
   my-caddy = pkgs.caddy.withPlugins {
     plugins = [
       "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
-      "github.com/caddy-dns/cloudflare@v0.0.0-20240703190432-89f16b99c18e"
+      "github.com/caddy-dns/cloudflare@v0.0.0-20250407183951-bbf79111721a"
     ];
-    hash = "sha256-GQzLzQNfiO2dXBaMLJ8omLu+qlp/8XSn/aF4HNTP3J0=";
+    hash = "sha256-Weh7gTWAijidQjPxiYEjN/Oc6wfg7MyVIjEGR++GMjY=";
   };
 in
 {
@@ -103,6 +103,10 @@ in
         # TODO: restrict `admin :2019` to just tailnet ips
         # https://caddy.community/t/access-metrics-when-using-dockerized-caddy/16496
         globalConfig = ''
+          on_demand_tls {
+            ask http://localhost:9123/ask
+          }
+
           tailscale {
             auth_key {$TS_AUTHKEY}
             webui true
@@ -115,6 +119,12 @@ in
         '';
         extraConfig =
           ''
+            https:// {
+              tls {
+                on_demand
+              }
+            }
+
             (cloudflare) {
               tls {
                 dns cloudflare {$CLOUDFLARE_TOKEN}
