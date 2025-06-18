@@ -226,7 +226,7 @@ in
       in
       {
         monitor = [
-          "${left}, 1920x1080, 0x0, 1, transform, 3"
+          "${left}, 1920x1080, 0x0, 1, transform, 1"
           "${right}, 1920x1080, 1080x0, 1"
         ];
         workspace = [
