@@ -224,8 +224,8 @@ in
     }
     // lib.optionalAttrs (osConfig.machine.name == "amd") (
       let
-        left = "DP-10";
-        right = "DP-8";
+        left = "desc:LG Electronics BK550Y 009MXSK5P902";
+        right = "desc:LG Electronics BK550Y 009MXAY5P912";
       in
       {
         monitor = [
