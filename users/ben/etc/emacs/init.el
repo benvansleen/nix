@@ -1,46 +1,60 @@
 ;;; -*- lexical-binding: t; -*-
 
 
-(require 'use-package-ensure)
-(setq use-package-always-ensure t)
-
-(setq user-emacs-directory
-      (concat (getenv "XDG_CONFIG_HOME") "/emacs"))
 (use-package no-littering
   :init
   (require 'no-littering))
 
-(defun remove-fringe ()
-  (set-face-attribute 'fringe nil :background nil))
+(let ((emacs-cache-dir (concat (getenv "XDG_CACHE_HOME") "/emacs")))
+  (use-package emacs
+	:custom
+	(user-emacs-directory
+	 (concat (getenv "XDG_CONFIG_HOME") "/emacs"))
 
-(remove-fringe)
-(add-hook 'server-after-make-frame-hook
-          #'remove-fringe)
+	(use-package-always-ensure t)
 
-(setq create-lockfiles nil)
-(global-auto-revert-mode)
-(save-place-mode)
+	(create-lockfiles nil)
+	(auto-save-list-file-prefix emacs-cache-dir)
+	(auto-save-file-name-transforms `((".*" ,emacs-cache-dir t)))
+	(backup-directory-alist `(("." . ,emacs-cache-dir)))
 
-(setq cache-dir (concat (getenv "XDG_CACHE_HOME") "/emacs"))
-(setq auto-save-list-file-prefix cache-dir
-      auto-save-file-name-transforms `((".*" ,cache-dir t))
-      backup-directory-alist `(("." . ,cache-dir)))
-(setopt use-short-answers t)
-(setq ring-bell-function 'ignore)
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(setq scroll-step 1)
-(pixel-scroll-precision-mode)
-(recentf-mode)
-(save-place-mode)
-(setq-default tab-width 4)
-(setq-default indent-tabs-mode nil)
-(setq split-width-threshold 100) ;; prefer horizontal split
-(setq display-buffer-reuse-frames t)
+	(use-short-answers t)
+	(ring-bell-function 'ignore)
 
-(add-to-list 'auto-mode-alist
-             '("\\.tsx?\\'" . typescript-ts-mode))
+	(scroll-step 1)
+
+	(split-width-threshold 100)  ;; prefer horizontal split
+	(display-buffer-reuse-frames t)
+
+	(treesit-font-lock-level 4)
+
+	:mode
+	("\\.rs\\'" . rust-ts-mode)
+	("\\.tsx?\\'" . typescript-ts-mode)
+
+	:custom-face
+	(font-lock-function-call-face ((t (:italic t))))
+	(font-lock-variable-use-face ((t (:italic t))))
+
+	:hook
+    (server-after-make-frame
+     .
+     (lambda ()
+       (set-face-attribute 'fringe nil :background nil)))
+
+	:init
+    (setq-default tab-width 4)
+    (setq-default indent-tabs-mode nil)
+
+	(global-auto-revert-mode)
+	(save-place-mode)
+	(recentf-mode)
+
+	(menu-bar-mode -1)
+	(tool-bar-mode -1)
+	(scroll-bar-mode -1)
+	(pixel-scroll-precision-mode)))
+
 
 (use-package which-key
   :ensure nil
