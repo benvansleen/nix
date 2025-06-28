@@ -48,7 +48,10 @@ in
       };
       firefox = {
         enable = osConfig.machine.desktop;
-        browser-pkg = pkgs.floorp;
+        browser-pkg = lib.optimizeForThisHostIfPowerful {
+          pkg = pkgs.firefox-beta;
+          config = osConfig;
+        };
       };
       window-manager = {
         enable = osConfig.machine.desktop;

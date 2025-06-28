@@ -51,6 +51,7 @@ in
           "browser.newtabpage.activity-stream.showSponsored" = lock-false;
           "browser.newtabpage.activity-stream.system.showSponsored" = lock-false;
           "browser.newtabpage.activity-stream.showSponsoredTopSites" = lock-false;
+          "browser.ml.chat.enabled" = lock-false;
 
           # Disable Alt key opening the menu
           "ui.key.menuAccessKey" = 17; # 18 is ALT

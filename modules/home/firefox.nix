@@ -18,13 +18,7 @@ in
   options.modules.firefox = {
     enable = mkEnableOption "firefox";
     browser-pkg = mkOption {
-      type = types.enum (
-        with pkgs;
-        [
-          firefox
-          floorp
-        ]
-      );
+      type = types.package;
       default = pkgs.firefox;
       description = "the package to use as the default browser";
     };
@@ -69,14 +63,33 @@ in
             "mousewheel.default.delta_multiplier_x" = 100;
             "mousewheel.default.delta_multiplier_y" = 100;
             "mousewheel.default.delta_multiplier_z" = 100;
+
+            "sidebar.verticalTabs" = true;
+            "sidebar.expandOnHover" = true;
+            "sidebar.expand-on-hover.duration-ms" = 100;
           };
           search = {
             force = true;
-            default = "ddg";
+            default = "SearxNG";
             order = [
               "ddg"
               "google"
             ];
+            engines = {
+              "SearxNG" = {
+                urls = [
+                  {
+                    template = "https://searx.ben.vansleen.dev/search";
+                    params = [
+                      {
+                        name = "q";
+                        value = "{searchTerms}";
+                      }
+                    ];
+                  }
+                ];
+              };
+            };
           };
         };
       };
