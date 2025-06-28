@@ -44,6 +44,9 @@ in
       env = [
         # "AQ_DRM_DEVICES,/dev/dri/card1"
 
+        "HYPRCURSOR_THEME,${config.home.pointerCursor.name}"
+        "HYPRCURSOR_SIZE,${toString config.home.pointerCursor.size}"
+
         "XDG_CURRENT_DESKTOP,Hyprland"
         "XDG_SESSION_TYPE,wayland"
         "GDK_BACKEND,wayland"

@@ -47,6 +47,7 @@ in
       };
     };
 
+    stylix.targets.firefox.profileNames = [ "default" ];
     programs.firefox = {
       enable = true;
       package = cfg.browser-pkg;

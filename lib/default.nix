@@ -45,9 +45,13 @@ rec {
       (filterAttrs (_moduleName: module: module ? homeManagerModules))
       (mapAttrsToList (
         moduleName:
-        { homeManagerModules, ... }:
-        homeManagerModules.default or homeManagerModules.${moduleName}
-          or homeManagerModules.${head (attrNames homeManagerModules)}
+        {
+          homeManagerModules ? { },
+          homeModules ? { },
+          ...
+        }:
+        homeModules.default or homeModules.${moduleName} or homeManagerModules.default
+          or homeManagerModules.${moduleName} or homeManagerModules.${head (attrNames homeManagerModules)}
       ))
     ]);
 

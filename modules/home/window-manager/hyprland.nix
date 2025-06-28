@@ -23,6 +23,10 @@ in
         config = osConfig;
         pkg = pkgs.hyprland;
       };
+      portalPackage = lib.optimizeForThisHostIfPowerful {
+        config = osConfig;
+        pkg = pkgs.xdg-desktop-portal-hyprland;
+      };
       systemd.enable = false; # Conflicts with UWSM
       plugins = with pkgs.hyprlandPlugins; [
       ];

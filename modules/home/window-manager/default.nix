@@ -35,6 +35,14 @@ lib.importAll ./.
       };
     };
 
+    home.pointerCursor = {
+      gtk.enable = true;
+      x11.enable = true;
+      package = pkgs.phinger-cursors;
+      name = "phinger-cursors-light";
+      size = 16;
+    };
+
     programs = {
       hyprlock = {
         enable = true;
