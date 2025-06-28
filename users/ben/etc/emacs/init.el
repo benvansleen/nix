@@ -78,8 +78,27 @@
 
 
 (use-package olivetti
+  :custom
+  (olivetti-body-width 0.8)
   :init
-  (setq olivetti-body-width 0.8)
+  (defun toggle-olivetti ()
+    (interactive)
+    (let ((disable-olivetti (lambda () (olivetti-mode -1)))
+          (apply-to-all-buffers (lambda (f)
+                                  (dolist (buffer (buffer-list))
+                                    (with-current-buffer buffer
+                                      (funcall f))))))
+      (if (-contains? prog-mode-hook #'olivetti-mode)
+          (progn
+            (funcall apply-to-all-buffers disable-olivetti)
+            (remove-hook 'prog-mode-hook #'olivetti-mode)
+            (remove-hook 'text-mode-hook #'olivetti-mode)
+            (remove-hook 'dired-mode-hook #'olivetti-mode))
+        (progn
+          (funcall apply-to-all-buffers #'olivetti-mode)
+          (add-hook 'prog-mode-hook #'olivetti-mode)
+          (add-hook 'text-mode-hook #'olivetti-mode)
+          (add-hook 'dired-mode-hook #'olivetti-mode)))))
   :hook
   (prog-mode . olivetti-mode)
   (text-mode . olivetti-mode)
@@ -207,6 +226,7 @@
 		 ("SPC fl" . consult-line)
 
 		 ("SPC tn" . display-line-numbers-mode)
+         ("SPC tc" . toggle-olivetti)
 		 ("SPC wtf" . my/where-am-i)
 		 ("C-M-f" . eval-last-sexp)
 		 ("C-f" . eval-defun)
