@@ -72,10 +72,10 @@ in
           };
           search = {
             force = true;
-            default = "DuckDuckGo";
+            default = "ddg";
             order = [
-              "DuckDuckGo"
-              "Google"
+              "ddg"
+              "google"
             ];
           };
         };
