@@ -1,12 +1,20 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  osConfig,
+  ...
+}:
 
+let
+  inherit (osConfig.users.users.${config.home.username}) shell;
+in
 {
   config.programs.starship.settings = {
     add_newline = false;
     character = {
-      success_symbol = "";
-      error_symbol = "(bold red)";
-      vicmd_symbol = " ";
+      success_symbol = if shell.pname != "nushell" then "" else "";
+      error_symbol = if shell.pname != "nushell" then "(bold red)" else "";
+      vicmd_symbol = if shell.pname != "nushell" then " " else "";
     };
     # custom = {
     #   direnv = {

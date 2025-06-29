@@ -22,6 +22,31 @@ with inputs;
     };
   })
 
+  (_final: prev: {
+    nushell = prev.rustPlatform.buildRustPackage {
+      inherit (prev.nushell)
+        src
+        version
+        name
+        pname
+        buildInputs
+        nativeBuildInputs
+        propagatedBuildInputs
+        checkPhase
+        passthru
+        meta
+        ;
+      cargoHash = "sha256-sU8mkZ9InV+3Hz2VWyXvTDd90+cVpYmYw8r2ZBBbgvY=";
+      cargoPatches = (prev.nushell.cargoPatches or [ ]) ++ [
+        ./patches/nushell/cargo-toml.patch
+        ./patches/nushell/cargo-lock.patch
+      ];
+      patches = [
+        ./patches/nushell/add-custom-escape-sequence.patch
+      ];
+    };
+  })
+
   emacs-overlay.overlays.default
   colmena.overlays.default
 ]

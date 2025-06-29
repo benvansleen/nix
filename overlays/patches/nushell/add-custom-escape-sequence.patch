@@ -1,0 +1,37 @@
+From fbd5ef43d56fc03e0778b35ed1f01860a5e3dfe2 Mon Sep 17 00:00:00 2001
+From: ben <benvansleen@gmail.com>
+Date: Sun, 29 Jun 2025 14:02:02 -0400
+Subject: [PATCH] add custom escape sequence
+
+---
+ crates/nu-cli/src/repl.rs | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/crates/nu-cli/src/repl.rs b/crates/nu-cli/src/repl.rs
+index a4ca2903c..8b00fb9f7 100644
+--- a/crates/nu-cli/src/repl.rs
++++ b/crates/nu-cli/src/repl.rs
+@@ -14,6 +14,7 @@ use crate::{
+     util::eval_source,
+ };
+ use crossterm::cursor::SetCursorStyle;
++use crossterm::event::KeyCode;
+ use log::{error, trace, warn};
+ use miette::{ErrReport, IntoDiagnostic, Result};
+ use nu_cmd_base::util::get_editor;
+@@ -1185,7 +1186,11 @@ fn setup_keybindings(engine_state: &EngineState, line_editor: Reedline) -> Reedl
+                 insert_keybindings,
+                 normal_keybindings,
+             } => {
+-                let edit_mode = Box::new(Vi::new(insert_keybindings, normal_keybindings));
++                let edit_mode = Box::new(Vi::new(
++                    insert_keybindings,
++                    normal_keybindings,
++                    (KeyCode::Char('j'), KeyCode::Char('j')),
++                ));
+                 line_editor.with_edit_mode(edit_mode)
+             }
+         },
+-- 
+2.49.0
+

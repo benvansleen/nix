@@ -48,7 +48,7 @@ lib.mkUser {
     };
     users.users.${user} = {
       isNormalUser = true;
-      shell = pkgs.zsh;
+      shell = pkgs.nushell;
       hashedPasswordFile = if-using-sops config.sops.secrets."${user}-password".path;
       home = home-dir;
 

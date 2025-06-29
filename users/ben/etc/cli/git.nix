@@ -1,5 +1,3 @@
-_:
-
 {
   config.programs.git = {
     extraConfig = {

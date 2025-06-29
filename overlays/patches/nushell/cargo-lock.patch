@@ -1,0 +1,26 @@
+From 5b54f6636812cd7f38d9c160d665ae11c3c658a0 Mon Sep 17 00:00:00 2001
+From: ben <benvansleen@gmail.com>
+Date: Sun, 29 Jun 2025 14:32:01 -0400
+Subject: [PATCH] patch cargo.lock
+
+---
+ Cargo.lock | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Cargo.lock b/Cargo.lock
+index 9b38febb1..81cf24bb5 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -6000,8 +6000,7 @@ dependencies = [
+ [[package]]
+ name = "reedline"
+ version = "0.40.0"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "b5cdfab7494d13ebfb6ce64828648518205d3ce8541ef1f94a27887f29d2d50b"
++source = "git+https://github.com/benvansleen/reedline#6937b8f43f1422a71f22dbfe41fd271d24730911"
+ dependencies = [
+  "arboard",
+  "chrono",
+-- 
+2.49.0
+
