@@ -1,14 +1,14 @@
-From 5b54f6636812cd7f38d9c160d665ae11c3c658a0 Mon Sep 17 00:00:00 2001
+From 1e2cfcefaae4096f95181716a3462b2c49d092c5 Mon Sep 17 00:00:00 2001
 From: ben <benvansleen@gmail.com>
-Date: Sun, 29 Jun 2025 14:32:01 -0400
-Subject: [PATCH] patch cargo.lock
+Date: Sun, 29 Jun 2025 18:55:24 -0400
+Subject: [PATCH] bump reedline hash
 
 ---
- Cargo.lock | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ Cargo.lock | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/Cargo.lock b/Cargo.lock
-index 9b38febb1..81cf24bb5 100644
+index 9b38febb1..bacda93a9 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
 @@ -6000,8 +6000,7 @@ dependencies = [
@@ -17,10 +17,19 @@ index 9b38febb1..81cf24bb5 100644
  version = "0.40.0"
 -source = "registry+https://github.com/rust-lang/crates.io-index"
 -checksum = "b5cdfab7494d13ebfb6ce64828648518205d3ce8541ef1f94a27887f29d2d50b"
-+source = "git+https://github.com/benvansleen/reedline#6937b8f43f1422a71f22dbfe41fd271d24730911"
++source = "git+https://github.com/benvansleen/reedline#82e18fc0b4a5010b9289307326f1803efa35d3da"
  dependencies = [
   "arboard",
   "chrono",
+@@ -8342,7 +8341,7 @@ version = "0.1.9"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "cf221c93e13a30d793f7645a0e7762c55d169dbb0a49671918a2319d289b10bb"
+ dependencies = [
+- "windows-sys 0.59.0",
++ "windows-sys 0.48.0",
+ ]
+ 
+ [[package]]
 -- 
 2.49.0
 
