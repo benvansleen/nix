@@ -26,6 +26,7 @@ in
       enable = true;
       inherit (cfg) port;
       inherit (cfg) scrapeConfigs;
+      retentionTime = "1y";
     };
   };
 }
