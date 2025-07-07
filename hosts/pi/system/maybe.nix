@@ -28,20 +28,27 @@ in
         POSTGRES_USER = "maybe_user";
         POSTGRES_DB = "maybe_production";
         network = "host";
+
+        SELF_HOSTED = "true";
+        RAILS_FORCE_SSL = "false";
+        RAILS_ASSUME_SSL = "false";
+        DB_HOST = "localhost";
       in
       {
-        maybe-financial = {
+        maybe-web = {
           image = "ghcr.io/maybe-finance/maybe:latest";
           environment = {
-            SELF_HOSTED = "true";
-            RAILS_FORCE_SSL = "false";
-            RAILS_ASSUME_SSL = "false";
-            DB_HOST = "localhost";
-            SYNTH_API_KEY = "";
-            inherit POSTGRES_DB POSTGRES_USER;
+            inherit
+              POSTGRES_USER
+              POSTGRES_DB
+              SELF_HOSTED
+              RAILS_FORCE_SSL
+              RAILS_ASSUME_SSL
+              DB_HOST
+              ;
           };
           environmentFiles = [
-            config.sops.templates."maybe.env".path
+            config.sops.templates."maybe-rails.env".path
           ];
           volumes = [
             "app-storage:/rails/storage"
@@ -49,7 +56,37 @@ in
           ports = [
             "127.0.0.1:${toString cfg.port}:3000"
           ];
-          dependsOn = [ "maybe-postgres" ];
+          dependsOn = [
+            "maybe-postgres"
+            "maybe-redis"
+          ];
+          extraOptions = [
+            # "--pull=newer"
+            "--network=${network}"
+          ];
+        };
+
+        maybe-worker = {
+          image = "ghcr.io/maybe-finance/maybe:latest";
+          entrypoint = "/usr/local/bin/bundle";
+          cmd = [
+            "exec"
+            "sidekiq"
+          ];
+          environment = {
+            inherit
+              POSTGRES_USER
+              POSTGRES_DB
+              SELF_HOSTED
+              RAILS_FORCE_SSL
+              RAILS_ASSUME_SSL
+              DB_HOST
+              ;
+          };
+          environmentFiles = [
+            config.sops.templates."maybe-rails.env".path
+          ];
+          dependsOn = [ "maybe-redis" ];
           extraOptions = [
             "--network=${network}"
           ];
@@ -61,7 +98,7 @@ in
             inherit POSTGRES_DB POSTGRES_USER;
           };
           environmentFiles = [
-            config.sops.templates."maybe.env".path
+            config.sops.templates."maybe-db.env".path
           ];
           volumes = [
             "postgres-data:/var/lib/postgresql/data"
@@ -70,10 +107,26 @@ in
             "--network=${network}"
           ];
         };
+
+        maybe-redis = {
+          image = "redis:latest";
+          environment = {
+            inherit POSTGRES_DB POSTGRES_USER;
+          };
+          volumes = [
+            "redis-data:/data"
+          ];
+          extraOptions = [
+            "--network=${network}"
+          ];
+        };
       };
 
-    sops.templates."maybe.env".content = ''
+    sops.templates."maybe-db.env".content = ''
       POSTGRES_PASSWORD=${config.sops.placeholder.maybe_postgres_password}
+    '';
+
+    sops.templates."maybe-rails.env".content = ''
       SECRET_KEY_BASE=${config.sops.placeholder.maybe_secret_key_base}
     '';
   };
