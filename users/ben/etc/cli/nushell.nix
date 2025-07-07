@@ -21,6 +21,9 @@ in
 
   config = mkIf cfg.enable {
     modules.cli.starship.enable = mkDefault true;
+    modules.impermanence.persistedFiles = [
+      "@config@/nushell/history.sqlite3"
+    ];
 
     programs = {
       atuin = {
@@ -91,6 +94,13 @@ in
               enable = true;
               max_results = 50;
             };
+          };
+
+          history = {
+            file_format = "sqlite";
+            max_size = 5000000;
+            isolation = true;
+            sync_on_enter = true;
           };
 
           show_banner = false;
