@@ -134,6 +134,7 @@
             rebuild-diff
             apply
             build
+            boot-partition-space-remaining
             ;
 
           install = run.install-nixos;

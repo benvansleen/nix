@@ -31,6 +31,10 @@ in
                (to-path current-generation))))
   '';
 
+  boot-partition-space-remaining = pkgs.writers.writeBashBin "boot-partition-space-remaining" { } ''
+    echo "/boot utilization: $(df -P | grep /boot | awk '{ print $5 }')"
+  '';
+
   all = pkgs.writeShellApplication {
     name = "all";
     text = ''
@@ -43,8 +47,10 @@ in
   rebuild = pkgs.writeShellApplication {
     name = "rebuild";
     text = ''
-      nix flake update secrets
-      ${colmena-bin} apply-local "''${1:-switch}" --sudo
+      mode="''${1:-switch}"
+      [ "$mode" = 'switch' ] && nix run .#boot-partition-space-remaining
+      # nix flake update secrets
+      ${colmena-bin} apply-local "$mode" --sudo
       nix run .#rebuild-diff
     '';
   };
