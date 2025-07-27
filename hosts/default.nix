@@ -26,6 +26,16 @@ in
     allowUnfree = mkEnableOption "Allow unfree nixpkgs";
     powerful = mkEnableOption "Powerful machine configuration";
     desktop = mkEnableOption "Desktop machine configuration; enable gui apps";
+    acceleration = mkOption {
+      type = types.str or null;
+      default = null;
+      description = "machine has access to gpu acceleration";
+    };
+    rocm-version = mkOption {
+      type = types.str or null;
+      default = null;
+      description = "if machine.acceleration = rocm, what version?";
+    };
   };
 
   config = {
@@ -110,16 +120,15 @@ in
 
     networking = {
       hostName = config.machine.name;
-      firewall =
-        {
-          enable = true;
-        }
-        // lib.optionalAttrs config.modules.tailscale.enable {
-          trustedInterfaces = [ "tailscale0" ];
-          # close all ports; only accessible via tailnet
-          allowedTCPPorts = lib.mkForce [ ];
-          allowedUDPPorts = lib.mkForce [ ];
-        };
+      firewall = {
+        enable = true;
+      }
+      // lib.optionalAttrs config.modules.tailscale.enable {
+        trustedInterfaces = [ "tailscale0" ];
+        # close all ports; only accessible via tailnet
+        allowedTCPPorts = lib.mkForce [ ];
+        allowedUDPPorts = lib.mkForce [ ];
+      };
     };
 
     programs = {

@@ -35,6 +35,34 @@ let
         :init
         (frames-only-mode))
     ''
+    + lib.optionalString config.services.ollama.enable (
+      let
+        url = "http://127.0.0.1:${toString config.modules.ollama-copilot.port}";
+      in
+      ''
+        (use-package copilot
+          :hook (prog-mode . copilot-mode)
+          :bind (:map copilot-completion-map
+                      ("<tab>" . 'copilot-accept-completion)
+                      ("M-;" . 'copilot-accept-completion)
+                      ("M-:" . 'copilot-accept-completion-by-word)
+                      ("M-f" . 'copilot-accept-completion-by-word)
+                      ("M-h" . 'copilot-next-completion)
+                      ("M-l" . 'copilot-previous-completion))
+          :custom
+          (copilot-indent-offset-warning-disable t)
+          (copilot-max-char -1)
+          (copilot-idle-delay 0.1)
+
+          :config
+          (setenv "AGENT_DEBUG_OVERRIDE_CAPI_URL" "${url}/v1")
+          (setenv "AGENT_DEBUG_OVERRIDE_PROXY_URL" "${url}")
+          (setenv "AGENT_DEBUG_CHAT_OVERRIDE_PROXY_URL" "${url}")
+          (setenv "AGENT_DEBUG_USE_EDITOR_FETCHER" "true")
+          (setenv "AGENT_DEBUG_OVERRIDE_RELATED_FILES" "true")
+          (setenv "AGENT_DEBUG_OVERRIDE_ENGINE" "copilot-codex"))
+      ''
+    )
     + (builtins.readFile cfg.init-el);
 
   emacs-pkg = pkgs.emacs-unstable-pgtk;

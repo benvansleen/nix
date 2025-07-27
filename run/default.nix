@@ -49,7 +49,7 @@ in
     text = ''
       mode="''${1:-switch}"
       [ "$mode" = 'switch' ] && nix run .#boot-partition-space-remaining
-      # nix flake update secrets
+      nix flake update secrets
       ${colmena-bin} apply-local "$mode" --sudo
       nix run .#rebuild-diff
     '';

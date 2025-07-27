@@ -7,5 +7,7 @@ lib.importAll ./.
     desktop = true;
     powerful = true;
     allowUnfree = true;
+    acceleration = "rocm";
+    rocm-version = "11.0.0";
   };
 }

@@ -28,17 +28,16 @@ in
     modules = {
       impermanence = {
         inherit homeDir;
-        persistedDirectories =
-          [
-            "${homeDir.config}/nix"
-            "Code"
-            "Documents"
-            "Downloads"
-            "Pictures"
-          ]
-          ++ lib.optionals osConfig.services.hardware.openrgb.enable [
-            "${homeDir.config}/OpenRGB"
-          ];
+        persistedDirectories = [
+          "${homeDir.config}/nix"
+          "Code"
+          "Documents"
+          "Downloads"
+          "Pictures"
+        ]
+        ++ lib.optionals osConfig.services.hardware.openrgb.enable [
+          "${homeDir.config}/OpenRGB"
+        ];
       };
       cli.enable = true;
       emacs = {
@@ -52,6 +51,10 @@ in
           pkg = pkgs.firefox-beta;
           config = osConfig;
         };
+      };
+      ollama-copilot = {
+        enable = true;
+        num-tokens = 30;
       };
       window-manager = {
         enable = osConfig.machine.desktop;
@@ -105,7 +108,7 @@ in
     };
 
     sops = secrets "${homeDir.root}/.ssh/master" // {
-      secrets.github_copilot.path = "${homeDir.config}/github-copilot/hosts.json";
+      secrets.github_copilot.path = "${homeDir.config}/github-copilot/apps.json";
     };
 
     home.stateVersion = "24.11";

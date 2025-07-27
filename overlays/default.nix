@@ -15,6 +15,7 @@ with inputs;
         allowUnfreePredicate =
           pkg:
           builtins.elem (lib.getName pkg) [
+            "copilot-language-server"
             "keymapp"
             "zsh-abbr"
           ];
@@ -36,14 +37,37 @@ with inputs;
         passthru
         meta
         ;
-      cargoHash = "sha256-NTCaJOrU+dcA2yuH9K8WPSDLbNJjMd1LyehXIdJOuUU=";
+      cargoHash = "sha256-ztPFHwg0jy0SORhUV/3CaU2R+hN6rNYIS06EiL7aMh4=";
       cargoPatches = (prev.nushell.cargoPatches or [ ]) ++ [
         ./patches/nushell/cargo-toml.patch
         ./patches/nushell/cargo-lock.patch
       ];
-      patches = [
+      patches = (prev.nushell.patches or [ ]) ++ [
         ./patches/nushell/add-custom-escape-sequence.patch
       ];
+    };
+  })
+
+  (prev: final: {
+    inherit (final.unfree) copilot-language-server;
+    ollama-copilot = prev.buildGoModule rec {
+      pname = "ollama-copilot";
+      version = "master";
+      src = prev.fetchFromGitHub {
+        owner = "bernardo-bruning";
+        repo = pname;
+        rev = "d6ab7a2fc9d94d61b12a5eb36efe8126346ea9cc";
+        hash = "sha256-eq9HlJ0+0cAF7jFCvflEMVAZYVKMBmzLRO8oUQox2ig=";
+      };
+
+      vendorHash = "sha256-g27MqS3qk67sve/jexd07zZVLR+aZOslXrXKjk9BWtk=";
+
+      meta = {
+        mainProgram = pname;
+        description = "Proxy that allows you to use ollama as a copilot like Github copilot";
+        homepage = "https://github.com/bernardo-bruning/ollama-copilot";
+        license = lib.licenses.mit;
+      };
     };
   })
 
