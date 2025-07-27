@@ -1,4 +1,5 @@
 {
+  nixos-facter-modules,
   config,
   pkgs,
   lib,
@@ -27,18 +28,24 @@ in
     powerful = mkEnableOption "Powerful machine configuration";
     desktop = mkEnableOption "Desktop machine configuration; enable gui apps";
     acceleration = mkOption {
-      type = types.str or null;
+      type = types.nullOr types.str;
       default = null;
       description = "machine has access to gpu acceleration";
     };
     rocm-version = mkOption {
-      type = types.str or null;
+      type = types.nullOr types.str;
       default = null;
       description = "if machine.acceleration = rocm, what version?";
     };
   };
 
+  imports = [
+    nixos-facter-modules.nixosModules.facter
+  ];
+
   config = {
+    facter.report = secrets.hardware."${config.machine.name}-facter.json";
+
     modules = {
       containers.enable = mkDefault true;
       display-manager.enable = mkDefault true;

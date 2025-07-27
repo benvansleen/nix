@@ -1,13 +1,7 @@
-{ nixos-facter-modules, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  imports = [
-    nixos-facter-modules.nixosModules.facter
-  ];
-
   config = {
-    facter.reportPath = ./facter.json;
-
     boot = {
       kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
       initrd.availableKernelModules = [

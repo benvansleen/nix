@@ -1,13 +1,7 @@
-{ nixos-facter-modules, pkgs, ... }:
+{ pkgs, ... }:
 
 {
-  imports = [
-    nixos-facter-modules.nixosModules.facter
-  ];
-
   config = {
-    facter.reportPath = ./facter.json;
-
     hardware = {
       ## TODO: add amd ryzen-specific support (eg for zen temp monitoring)
 

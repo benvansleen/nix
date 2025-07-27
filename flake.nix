@@ -9,8 +9,6 @@
   };
 
   inputs = {
-    # https://github.com/NixOS/nixpkgs/issues/420513
-    # nixpkgs.url = "github:nixos/nixpkgs/d139ff7561a884bb88545176546293ccd90ac14c";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     systems.url = "github:nix-systems/default";
@@ -54,10 +52,8 @@
     stylix = {
       url = "github:nix-community/stylix";
       inputs = {
-        # home-manager.follows = "home-manager";
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
-        # flake-compat.follows = "flake-compat";
       };
     };
 
@@ -120,7 +116,6 @@
       lib = nixpkgs.lib.extend (_final: _prev: home-manager.lib // (import ./lib lib inputs));
     in
     {
-      # colmena = import ./hive { inherit inputs lib overlays; };
       colmenaHive = colmena.lib.makeHive (import ./hive { inherit inputs lib overlays; });
 
       packages = lib.eachSystem (
@@ -138,6 +133,7 @@
             apply
             build
             boot-partition-space-remaining
+            rebuild-facter-report
             ;
 
           install = run.install-nixos;

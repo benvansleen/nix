@@ -73,7 +73,7 @@ in
   install-nixos = pkgs.writeShellApplication {
     name = "install-nixos";
     text = with pkgs lib; ''
-      [ -z "$1" ] && printf "Must provide a host!" && exit 0
+      [ -z "$1" ] && printf "Must provide a host!" && exit 1
       HOST="$1"
       ${getExe disko} --mode disko "/nixos-config/hosts/$HOST/disko-config.nix"
       ${getExe nixos-facter} -o "/nixos-config/hosts/$HOST/facter.json"
@@ -114,4 +114,28 @@ in
         fi
       '';
     };
+
+  rebuild-facter-report = pkgs.writeShellApplication {
+    name = "rebuild-facter-report";
+    runtimeInputs = with pkgs; [ sops ];
+    text = ''
+      HOST="''${1:-$(hostname)}"
+      DEST="./secrets/hosts/$HOST/facter.json"
+
+      if [[ "$HOST" == "$(hostname)" ]]; then
+          sudo nix run \
+            --option experimental-features "nix-command flakes" \
+            --option extra-substituters https://numtide.cachix.org \
+            --option extra-trusted-public-keys numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE= \
+            github:nix-community/nixos-facter -- -o "$DEST"
+      else
+          ${colmena-bin} exec -v --on "$HOST" \
+            sudo nix run \
+              --option extra-substituters https://numtide.cachix.org \
+              --option extra-trusted-public-keys numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE= \
+              github:nix-community/nixos-facter -- -o "/tmp/facter.json"
+          scp "root@$HOST:/tmp/facter.json" "$DEST"
+      fi
+    '';
+  };
 }
