@@ -60,12 +60,18 @@ in
       zsa.enable = mkDefault true;
     };
 
+    nixpkgs.flake = {
+      setNixPath = false;
+      setFlakeRegistry = true;
+    };
     nix = {
+      channel.enable = false;
       gc = {
         automatic = true;
         dates = "weekly";
         options = "--delete-older-than 30d";
       };
+      registry.nixpkgs.flake = nixpkgs;
       settings = {
         accept-flake-config = true;
         auto-optimise-store = true;
@@ -77,7 +83,6 @@ in
         ];
         fallback = true;
         min-free = 128000000; # 128 MB
-        nix-path = [ "nixpkgs=${nixpkgs}" ];
         trusted-users = [ "@wheel" ];
         use-xdg-base-directories = true;
         warn-dirty = false;

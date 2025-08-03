@@ -39,7 +39,10 @@ in
   ];
 
   config = mkIf cfg.enable {
-    fileSystems.${cfg.persistRoot}.neededForBoot = true;
+    fileSystems.${cfg.persistRoot} = {
+      neededForBoot = true;
+      options = [ "noexec" ];
+    };
 
     # Ensure all necessary state is preserved according to nixos manual:
     # https://nixos.org/manual/nixos/stable/#ch-system-state
@@ -53,7 +56,8 @@ in
         "/var/lib/systemd"
         "/var/log/journal"
         "/etc/NetworkManager/system-connections"
-      ] ++ cfg.persistedDirectories;
+      ]
+      ++ cfg.persistedDirectories;
       files = [
         "/etc/machine-id"
         # "/etc/passwd"
