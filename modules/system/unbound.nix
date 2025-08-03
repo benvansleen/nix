@@ -27,6 +27,10 @@ in
   };
 
   config = mkIf cfg.enable {
+    modules.tailscale.tailscale-up-extra-args = [
+      "--exit-node-allow-lan-access"
+    ];
+
     services = {
 
       # CANNOT RESOLVE DNS REQUESTS WHEN BEHIND MULLVAD VPN
@@ -38,6 +42,13 @@ in
         stateDir = "/var/lib/unbound";
         settings = {
           forward-zone = [
+            {
+              ## requests to tailnet hosts should be forwarded to Tailscale MagicDNS
+              name = lib.constants.tailscale-domain;
+              forward-addr = [
+                "100.100.100.100"
+              ];
+            }
             {
               name = "adblock.dns.mullvad.net";
               forward-tls-upstream = true;
@@ -80,11 +91,8 @@ in
             tls-cert-bundle = "/etc/ssl/certs/ca-bundle.crt";
 
             ## configuration from https://joshua.hu/encrypted-dns-over-tls-unbound-mullvad-freebsd-block-unencrypted-dns-traffic
-            tcp-upstream = true;
-            tls-upstream = true;
             hide-identity = true;
             hide-trustanchor = true;
-            # target-fetch-policy = [ "-1 -1 -1 -1 -1" ];
             harden-large-queries = true;
             harden-referral-path = true;
             harden-algo-downgrade = true;
