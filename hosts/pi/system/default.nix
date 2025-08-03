@@ -119,7 +119,7 @@ lib.importAll ./.
         ];
       };
       unbound = {
-        enable = false; # currently using mullvad upstream dns
+        enable = true;
         port = 5335;
         num-threads = 4;
       };

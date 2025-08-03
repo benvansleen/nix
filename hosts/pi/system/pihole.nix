@@ -38,13 +38,12 @@ in
         hostname = "pihole";
         image = "pihole/pihole:latest";
         environment = {
-          PIHOLE_DNS_ = "100.64.0.3"; # mullvad dns
-          PIHOLE_INTERFACE = "end0"; # rpi4 uses `end0` instead of `eth0`
-          WEB_PORT = toString cfg.web-ui-port;
           TZ = "America/New_York";
-          DNSSEC = mkIf config.modules.unbound.enable "false";
-          CACHE_SIZE = mkIf config.modules.unbound.enable "0";
-          DNSMASQ_LISTENING = "all";
+          PIHOLE_INTERFACE = "end0"; # rpi4 uses `end0` instead of `eth0`
+          FTLCONF_dns_upstreams = "127.0.0.1#${toString config.modules.unbound.port}";
+          FTLCONF_webserver_port = toString cfg.web-ui-port;
+          FTLCONF_dns_dnssec = mkIf config.modules.unbound.enable "false";
+          FTLCONF_dns_listeningMode = "all";
           FTLCONF_webserver_session_timeout = "604800";
         };
         environmentFiles = [
@@ -69,7 +68,7 @@ in
       mkdir -p /etc/dnsmasq.d
     '';
     sops.templates."pihole.env".content = ''
-      WEBPASSWORD=${config.sops.placeholder.pihole_webpassword}
+      FTLCONF_webserver_api_password=${config.sops.placeholder.pihole_webpassword}
     '';
   };
 }

@@ -37,13 +37,26 @@ in
         resolveLocalQueries = true;
         stateDir = "/var/lib/unbound";
         settings = {
-          # forward-zone = {
-          #   # name = "clouded-mimosa.ts.net.";
-          #   forward-addr = [
-          #     "100.100.100.100"
-          #   ];
-          #   forward-first = true;
-          # };
+          forward-zone = [
+            {
+              name = "adblock.dns.mullvad.net";
+              forward-tls-upstream = true;
+              forward-addr = [
+                "194.242.2.3@853#adblock.dns.mullvad.net"
+                "2a07:e340::3@853#adblock.dns.mullvad.net"
+                "1.1.1.1@853#one.one.one.one"
+                "2606:4700:4700::1111@853#one.one.one.one"
+              ];
+            }
+            {
+              name = ".";
+              forward-tls-upstream = true;
+              forward-first = false;
+              forward-host = [
+                "adblock.dns.mullvad.net#adblock.dns.mullvad.net"
+              ];
+            }
+          ];
 
           server = {
             inherit (cfg) port num-threads;
@@ -64,8 +77,23 @@ in
             ];
             extended-statistics = true;
 
+            tls-cert-bundle = "/etc/ssl/certs/ca-bundle.crt";
+
+            ## configuration from https://joshua.hu/encrypted-dns-over-tls-unbound-mullvad-freebsd-block-unencrypted-dns-traffic
+            tcp-upstream = true;
+            tls-upstream = true;
+            hide-identity = true;
+            hide-trustanchor = true;
+            # target-fetch-policy = [ "-1 -1 -1 -1 -1" ];
+            harden-large-queries = true;
+            harden-referral-path = true;
+            harden-algo-downgrade = true;
+            qname-minimisation-strict = true;
+            use-caps-for-id = true;
+
             # Performance settings
             prefetch = true;
+            prefetch-key = true;
             cache-min-ttl = 3600;
             msg-cache-slabs = cfg.num-threads;
             rrset-cache-slabs = cfg.num-threads;
