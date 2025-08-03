@@ -159,6 +159,12 @@ in
       };
     };
 
+    system.activationScripts = {
+      diffGens = ''
+        ${lib.getExe pkgs.dix} /run/current-system "$systemConfig"
+      '';
+    };
+
     time.timeZone = "America/New_York";
     i18n = {
       defaultLocale = "en_US.UTF-8";

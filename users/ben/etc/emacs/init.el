@@ -10,46 +10,46 @@
   :custom
   (user-emacs-directory
    (concat (getenv "XDG_CONFIG_HOME") "/emacs"))
-  
+
   (use-package-always-ensure t)
-  
+
   (create-lockfiles nil)
   (auto-save-list-file-prefix emacs-cache-dir)
   (auto-save-file-name-transforms `((".*" ,emacs-cache-dir t)))
   (backup-directory-alist `(("." . ,emacs-cache-dir)))
-  
+
   (use-short-answers t)
   (ring-bell-function 'ignore)
-  
+
   (scroll-step 1)
-  
+
   (split-width-threshold 100)  ;; prefer horizontal split
   (display-buffer-reuse-frames t)
-  
+
   (treesit-font-lock-level 4)
-  
+
   :mode
   ("\\.rs\\'" . rust-ts-mode)
   ("\\.tsx?\\'" . typescript-ts-mode)
-  
+
   :custom-face
   (font-lock-function-call-face ((t (:italic t))))
   (font-lock-variable-use-face ((t (:italic t))))
-  
+
   :hook
   (server-after-make-frame
    .
    (lambda ()
      (set-face-attribute 'fringe nil :background nil)))
-  
+
   :init
   (setq-default tab-width 4)
   (setq-default indent-tabs-mode nil)
-  
+
   (global-auto-revert-mode)
   (save-place-mode)
   (recentf-mode)
-  
+
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)

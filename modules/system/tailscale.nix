@@ -56,9 +56,6 @@ in
 
       serviceConfig.Type = "oneshot";
       script = with pkgs; ''
-        # wait for tailscaled to settle
-        # sleep 2
-
         # check if we are already authenticated
         status="$(${lib.getExe tailscale} status --json | ${lib.getExe jq} -r .BackendState)"
 

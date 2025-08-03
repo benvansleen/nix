@@ -51,7 +51,6 @@ in
       [ "$mode" = 'switch' ] && nix run .#boot-partition-space-remaining
       nix flake update secrets
       ${colmena-bin} apply-local "$mode" --sudo
-      nix run .#rebuild-diff
     '';
   };
 
@@ -72,11 +71,11 @@ in
 
   install-nixos = pkgs.writeShellApplication {
     name = "install-nixos";
-    text = with pkgs lib; ''
+    text = ''
       [ -z "$1" ] && printf "Must provide a host!" && exit 1
       HOST="$1"
-      ${getExe disko} --mode disko "/nixos-config/hosts/$HOST/disko-config.nix"
-      ${getExe nixos-facter} -o "/nixos-config/hosts/$HOST/facter.json"
+      ${lib.getExe pkgs.disko} --mode disko "/nixos-config/hosts/$HOST/disko-config.nix"
+      ${lib.getExe pkgs.nixos-facter} -o "/nixos-config/hosts/$HOST/facter.json"
       nixos-install --flake "/nixos-config#$HOST"
     '';
   };
@@ -91,7 +90,7 @@ in
     pkgs.writeShellApplication {
       name = "set-password";
       runtimeInputs = with pkgs; [ sops ];
-      text = with pkgs lib; ''
+      text = with lib; ''
         PASSWORD_FILE=${file}
 
         read -rp "New password: " password
@@ -101,12 +100,12 @@ in
             exit 1
         fi
 
-        SOPS_AGE_KEY=$(${need-privileged-execution} ${getExe ssh-to-age} -i ${keyfile} -private-key)
+        SOPS_AGE_KEY=$(${need-privileged-execution} ${getExe pkgs.ssh-to-age} -i ${keyfile} -private-key)
         export SOPS_AGE_KEY
         if [ -e $PASSWORD_FILE ]
         then
-            hash=$(${getExe mkpasswd} "$password" -m sha-512)
-            ${getExe sops} set "$PASSWORD_FILE" '["data"]' "\"$hash\""
+            hash=$(${getExe pkgs.mkpasswd} "$password" -m sha-512)
+            ${getExe pkgs.sops} set "$PASSWORD_FILE" '["data"]' "\"$hash\""
             echo "Password will update after next system rebuild"
             echo "Be sure to push to the \`secrets\` remote repository"
         else

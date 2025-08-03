@@ -19,7 +19,7 @@ let
       "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
       "github.com/caddy-dns/cloudflare@v0.0.0-20250407183951-bbf79111721a"
     ];
-    hash = "sha256-BXr1++M2Z8JKPucKe8HAeU9IsmQXK1C0gbCuAaoUKAA=";
+    hash = "sha256-Ovk2OimLkPhcFB48h2sMUWbpwVS9Hnuzb1FHm4cixmk=";
   };
 in
 {
@@ -117,27 +117,26 @@ in
             metrics
           }
         '';
-        extraConfig =
-          ''
-            https:// {
-              tls {
-                on_demand
-              }
+        extraConfig = ''
+          https:// {
+            tls {
+              on_demand
             }
+          }
 
-            (cloudflare) {
-              tls {
-                dns cloudflare {$CLOUDFLARE_TOKEN}
-              }
+          (cloudflare) {
+            tls {
+              dns cloudflare {$CLOUDFLARE_TOKEN}
             }
-          ''
-          + (
-            with lib;
-            pipe services [
-              (mapAttrsToList tailscale)
-              (concatStringsSep "\n")
-            ]
-          );
+          }
+        ''
+        + (
+          with lib;
+          pipe services [
+            (mapAttrsToList tailscale)
+            (concatStringsSep "\n")
+          ]
+        );
         virtualHosts =
           let
             primary = {

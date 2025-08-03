@@ -118,38 +118,26 @@
     {
       colmenaHive = colmena.lib.makeHive (import ./hive { inherit inputs lib overlays; });
 
-      packages = lib.eachSystem (
+      apps = lib.eachSystem (
         pkgs:
         let
           run = pkgs.callPackage ./run { inherit colmena; };
-        in
-        rec {
-          default = rebuild;
-
-          inherit (run)
-            all
-            rebuild
-            rebuild-diff
-            apply
-            build
-            boot-partition-space-remaining
-            rebuild-facter-report
-            ;
-
-          install = run.install-nixos;
-
-          root.set-password = run.set-password-for "root";
-
-          iso = self.nixosConfigurations.iso.config.system.build.isoImage;
-          test-iso = import ./hosts/iso/run.nix {
-            inherit pkgs;
-            iso = self.nixosConfigurations.iso.config.system.build.isoImage;
+          create-app = pkg: {
+            type = "app";
+            program = lib.getExe pkg;
           };
-
-        }
-        // (lib.eachUser (user: {
-          set-password = run.set-password-for user;
-        }))
+          str-starts-with = with builtins; prefix: s: (substring 0 (stringLength prefix) s) == prefix;
+          set-password-for = user: create-app (run.set-password-for user);
+        in
+        with lib;
+        (pipe run [
+          (filterAttrs (name: value: (builtins.typeOf value) == "set" && !str-starts-with "override" name))
+          (mapAttrs (_name: create-app))
+        ])
+        // (pipe { root = set-password-for "root"; } [
+          (attrs: attrs // (eachUser set-password-for))
+          (mapAttrs' (user: app: nameValuePair "set-password-for-${user}" app))
+        ])
       );
 
       devShells = lib.eachSystem (pkgs: {
@@ -158,7 +146,6 @@
           mkShell {
             buildInputs = [
               self.checks.${system}.pre-commit-check.enabledPackages
-              nixfmt-rfc-style
               colmena.packages.${pkgs.system}.colmena
             ];
             inherit (self.checks.${system}.pre-commit-check) shellHook;
@@ -172,15 +159,31 @@
         pre-commit-check = pre-commit-hooks.lib.${pkgs.system}.run {
           src = ./.;
           hooks = {
+            check-added-large-files.enable = true;
+            check-merge-conflicts.enable = true;
+            detect-private-keys.enable = true;
             deadnix.enable = true;
+            end-of-file-fixer.enable = true;
+            flake-checker.enable = true;
             ripsecrets.enable = true;
-            statix.enable = true;
-            nix-fmt = {
+            statix = {
               enable = true;
-              name = "nix fmt";
-              entry = "${pkgs.nix}/bin/nix fmt";
-              language = "system";
-              stages = [ "pre-commit" ];
+              settings.config = "statix.toml";
+            };
+            treefmt = {
+              enable = true;
+              packageOverrides.treefmt = self.outputs.formatter.${pkgs.system};
+            };
+            typos = {
+              enable = true;
+              settings = {
+                diff = false;
+                ignored-words = [
+                  "artic"
+                  "facter"
+                ];
+                exclude = "*.patch";
+              };
             };
           };
         };

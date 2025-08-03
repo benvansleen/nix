@@ -47,7 +47,7 @@ in
                   search dns.podman <tailscale-domain>
                   ```
                  3. Restart container
-                 4. Verify that `tailscale` has ovewritten `/etc/resolv.conf`
+                 4. Verify that `tailscale` has overwritten `/etc/resolv.conf`
               */
               TS_ACCEPT_DNS = "true";
 

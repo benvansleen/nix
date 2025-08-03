@@ -1,6 +1,7 @@
 #! /usr/bin/env bash
 
 function dispatch {
+  # shellcheck disable=SC2145
   hyprctl --batch \
     "dispatch $@ ;" \
     "dispatch movecursortocorner 1"

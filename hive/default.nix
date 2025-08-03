@@ -17,7 +17,8 @@ in
     {
       specialArgs = {
         inherit lib;
-      } // inputs;
+      }
+      // inputs;
       nixpkgs = import nixpkgs (nixpkgs-config "x86_64-linux");
       nodeNixpkgs = {
         pi = import nixpkgs (nixpkgs-config "aarch64-linux");
