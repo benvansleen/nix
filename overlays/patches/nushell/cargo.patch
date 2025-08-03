@@ -1,0 +1,42 @@
+From 70d896396b4bef4f51d8195a906a5b6fec7ad78d Mon Sep 17 00:00:00 2001
+From: ben <benvansleen@gmail.com>
+Date: Sat, 2 Aug 2025 18:48:21 -0400
+Subject: [PATCH] point to my reedline
+
+---
+ Cargo.lock | 5 ++---
+ Cargo.toml | 2 +-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/Cargo.lock b/Cargo.lock
+index 265ddf90e..1aa07bec4 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -6043,9 +6043,8 @@ dependencies = [
+ 
+ [[package]]
+ name = "reedline"
+-version = "0.41.0"
+-source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "b627c435d0189363b15f885f1b07193d310ec9e4e39c5627951c6e0f4d02c93a"
++version = "0.40.0"
++source = "git+https://github.com/benvansleen/reedline#82e18fc0b4a5010b9289307326f1803efa35d3da"
+ dependencies = [
+  "arboard",
+  "chrono",
+diff --git a/Cargo.toml b/Cargo.toml
+index 34a0c5beb..59b378204 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -141,7 +141,7 @@ getrandom = "0.2" # pick same version that rand requires
+ rand_chacha = "0.9"
+ ratatui = "0.29"
+ rayon = "1.10"
+-reedline = "0.41.0"
++reedline = { git = "https://github.com/benvansleen/reedline" }
+ rmp = "0.8"
+ rmp-serde = "1.3"
+ roxmltree = "0.20"
+-- 
+2.50.1
+

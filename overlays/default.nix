@@ -37,10 +37,9 @@ with inputs;
         passthru
         meta
         ;
-      cargoHash = "sha256-ztPFHwg0jy0SORhUV/3CaU2R+hN6rNYIS06EiL7aMh4=";
+      cargoHash = "sha256-HARErJeB0bJnHLnLjg5vqJyHWLSdU7d8HMFcdVd/YcI=";
       cargoPatches = (prev.nushell.cargoPatches or [ ]) ++ [
-        ./patches/nushell/cargo-toml.patch
-        ./patches/nushell/cargo-lock.patch
+        ./patches/nushell/cargo.patch
       ];
       patches = (prev.nushell.patches or [ ]) ++ [
         ./patches/nushell/add-custom-escape-sequence.patch

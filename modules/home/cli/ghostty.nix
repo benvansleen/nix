@@ -34,11 +34,16 @@ in
             options = mkOption {
               description = "attrs of \"option = value\" definitions";
               type = attrsOf str;
-              default = [ ];
+              default = { };
             };
             keybinds = mkOption {
               description = "list of \"trigger = action\" definitions";
               type = attrsOf str;
+              default = { };
+            };
+            custom-shaders = mkOption {
+              description = "paths to shader files";
+              type = listOf str;
               default = [ ];
             };
             useStylixTheme = mkEnableOption "use stylix theme";
@@ -59,6 +64,7 @@ in
         in
         join (
           [
+            (join (map (shaderPath: "custom-shader = ${shaderPath}") cfg.settings.custom-shaders))
             (join (kvToString cfg.settings.options))
             (join (map (bind: "keybind = ${bind}") (kvToString cfg.settings.keybinds)))
           ]

@@ -21,6 +21,7 @@ in
         iosevka
         hack-font
         nerd-fonts.fira-code
+        nerd-fonts._3270
       ];
 
       fontconfig = {
