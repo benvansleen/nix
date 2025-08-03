@@ -139,8 +139,19 @@ in
     };
 
     security = {
+      doas = {
+        enable = lib.constants.privilege-escalation == "doas";
+        extraRules = [
+          {
+            groups = [ "wheel" ];
+            keepEnv = true;
+            noPass = false;
+            persist = true;
+          }
+        ];
+      };
       sudo = {
-        enable = true;
+        enable = lib.constants.privilege-escalation == "sudo";
         execWheelOnly = true;
       };
 

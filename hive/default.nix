@@ -6,6 +6,7 @@
 
 let
   inherit (inputs) nixpkgs;
+  inherit (lib) mkIf;
 in
 {
   meta =
@@ -41,6 +42,7 @@ in
     deployment = {
       allowLocalDeployment = true;
       targetHost = null;
+      privilegeEscalationCommand = mkIf (lib.constants.privilege-escalation == "doas") [ "doas" ];
     };
   };
 
