@@ -18,7 +18,7 @@ in
 
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
-      enable = true;
+      enable = osConfig.machine.desktop;
       package = lib.optimizeForThisHostIfPowerful {
         config = osConfig;
         pkg = pkgs.hyprland;

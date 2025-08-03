@@ -20,7 +20,7 @@ lib.importAll ./.
     modules.cli = {
       alacritty.enable = osConfig.machine.desktop;
       ghostty.enable = osConfig.machine.desktop;
-      nushell.enable = true;
+      nushell.enable = osConfig.machine.desktop;
       tmux = {
         enable = osConfig.machine.desktop;
         enable-resurrect = osConfig.machine.desktop;

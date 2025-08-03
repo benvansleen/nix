@@ -46,7 +46,7 @@ in
     ];
 
     services.ollama = {
-      enable = !builtins.isNull osConfig.machine.acceleration;
+      enable = osConfig.machine.powerful;
       environmentVariables = {
         OLLAMA_MODELS = ".local/share/ollama";
       };

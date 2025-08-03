@@ -40,7 +40,7 @@ lib.mkUser {
 
     programs = {
       hyprland = {
-        enable = true;
+        enable = config.machine.desktop;
         withUWSM = true;
         xwayland.enable = true;
       };
@@ -48,7 +48,7 @@ lib.mkUser {
     };
     users.users.${user} = {
       isNormalUser = true;
-      shell = pkgs.nushell;
+      shell = if config.machine.desktop then pkgs.nushell else pkgs.zsh;
       hashedPasswordFile = if-using-sops config.sops.secrets."${user}-password".path;
       home = home-dir;
 
