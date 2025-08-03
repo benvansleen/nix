@@ -17,8 +17,8 @@ in
         };
       };
       "ghostty/retro-terminal-amber.glsl".text = ''
-        float warp = 0.0; // simulate curvature of CRT monitor
-        float scan = 0.50; // simulate darkness between scanlines
+        float warp = 0.55; // simulate curvature of CRT monitor
+        float scan = 0.60; // simulate darkness between scanlines
 
         void mainImage(out vec4 fragColor, in vec2 fragCoord)
         {
@@ -41,7 +41,7 @@ in
 
                 // sample the texture and apply a teal tint
                 vec3 color = texture(iChannel0, uv).rgb;
-                vec3 amberTint = vec3(0.9, 0.5, 0.0); // amber color (slightly more green than blue)
+                vec3 amberTint = vec3(0.996, 0.6875, 0.0); // amber color (slightly more green than blue)
 
                 // mix the sampled color with the amber tint based on scanline intensity
                 fragColor = vec4(mix(color * amberTint, vec3(0.0), apply), 1.0);
@@ -56,7 +56,7 @@ in
       useStylixTheme = true;
       custom-shaders = [
         "./retro-terminal-amber.glsl"
-        "./shaders/bettercrt.glsl"
+        # "./shaders/bettercrt.glsl"
       ];
       options = {
         command = mkIf config.modules.cli.tmux.enable "tmux-attach-to-last-session";
