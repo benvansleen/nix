@@ -41,9 +41,9 @@ let
       in
       ''
         (use-package copilot
-          :hook (prog-mode . copilot-mode)
+          :hook ((prog-mode . copilot-mode)
+                 (text-mode . copilot-mode))
           :bind (:map copilot-completion-map
-                      ("<tab>" . 'copilot-accept-completion)
                       ("M-;" . 'copilot-accept-completion)
                       ("M-:" . 'copilot-accept-completion-by-word)
                       ("M-f" . 'copilot-accept-completion-by-word)

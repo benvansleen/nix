@@ -53,10 +53,10 @@ with inputs;
       pname = "ollama-copilot";
       version = "master";
       src = prev.fetchFromGitHub {
-        owner = "bernardo-bruning";
+        owner = "benvansleen";
         repo = pname;
-        rev = "d6ab7a2fc9d94d61b12a5eb36efe8126346ea9cc";
-        hash = "sha256-eq9HlJ0+0cAF7jFCvflEMVAZYVKMBmzLRO8oUQox2ig=";
+        rev = "master";
+        hash = "sha256-Qg/hx9/iEm4aYTalcwkPgFDMeDxe5M5fvzdqCldXr88=";
       };
 
       vendorHash = "sha256-g27MqS3qk67sve/jexd07zZVLR+aZOslXrXKjk9BWtk=";

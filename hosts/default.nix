@@ -27,16 +27,6 @@ in
     allowUnfree = mkEnableOption "Allow unfree nixpkgs";
     powerful = mkEnableOption "Powerful machine configuration";
     desktop = mkEnableOption "Desktop machine configuration; enable gui apps";
-    acceleration = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      description = "machine has access to gpu acceleration";
-    };
-    rocm-version = mkOption {
-      type = types.nullOr types.str;
-      default = null;
-      description = "if machine.acceleration = rocm, what version?";
-    };
   };
 
   imports = [

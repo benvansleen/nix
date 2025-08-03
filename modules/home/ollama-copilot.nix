@@ -33,6 +33,11 @@ in
       default = 50;
       description = "number of tokens per inference";
     };
+    system = mkOption {
+      type = types.str;
+      default = "";
+      description = "system prompt for the llm";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -42,9 +47,7 @@ in
 
     services.ollama = {
       enable = !builtins.isNull osConfig.machine.acceleration;
-      inherit (osConfig.machine) acceleration;
       environmentVariables = {
-        HSA_OVERRIDE_GFX_VERSION = osConfig.machine.rocm-version;
         OLLAMA_MODELS = ".local/share/ollama";
       };
     };
@@ -64,7 +67,8 @@ in
           ${lib.getExe pkgs.ollama-copilot} \
             -port ":${toString cfg.port}" \
             -model "${cfg.model}" \
-            -num-predict ${toString cfg.num-tokens}
+            -num-predict ${toString cfg.num-tokens} \
+            -system "${cfg.system}"
         '';
       };
     };
