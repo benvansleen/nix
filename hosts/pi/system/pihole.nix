@@ -55,7 +55,7 @@ in
           "/etc/dnsmasq.d:/etc/dnsmasq.d"
         ];
         extraOptions = [
-          "--pull=newer"
+          # "--pull=newer"
 
           # If facing any issues with DNS resolution on pihole startup,
           # ensure `Permit all origins` is set in web ui

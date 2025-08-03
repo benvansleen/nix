@@ -61,7 +61,6 @@ in
             "maybe-redis"
           ];
           extraOptions = [
-            # "--pull=newer"
             "--network=${network}"
           ];
         };
@@ -88,6 +87,8 @@ in
           ];
           dependsOn = [ "maybe-redis" ];
           extraOptions = [
+            ## `maybe` has been archived; do not expect updates to this image
+            # "--pull=newer"
             "--network=${network}"
           ];
         };
