@@ -48,13 +48,15 @@ in
       firefox = {
         enable = osConfig.machine.desktop;
         browser-pkg = lib.optimizeForThisHostIfPowerful {
-          pkg = pkgs.firefox-beta;
+          pkg = pkgs.firefox-wayland;
           config = osConfig;
         };
       };
       ollama-copilot = {
         enable = true;
         num-tokens = 30;
+        model = "hf.co/unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF:Q4_K_XL";
+        system = "respond only by completing the code. What you write after <MID> will be directly inserted between <PRE> and <SUF>.";
       };
       window-manager = {
         enable = osConfig.machine.desktop;
