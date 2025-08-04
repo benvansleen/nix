@@ -1,4 +1,8 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 
 let
   inherit (lib)
@@ -17,6 +21,11 @@ in
       default = 8080;
       description = "port to serve pihole web UI on";
     };
+    prometheus-exporter-port = mkOption {
+      type = types.port;
+      default = 9617;
+      description = "port to serve exports from prometheus-pihole-exporter";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -34,9 +43,30 @@ in
     };
 
     virtualisation.oci-containers.containers = {
+      pihole-exporter = mkIf config.modules.prometheus.client.enable {
+        image = "ekofr/pihole-exporter:v1.2.0";
+        environment = {
+          PIHOLE_HOSTNAME = "127.0.0.1";
+          PIHOLE_PORT = toString cfg.web-ui-port;
+          PORT = "9617";
+        };
+        environmentFiles = [
+          config.sops.templates."pihole.env".path
+        ];
+        ports = [
+          "${toString cfg.prometheus-exporter-port}:9617"
+        ];
+        extraOptions = [
+          "--network=host"
+        ];
+        dependsOn = [
+          "pihole"
+        ];
+      };
+
       pihole = {
         hostname = "pihole";
-        image = "pihole/pihole:latest";
+        image = "pihole/pihole:2025.07.1";
         environment = {
           TZ = "America/New_York";
           PIHOLE_INTERFACE = "end0"; # rpi4 uses `end0` instead of `eth0`
@@ -54,7 +84,9 @@ in
           "/etc/dnsmasq.d:/etc/dnsmasq.d"
         ];
         extraOptions = [
-          # "--pull=newer"
+          ## ALWAYS PULL NEW IMAGES IMPERATIVELY BEFORE APPLYING CONFIG
+          ## `sudo podman pull pihole/pihole:<tag>`
+          "--pull=never"
 
           # If facing any issues with DNS resolution on pihole startup,
           # ensure `Permit all origins` is set in web ui
@@ -69,6 +101,7 @@ in
     '';
     sops.templates."pihole.env".content = ''
       FTLCONF_webserver_api_password=${config.sops.placeholder.pihole_webpassword}
+      PIHOLE_PASSWORD=${config.sops.placeholder.pihole_webpassword}
     '';
   };
 }

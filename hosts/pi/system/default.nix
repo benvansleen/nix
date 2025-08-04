@@ -99,6 +99,17 @@ lib.importAll ./.
               ];
               scrape_interval = "15s";
             }
+            {
+              job_name = "pihole";
+              static_configs = [
+                {
+                  targets = [
+                    "pi:${toString config.modules.pihole.prometheus-exporter-port}"
+                  ];
+                }
+              ];
+              scrape_interval = "15s";
+            }
           ];
         };
       };
