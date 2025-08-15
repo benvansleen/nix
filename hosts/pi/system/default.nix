@@ -125,7 +125,7 @@ lib.importAll ./.
         tailscale-up-extra-args = [
           "--ssh"
           "--accept-risk=lose-ssh"
-          "--exit-node=us-hou-wg-001.mullvad.ts.net"
+          "--exit-node=auto:any"
           "--advertise-routes=192.168.1.0/24"
         ];
       };

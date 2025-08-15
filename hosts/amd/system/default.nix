@@ -48,7 +48,7 @@ in
         authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
         tailscale-up-extra-args = [
           "--accept-routes"
-          "--exit-node=us-chi-wg-301.mullvad.ts.net"
+          "--exit-node=auto:any"
         ];
       };
       searx.enable = false;
