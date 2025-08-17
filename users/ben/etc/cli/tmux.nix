@@ -1,11 +1,13 @@
 {
   config,
+  osConfig,
   pkgs,
   lib,
   ...
 }:
 
 let
+  inherit (osConfig.users.users.${config.home.username}) shell;
   inherit (lib) mkEnableOption mkIf optionals;
   cfg = config.modules.cli.tmux;
 in
@@ -118,7 +120,7 @@ in
 
         set-option -g status-interval 1
         set-option -g automatic-rename on
-        set-option -g automatic-rename-format "#{?#{==:#{pane_current_command},zsh},#{b:pane_current_path},#{pane_current_command}}"
+        set-option -g automatic-rename-format "#{?#{==:#{pane_current_command},${shell.NIX_MAIN_PROGRAM}},#{b:pane_current_path},#{pane_current_command}}"
         set -g status-justify centre
 
         set -g status-left-length 100
