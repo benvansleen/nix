@@ -58,8 +58,9 @@
 
 (use-package which-key
   :ensure nil
+  :custom
+  (which-key-idle-delay 0.5)
   :init
-  (setq which-key-idle-delay 0.5)
   (which-key-mode))
 
 (use-package smart-cursor-color
@@ -127,19 +128,22 @@
 
 (use-package evil
   :demand t
+  :custom
+  (evil-want-integration t)
+  (evil-want-minibuffer t)
+  (evil-want-keybinding nil)
+  (evil-want-C-i-jump t)
+  (evil-want-fine-undo t)
+  (evil-search-module 'evil-search)
+  (evil-ex-search-persistent-highlight nil)
+  (evil-ex-complete-emacs-commands t)
+  (evil-vsplit-window-right t)
+  (evil-split-window-below t)
+  (evil-shift-round nil)
+  (evil-want-C-u-scroll t)
+  (tab-always-indent 'complete)
+
   :init
-  (setq evil-want-integration t
-		evil-want-minibuffer t
-		evil-want-keybinding nil
-        evil-want-C-i-jump t
-		evil-search-module 'evil-search
-		evil-ex-search-persistent-highlight nil
-		evil-ex-complete-emacs-commands t
-		evil-vsplit-window-right t
-		evil-split-window-below t
-		evil-shift-round nil
-		evil-want-C-u-scroll t
-		tab-always-indent 'complete)
   (electric-pair-mode)
   (evil-mode 1)
 
@@ -252,9 +256,12 @@
   :config
   (global-evil-surround-mode 1))
 
+(use-package evil-tex
+  :hook (LaTeX-mode . evil-tex-mode))
+
 (use-package avy
-  :init
-  (setq avy-timeout-seconds 0.3)
+  :custom
+  (avy-timeout-seconds 0.3)
   :bind (:map evil-normal-state-map
 			  ("s" . avy-goto-char-timer)
 			  :map evil-motion-state-map
@@ -263,8 +270,10 @@
 
 ;; Command buffer
 (use-package vertico
+  :custom
+  (vertico-count 15)
+
   :init
-  (setq vertico-count 15)
   (vertico-mode)
 
   (defun my/pos-at-beginning-of-line-text ()
@@ -323,8 +332,8 @@
 (when (>= emacs-major-version 30)
   (use-package completion-preview
     :ensure nil ;; built-in mode
-    :config
-    (setq completion-prefix-min-length 2)
+    :custom
+    (completion-prefix-min-length 2)
     :hook
     (minibuffer-setup . (lambda ()
                           (when global-completion-preview-mode
@@ -339,10 +348,10 @@
 
 (use-package consult
   :demand t
-  :config
-  (setq completion-in-region-function #'consult-completion-in-region
-		xref-show-xrefs-function #'consult-xref
-		xref-show-definitions-function #'consult-xref))
+  :custom
+  (completion-in-region-function #'consult-completion-in-region)
+  (xref-show-xrefs-function #'consult-xref)
+  (xref-show-definitions-function #'consult-xref))
 
 (use-package direnv
   :init
@@ -369,10 +378,12 @@
 		   (list #'project-eshell "Eshell" "e")))))
 
 (use-package fancy-compilation
+  :custom
+  (fancy-compilation-override-colors nil)
+  (fancy-compilation-quiet-prelude nil)
+  (fancy-compilation-quiet-prolog nil)
+
   :init
-  (setq fancy-compilation-override-colors nil
-        fancy-compilation-quiet-prelude nil
-        fancy-compilation-quiet-prolog nil)
   (fancy-compilation-mode))
 
 
@@ -383,9 +394,11 @@
   :hook (magit-mode . magit-delta-mode))
 
 (use-package git-gutter
-  :hook (prog-mode . git-gutter-mode)
-  :config
-  (setq git-gutter:update-interval 0.02)
+  :custom
+  (git-gutter:update-interval 0.02)
+
+  :hook ((prog-mode . git-gutter-mode)
+         (text-mode . git-gutter-mode))
   :bind (:map evil-normal-state-map
 			  ("SPC g n" . git-gutter:next-hunk)
 			  ("SPC g p" . git-gutter:previous-hunk)
@@ -411,9 +424,9 @@
 ;; Dired
 (use-package dired
   :ensure nil
-  :init
-  (setq dired-auto-revert-buffer t
-		dired-kill-when-opening-new-dired-buffer t))
+  :custom
+  (dired-auto-revert-buffer t)
+  (dired-kill-when-opening-new-dired-buffer t))
 
 
 (use-package paren-face
@@ -483,24 +496,46 @@
 
 
 (use-package dashboard
+  :custom
+  (dashboard-banner-logo-title "\n\n\n")
+  (dashboard-center-content t)
+  (dashboard-show-shortcuts nil)
+  (dashboard-items '((projects . 5) (recents . 5)))
+  (dashboard-set-navigator t)
+  ;; dashboard-set-footer nil
+  (dashboard-page-separator "\n\n")
+  ;; dashboard-init-info ""
+  (initial-buffer-choice (lambda ()
+                           (dashboard-refresh-buffer)
+                           (get-buffer "*dashboard*")))
+
+  ;; Defined in nix `modules.home.emacs.dashboard-img'
+  (dashboard-startup-banner my/dashboard-img)
+
   :bind (:map dashboard-mode-map
               ("<normal-state> f" . find-file)
-         :map evil-normal-state-map
+              :map evil-normal-state-map
               ("SPC d" . dashboard-open))
   :init
-  (dashboard-setup-startup-hook)
-  (setq dashboard-banner-logo-title "\n\n\n"
-        dashboard-center-content t
-        dashboard-show-shortcuts nil
-        dashboard-items '((projects . 5) (recents . 5))
-        dashboard-set-navigator t
-        ;; dashboard-set-footer nil
-        dashboard-page-separator "\n\n"
-        ;; dashboard-init-info ""
-        initial-buffer-choice (lambda ()
-                                (dashboard-refresh-buffer)
-                                (get-buffer "*dashboard*"))
+  (dashboard-setup-startup-hook))
 
-        ;; Defined in nix `modules.home.emacs.dashboard-img'
-        dashboard-startup-banner my/dashboard-img)
+
+(use-package tuareg
+  ;; :mode "\\.ml\\'"
+  :init
+  (add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
   )
+
+
+(use-package haskell-mode)
+
+(use-package clojure-ts-mode)
+
+(use-package pdf-tools
+  :init
+  (pdf-tools-install))
+
+(use-package latex-mode
+  :ensure nil
+  :hook
+  (latex-mode . hs-minor-mode))
