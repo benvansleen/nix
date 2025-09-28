@@ -55,11 +55,12 @@ in
           # gstat
           # polars
           # query
-          skim
+          # skim
           # units
         ];
         shellAliases = with pkgs; {
           cd = mkIf config.programs.zoxide.enableNushellIntegration "z";
+          sudo = mkIf (lib.constants.privilege-escalation == "doas") "doas";
 
           htop = "${getExe bottom} -b";
           # ps = "${getExe procs}";
@@ -180,6 +181,10 @@ in
               event: { send: HistoryHintWordComplete }
             }
           ]
+        '';
+        extraConfig = ''
+          $env.config.color_config.shape_external = { fg: "#89b482", attr: b}
+          $env.config.color_config.shape_externalarg = { fg: "#a9b665" }
         '';
       };
     };
