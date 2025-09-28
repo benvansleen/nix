@@ -13,14 +13,6 @@ let
     types
     ;
   cfg = config.modules.caddy;
-
-  my-caddy = pkgs.caddy.withPlugins {
-    plugins = [
-      "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
-      "github.com/caddy-dns/cloudflare@v0.0.0-20250407183951-bbf79111721a"
-    ];
-    hash = "sha256-Ovk2OimLkPhcFB48h2sMUWbpwVS9Hnuzb1FHm4cixmk=";
-  };
 in
 {
   options.modules.caddy = {
@@ -33,7 +25,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ my-caddy ];
     sops.templates."caddy.env".content = ''
       TS_AUTHKEY=${config.sops.placeholder.tailscale_sidecar_authkey}
       CLOUDFLARE_TOKEN=${config.sops.placeholder.cloudflare_caddy_api_token}
@@ -84,7 +75,13 @@ in
       rec {
         enable = true;
         enableReload = false;
-        package = my-caddy;
+        package = pkgs.caddy.withPlugins {
+          plugins = [
+            "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
+            "github.com/caddy-dns/cloudflare@v0.0.0-20250407183951-bbf79111721a"
+          ];
+          hash = "sha256-og6CgmWec/8jZqA3oh3Ukk++t2ROcXE419voNRMbRcQ=";
+        };
         inherit (lib.constants) email;
         dataDir = "/var/lib/caddy";
         logDir = "/var/log/caddy";
