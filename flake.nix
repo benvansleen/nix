@@ -126,12 +126,11 @@
             type = "app";
             program = lib.getExe pkg;
           };
-          str-starts-with = with builtins; prefix: s: (substring 0 (stringLength prefix) s) == prefix;
           set-password-for = user: create-app (run.set-password-for user);
         in
         with lib;
         (pipe run [
-          (filterAttrs (name: value: (builtins.typeOf value) == "set" && !str-starts-with "override" name))
+          (filterAttrs (name: value: (builtins.typeOf value) == "set" && !hasPrefix "override" name))
           (mapAttrs (_name: create-app))
         ])
         // (pipe { root = set-password-for "root"; } [
