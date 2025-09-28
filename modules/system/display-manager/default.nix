@@ -18,8 +18,7 @@ in
     services = {
       displayManager.sddm = {
         enable = true;
-        package = lib.mkForce pkgs.libsForQt5.sddm;
-        extraPackages = lib.mkForce [ pkgs.libsForQt5.qt5.qtgraphicaleffects ];
+        extraPackages = with pkgs; [ qt6.qtmultimedia ];
         wayland.enable = true;
         theme = "${import ./sddm-theme.nix {
           inherit pkgs;
