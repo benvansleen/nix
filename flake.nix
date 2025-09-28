@@ -121,7 +121,7 @@
       apps = lib.eachSystem (
         pkgs:
         let
-          run = pkgs.callPackage ./run { inherit colmena; };
+          run = import ./run { inherit pkgs lib colmena; };
           create-app = pkg: {
             type = "app";
             program = lib.getExe pkg;

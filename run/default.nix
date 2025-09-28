@@ -8,7 +8,9 @@
 let
   colmena-bin = "RUST_LOG=error ${lib.getExe colmena.packages.${pkgs.system}.colmena}";
 in
-{
+rec {
+  default = rebuild;
+
   rebuild-diff = pkgs.writers.writeBabashkaBin "rebuild-diff-closures" { } ''
     (ns script
       (:require [babashka.process :refer [shell]]
@@ -122,17 +124,10 @@ in
       DEST="./secrets/hosts/$HOST/facter.json"
 
       if [[ "$HOST" == "$(hostname)" ]]; then
-          sudo nix run \
-            --option experimental-features "nix-command flakes" \
-            --option extra-substituters https://numtide.cachix.org \
-            --option extra-trusted-public-keys numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE= \
-            github:nix-community/nixos-facter -- -o "$DEST"
+          ${lib.constants.privilege-escalation} nix run nixpkgs#nixos-facter -- -o "$DEST"
       else
           ${colmena-bin} exec -v --on "$HOST" \
-            sudo nix run \
-              --option extra-substituters https://numtide.cachix.org \
-              --option extra-trusted-public-keys numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE= \
-              github:nix-community/nixos-facter -- -o "/tmp/facter.json"
+            ${lib.constants.privilege-escalation} nix run nixpkgs#nixos-facter -- -o "/tmp/facter.json"
           scp "root@$HOST:/tmp/facter.json" "$DEST"
       fi
     '';
