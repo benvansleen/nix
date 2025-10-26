@@ -1,13 +1,13 @@
 {
-  config.programs.git = {
-    extraConfig = {
-      init.defaultBranch = "master";
-    };
+  config.programs = {
     difftastic = {
       enable = true;
-      color = "auto";
-      display = "side-by-side";
-      background = "dark";
+      git.enable = true;
+      options = {
+        color = "auto";
+        display = "side-by-side";
+        background = "dark";
+      };
     };
   };
 }

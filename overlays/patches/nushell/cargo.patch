@@ -1,41 +1,51 @@
-From 70d896396b4bef4f51d8195a906a5b6fec7ad78d Mon Sep 17 00:00:00 2001
+From e1d35d0f909f33d406f3375b7cf6befbc92e5658 Mon Sep 17 00:00:00 2001
 From: ben <benvansleen@gmail.com>
-Date: Sat, 2 Aug 2025 18:48:21 -0400
-Subject: [PATCH] point to my reedline
+Date: Sun, 26 Oct 2025 13:53:16 -0400
+Subject: [PATCH] apply cargo patch for v0.108.0
 
 ---
- Cargo.lock | 5 ++---
- Cargo.toml | 2 +-
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ Cargo.lock | 3 +--
+ Cargo.toml | 6 +++---
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/Cargo.lock b/Cargo.lock
-index 265ddf90e..1aa07bec4 100644
+index 655c3c4aa..8de640096 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
-@@ -6043,9 +6043,8 @@ dependencies = [
- 
+@@ -6414,8 +6414,7 @@ dependencies = [
  [[package]]
  name = "reedline"
--version = "0.41.0"
+ version = "0.43.0"
 -source = "registry+https://github.com/rust-lang/crates.io-index"
--checksum = "b627c435d0189363b15f885f1b07193d310ec9e4e39c5627951c6e0f4d02c93a"
-+version = "0.40.0"
-+source = "git+https://github.com/benvansleen/reedline#82e18fc0b4a5010b9289307326f1803efa35d3da"
+-checksum = "b0fcf9f5225169f49622af4027b6d775cf9b6313f9eba16ba9e5ebd9d319a1f0"
++source = "git+https://github.com/benvansleen/reedline#0964d6e0bc45423b81078fcc7fe8d5e645277d2a"
  dependencies = [
   "arboard",
   "chrono",
 diff --git a/Cargo.toml b/Cargo.toml
-index 34a0c5beb..59b378204 100644
+index 0b2c5ed86..2a70281b2 100644
 --- a/Cargo.toml
 +++ b/Cargo.toml
-@@ -141,7 +141,7 @@ getrandom = "0.2" # pick same version that rand requires
+@@ -146,7 +146,7 @@ getrandom = "0.2" # pick same version that rand requires
  rand_chacha = "0.9"
  ratatui = "0.29"
- rayon = "1.10"
--reedline = "0.41.0"
+ rayon = "1.11"
+-reedline = "0.43.0"
 +reedline = { git = "https://github.com/benvansleen/reedline" }
  rmp = "0.8"
  rmp-serde = "1.3"
  roxmltree = "0.20"
+@@ -366,8 +366,8 @@ bench = false
+ # To use a development version of a dependency please use a global override here
+ # changing versions in each sub-crate of the workspace is tedious
+ [patch.crates-io]
+-# reedline = { git = "https://github.com/nushell/reedline", branch = "main" }
+-# nu-ansi-term = { git = "https://github.com/nushell/nu-ansi-term.git", branch = "main" }
++reedline = { git = "https://github.com/benvansleen/reedline.git" }
++# nu-ansi-term = {git = "https://github.com/nushell/nu-ansi-term.git", branch = "main"}
+ 
+ # Run all benchmarks with `cargo bench`
+ # Run individual benchmarks like `cargo bench -- <regex>` e.g. `cargo bench -- parse`
 -- 
 2.50.1
+

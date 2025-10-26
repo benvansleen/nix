@@ -104,8 +104,13 @@ in
       bottom.enable = true;
       git = {
         enable = true;
-        userName = user;
-        userEmail = "benvansleen@gmail.com";
+        settings = {
+          user = {
+            name = user;
+            email = "benvansleen@gmail.com";
+          };
+          init.defaultBranch = "master";
+        };
       };
     };
 

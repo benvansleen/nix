@@ -80,7 +80,7 @@ in
             "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
             "github.com/caddy-dns/cloudflare@v0.0.0-20250407183951-bbf79111721a"
           ];
-          hash = "sha256-og6CgmWec/8jZqA3oh3Ukk++t2ROcXE419voNRMbRcQ=";
+          hash = "sha256-8nFRJukvi6amwvrpexj2ahghxZKOiGwWjTxeExE41PQ=";
         };
         inherit (lib.constants) email;
         dataDir = "/var/lib/caddy";
