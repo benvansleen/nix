@@ -37,9 +37,10 @@
         src = pkgs.fetchFromGitLab {
           owner = "CalcProgrammer1";
           repo = "OpenRGB";
-          rev = "58c609674db9abb87c927873db7ae9f12758e322";
-          hash = "sha256-8QV1BhLLEThKIJTe3syxmzGaX/8jbYqCw1P4AcB/IbA=";
+          rev = "8a63cfbf2581ed35c7c771bcaa5516678238acc3";
+          hash = "sha256-UyllLHdyzZf/Fxp2oW2MDw0o28FruJBNiRZv7LL/mAo=";
         };
+        patches = [ ];
         postPatch = ''
           patchShebangs scripts/build-udev-rules.sh
           substituteInPlace scripts/build-udev-rules.sh \
