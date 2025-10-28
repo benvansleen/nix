@@ -65,6 +65,13 @@
       };
     };
 
+    nvim = {
+      url = "github:benvansleen/nvim";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
     hyprbar = {
       url = "github:benvansleen/hyprbar";
       inputs = {
