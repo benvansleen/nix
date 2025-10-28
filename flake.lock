@@ -585,11 +585,11 @@
         "plugins-telescope-cmdline": "plugins-telescope-cmdline"
       },
       "locked": {
-        "lastModified": 1761676063,
-        "narHash": "sha256-QGBQBYZRF/gm/6P3Ebh/poyz+UbUu/JsFkPE8HK6Ob0=",
+        "lastModified": 1761676297,
+        "narHash": "sha256-G71aWZksZNH6L53b8GJHgatXMm3lUI6Ikvh49hqDIxo=",
         "owner": "benvansleen",
         "repo": "nvim",
-        "rev": "855ed7b5fca4dd0d63c8b042ea363e1a1b71b79c",
+        "rev": "24c39b73357eb7d6ac5b33649d7fec876383ec74",
         "type": "github"
       },
       "original": {
