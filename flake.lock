@@ -620,21 +620,38 @@
         "nixpkgs": [
           "nixpkgs"
         ],
+        "plugins-direnv-nvim": "plugins-direnv-nvim",
         "plugins-telescope-cmdline": "plugins-telescope-cmdline",
         "pre-commit-hooks": "pre-commit-hooks",
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1761706694,
-        "narHash": "sha256-uzkMWHtldIqWd9szE/Mra87c7B1NE/mu+PixTZsMk3U=",
+        "lastModified": 1761770589,
+        "narHash": "sha256-9ejobLSawsvx4Y46xSF75vi3WmiA2uxI1uirXc0Nfx0=",
         "owner": "benvansleen",
         "repo": "nvim",
-        "rev": "0b969a1e660fbff4a849d23439df502aa1c9eff0",
+        "rev": "1aff272ad8f438f2ab09c79138462352e5d0d902",
         "type": "github"
       },
       "original": {
         "owner": "benvansleen",
         "repo": "nvim",
+        "type": "github"
+      }
+    },
+    "plugins-direnv-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1749467049,
+        "narHash": "sha256-KqO8uDbVy4sVVZ6mHikuO+SWCzWr97ZuFRC8npOPJIE=",
+        "owner": "NotAShelf",
+        "repo": "direnv.nvim",
+        "rev": "4dfc8758a1deab45e37b7f3661e0fd3759d85788",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NotAShelf",
+        "repo": "direnv.nvim",
         "type": "github"
       }
     },
