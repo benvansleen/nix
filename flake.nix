@@ -69,6 +69,8 @@
       url = "github:benvansleen/nvim";
       inputs = {
         nixpkgs.follows = "nixpkgs";
+        pre-commit-hooks.follows = "pre-commit-hooks";
+        treefmt-nix.follows = "treefmt-nix";
       };
     };
 
