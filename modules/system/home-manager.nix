@@ -1,4 +1,5 @@
 {
+  self,
   config,
   lib,
   home-manager,
@@ -24,7 +25,7 @@ in
       useGlobalPkgs = true;
       useUserPackages = true;
       extraSpecialArgs = {
-        inherit nix-index-database;
+        inherit self nix-index-database;
       };
     };
   };

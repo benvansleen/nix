@@ -3,7 +3,6 @@
   config,
   pkgs,
   lib,
-  nixpkgs,
   secrets,
   ...
 }:
@@ -61,7 +60,6 @@ in
         dates = "weekly";
         options = "--delete-older-than 30d";
       };
-      registry.nixpkgs.flake = nixpkgs;
       settings = {
         accept-flake-config = true;
         auto-optimise-store = true;
@@ -80,8 +78,6 @@ in
     };
 
     environment = {
-      etc.nixos.source = ../.;
-
       systemPackages = with pkgs; [
         bat
         bottom

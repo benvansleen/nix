@@ -121,7 +121,7 @@ in
       "$crystal"
       "$sudo"
       "$cmd_duration"
-      "$jobs"
+      # "$jobs"
       "$battery"
       "$time"
       "$status"
