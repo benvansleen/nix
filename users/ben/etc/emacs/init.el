@@ -67,15 +67,15 @@
   :init
   (smart-cursor-color-mode))
 
-(use-package ef-themes
+(use-package ef-themes)
   ;; :init
   ;; (load-theme 'ef-melissa-dark t)
-  )
+  
 
-(use-package gruvbox-theme
+(use-package gruvbox-theme)
   ;; :init
   ;; (load-theme 'gruvbox-dark-hard t)
-  )
+  
 
 
 (use-package olivetti
@@ -151,65 +151,65 @@
   (evil-set-undo-system 'undo-redo)
 
   (defun w ()
-	"Save the current buffer"
-	(interactive)
-	(save-buffer)
-	t)
+   "Save the current buffer"
+   (interactive)
+   (save-buffer)
+   t)
 
   (defun q ()
-	"Close the current buffer"
-	(interactive)
-	(evil-quit)
-	t)
+   "Close the current buffer"
+   (interactive)
+   (evil-quit)
+   t)
 
   (defun qa ()
-	"Close all buffers"
-	(interactive)
-	(evil-quit-all)
-	t)
+   "Close all buffers"
+   (interactive)
+   (evil-quit-all)
+   t)
 
   (defun wq ()
-	"Save and close the current buffer"
-	(interactive)
-	(and (w) (q)))
+   "Save and close the current buffer"
+   (interactive)
+   (and (w) (q)))
 
   (defun vs ()
-	"Open a vertical split"
-	(interactive)
-	(evil-window-vsplit))
+   "Open a vertical split"
+   (interactive)
+   (evil-window-vsplit))
 
   (defun sp ()
-	"Open a horizontal split"
-	(interactive)
-	(evil-window-split))
+   "Open a horizontal split"
+   (interactive)
+   (evil-window-split))
 
   (defun my/launch-dired ()
-	(interactive)
-	(or (dired-jump) (dired-up-directory)))
+   (interactive)
+   (or (dired-jump) (dired-up-directory)))
 
   (defun my/where-am-i ()
-	(interactive)
-	(message buffer-file-name))
+   (interactive)
+   (message buffer-file-name))
 
   (evil-define-operator my/comment-operator (beg end)
-	"Comment out lines selected by motion"
-	:restore-point t
-	(comment-region beg end))
+   "Comment out lines selected by motion"
+   :restore-point t
+   (comment-region beg end))
 
   :bind (("M-l" . evil-window-right)
-		 ("M-h" . evil-window-left)
-		 ("M-j" . evil-window-down)
-		 ("M-k" . evil-window-up)
-		 ("M-H v" . describe-variable)
-		 ("M-H f" . describe-function)
-		 ("M-H k" . describe-key)
+         ("M-h" . evil-window-left)
+         ("M-j" . evil-window-down)
+         ("M-k" . evil-window-up)
+         ("M-H v" . describe-variable)
+         ("M-H f" . describe-function)
+         ("M-H k" . describe-key)
 
-		 :map evil-motion-state-map
-		 ("gc" . my/comment-operator)
+         :map evil-motion-state-map
+         ("gc" . my/comment-operator)
 
-		 :map evil-normal-state-map
-		 ("-" . my/launch-dired)
-		 (";" . execute-extended-command)
+         :map evil-normal-state-map
+         ("-" . my/launch-dired)
+         (";" . execute-extended-command)
          ("j" . (lambda () (interactive)
                   (if (minibufferp)
                       (or (vertico-next)
@@ -220,34 +220,34 @@
                       (or (vertico-previous)
                           (previous-line-or-history-element))
                     (evil-previous-visual-line))))
-		 ("SPC q" . kill-current-buffer)
-		 ("SPC r" . recompile)
-		 ("SPC SPC g" . magit)
-		 ("SPC f f" . find-file)
-		 ("SPC f h" . consult-recent-file)
-		 ("SPC fb" . consult-buffer)
-		 ("SPC fw" . consult-ripgrep)
-		 ("SPC fl" . consult-line)
+         ("SPC q" . kill-current-buffer)
+         ("SPC r" . recompile)
+         ("SPC SPC g" . magit)
+         ("SPC f f" . find-file)
+         ("SPC f h" . consult-recent-file)
+         ("SPC fb" . consult-buffer)
+         ("SPC fw" . consult-ripgrep)
+         ("SPC fl" . consult-line)
 
-		 ("SPC tn" . display-line-numbers-mode)
+         ("SPC tn" . display-line-numbers-mode)
          ("SPC tc" . toggle-olivetti)
-		 ("SPC wtf" . my/where-am-i)
-		 ("C-M-f" . eval-last-sexp)
-		 ("C-f" . eval-defun)
-		 ("C-/" . comment-line)
-		 ("M-/" . comment-line)
-		 ("C-_" . comment-line)
+         ("SPC wtf" . my/where-am-i)
+         ("C-M-f" . eval-last-sexp)
+         ("C-f" . eval-defun)
+         ("C-/" . comment-line)
+         ("M-/" . comment-line)
+         ("C-_" . comment-line)
 
-		 ("C-k" . evil-scroll-up)
-		 ("C-j" . evil-scroll-down)
+         ("C-k" . evil-scroll-up)
+         ("C-j" . evil-scroll-down)
 
-		 :map evil-insert-state-map
-		 ("j" . my/escape-if-next-char-is-j)
-		 ("M-h" . backward-delete-char-untabify)
-		 ("C-k" . nil))
+         :map evil-insert-state-map
+         ("j" . my/escape-if-next-char-is-j)
+         ("M-h" . backward-delete-char-untabify)
+         ("C-k" . nil))
 
   :hook ((evil-jumps-post-jump . my/where-am-i)
-		 (xref-after-jump . my/where-am-i)))
+         (xref-after-jump . my/where-am-i)))
 
 (use-package evil-collection
   :init
@@ -263,9 +263,9 @@
   :custom
   (avy-timeout-seconds 0.3)
   :bind (:map evil-normal-state-map
-			  ("s" . avy-goto-char-timer)
-			  :map evil-motion-state-map
-			  ("s" . avy-goto-char-timer)))
+         ("s" . avy-goto-char-timer)
+         :map evil-motion-state-map
+         ("s" . avy-goto-char-timer)))
 
 
 ;; Command buffer
@@ -277,50 +277,50 @@
   (vertico-mode)
 
   (defun my/pos-at-beginning-of-line-text ()
-	(save-excursion
-	  (beginning-of-line-text)
-	  (point)))
+   (save-excursion
+    (beginning-of-line-text)
+    (point)))
 
   (defun my/find-char-backward (ch)
-	(letrec
-		((bol (my/pos-at-beginning-of-line-text))
-		 (find-ch (lambda ()
-					(let ((cur (point)))
-					  (cond
-					   ((= ch (char-before)) cur)
-					   ((= cur bol)
-						(error "%c not found in current line" ch))
-					   (t (backward-char 1)
-						  (funcall find-ch)))))))
-	  (save-excursion
-		(funcall find-ch))))
+   (letrec
+    ((bol (my/pos-at-beginning-of-line-text))
+     (find-ch (lambda ()
+               (let ((cur (point)))
+                (cond
+                 ((= ch (char-before)) cur)
+                 ((= cur bol)
+                  (error "%c not found in current line" ch))
+                 (t (backward-char 1)
+                  (funcall find-ch)))))))
+    (save-excursion
+     (funcall find-ch))))
 
   (defun my/delete-word-backward ()
-	(interactive)
-	(let ((delete-to-previous-slash
-		   (lambda ()
-			 (when (= (char-before) ?/)
-			   (backward-delete-char 1))
-			 (delete-region (my/find-char-backward ?/)
-							(point)))))
-	  (condition-case _
-		  (funcall delete-to-previous-slash)
-		(error (backward-kill-word 1)))))
+   (interactive)
+   (let ((delete-to-previous-slash
+          (lambda ()
+           (when (= (char-before) ?/)
+            (backward-delete-char 1))
+           (delete-region (my/find-char-backward ?/)
+            (point)))))
+    (condition-case _
+     (funcall delete-to-previous-slash)
+     (error (backward-kill-word 1)))))
 
   :bind (:map vertico-map
-		 ("C-c" . abort-minibuffers)
-		 ("M-h" . backward-delete-char-untabify)
-		 :map evil-ex-map
-		 ("C-c" . abort-minibuffers)
-		 :map minibuffer-mode-map
-		 ("C-c" . abort-minibuffers)
-		 ("C-h" . my/delete-word-backward)
-		 ("C-j" . vertico-next)
-		 ("C-k" . vertico-previous)))
+         ("C-c" . abort-minibuffers)
+         ("M-h" . backward-delete-char-untabify)
+         :map evil-ex-map
+         ("C-c" . abort-minibuffers)
+         :map minibuffer-mode-map
+         ("C-c" . abort-minibuffers)
+         ("C-h" . my/delete-word-backward)
+         ("C-j" . vertico-next)
+         ("C-k" . vertico-previous)))
 
 (use-package marginalia
   :bind (:map minibuffer-local-map
-			  ("M-A" . marginalia-cycle))
+         ("M-A" . marginalia-cycle))
   :init
   (marginalia-mode))
 
@@ -360,22 +360,22 @@
 (use-package project
   :ensure nil
   :bind (:map evil-normal-state-map
-			  ("SPC p s" . project-switch-project)
-			  ("SPC p f" . project-find-file)
-			  ("SPC p w" . consult-git-grep))
+         ("SPC p s" . project-switch-project)
+         ("SPC p f" . project-find-file)
+         ("SPC p w" . consult-git-grep))
   :init
   (let ((open-magit-in-project-root
-		 (lambda () (interactive)
-		   (magit (car (last (project-current))))))
-		(open-consult-ripgrep-in-project-root
-		 (lambda () (interactive)
-		   (consult-ripgrep (car (last (project-current)))))))
-	(setq project-switch-commands
-		  (list
-		   (list open-magit-in-project-root "Magit" "g")
-		   (list #'project-find-file "Find file" "f")
-		   (list open-consult-ripgrep-in-project-root "Find word" "w")
-		   (list #'project-eshell "Eshell" "e")))))
+         (lambda () (interactive)
+          (magit (car (last (project-current))))))
+        (open-consult-ripgrep-in-project-root
+         (lambda () (interactive)
+          (consult-ripgrep (car (last (project-current)))))))
+   (setq project-switch-commands
+    (list
+     (list open-magit-in-project-root "Magit" "g")
+     (list #'project-find-file "Find file" "f")
+     (list open-consult-ripgrep-in-project-root "Find word" "w")
+     (list #'project-eshell "Eshell" "e")))))
 
 (use-package fancy-compilation
   :custom
@@ -389,7 +389,7 @@
 
 (use-package magit
   :bind (:map evil-normal-state-map
-			  ("SPC SPC g" . magit)))
+         ("SPC SPC g" . magit)))
 (use-package magit-delta
   :hook (magit-mode . magit-delta-mode))
 
@@ -400,11 +400,11 @@
   :hook ((prog-mode . git-gutter-mode)
          (text-mode . git-gutter-mode))
   :bind (:map evil-normal-state-map
-			  ("SPC g n" . git-gutter:next-hunk)
-			  ("SPC g p" . git-gutter:previous-hunk)
-			  ("SPC g s" . git-gutter:stage-hunk)
-			  ("SPC g P" . git-gutter:popup-hunk)
-			  ("SPC g r" . git-gutter:revert-hunk)))
+         ("SPC g n" . git-gutter:next-hunk)
+         ("SPC g p" . git-gutter:previous-hunk)
+         ("SPC g s" . git-gutter:stage-hunk)
+         ("SPC g P" . git-gutter:popup-hunk)
+         ("SPC g r" . git-gutter:revert-hunk)))
 (use-package git-gutter-fringe
   :config
   (setq-default fringes-outside-margins t)
@@ -413,11 +413,11 @@
   (define-fringe-bitmap 'git-gutter-fr:added [#b11100000] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:modified [#b11100000] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:deleted
-	[#b10000000
-	 #b11000000
-	 #b11100000
-	 #b11110000]
-	nil nil 'bottom))
+   [#b10000000
+    #b11000000
+    #b11100000
+    #b11110000]
+   nil nil 'bottom))
 
 
 
@@ -436,15 +436,15 @@
 
 (use-package eglot
   :bind (:map evil-normal-state-map
-			  ("SPC SPC e" . eglot)
-			  ("C-c C-d" . eldoc)
-			  ("SPC ed" . eldoc)
-			  ("C-c C-e" . eglot-rename)
-			  ("SPC er" . eglot-rename)
-			  ("C-c C-f" . eglot-format)
-			  ("SPC ef" . eglot-format)
-			  ("SPC en" . flymake-goto-next-error)
-			  ("SPC ep" . flymake-goto-prev-error))
+         ("SPC SPC e" . eglot)
+         ("C-c C-d" . eldoc)
+         ("SPC ed" . eldoc)
+         ("C-c C-e" . eglot-rename)
+         ("SPC er" . eglot-rename)
+         ("C-c C-f" . eglot-format)
+         ("SPC ef" . eglot-format)
+         ("SPC en" . flymake-goto-next-error)
+         ("SPC ep" . flymake-goto-prev-error))
 
   :hook ((nix-ts-mode . eglot-ensure)
          (typescript-ts-mode . eglot-ensure))
@@ -454,15 +454,17 @@
   (set-face-underline 'flymake-error nil)
 
   (setq-default eglot-extend-to-xref t
-                flymake-show-diagnostics-at-end-of-line t)
+                flymake-show-diagnostics-at-end-of-line t
 
-  (setq-default
-   ;; TODO: remove hardcoded path to flake
-   eglot-workspace-configuration
-   '(:nixd (:nixpkgs (:expr "import (builtins.getFlake \"/home/ben/.config/nix\").inputs.nixpkgs {}")
-            :formatting (:command "nixfmt")
-            :options (:nixos (:expr "(builtins.getFlake \"/home/ben/.config/nix\").nixosConfigurations.amd.options")
-                      :home-manager (:expr "(builtins.getFlake \"/home/ben/.config/nix\").homeConfigurations.\"ben@amd\".options"))))))
+   (setq-default
+    ;; TODO: remove hardcoded path to flake
+    eglot-workspace-configuration
+    '(:nixd (:settings (:nixd (:nixpkgs (:expr "import (builtins.getFlake \"/home/ben/.config/nix\").inputs.nixpkgs {}"))
+                        :options (:nixos (:expr "(builtins.getFlake \"/home/ben/.config/nix\").outputs.colmenaHive.amd.options")
+                                  :home-manager (:expr "(builtins.getFlake \"/home/ben/.config/nix\").outputs.colmenaHive.amd.options.home-manager.users.type.getSubOptions [ ]"))
+                        :formatting (:command "nixfmt")
+                        :diagnostic (:suppress (:sema-escaping-with))))))))
+  
 
 
 (use-package nix-ts-mode
@@ -523,8 +525,8 @@
 (use-package tuareg
   ;; :mode "\\.ml\\'"
   :init
-  (add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode))
-  )
+  (add-to-list 'auto-mode-alist '("\\.ml\\'" . tuareg-mode)))
+  
 
 
 (use-package haskell-mode)
