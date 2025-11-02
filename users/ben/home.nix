@@ -48,7 +48,7 @@ in
       firefox = {
         enable = osConfig.machine.desktop;
         browser-pkg = lib.optimizeForThisHostIfPowerful {
-          pkg = pkgs.firefox-wayland;
+          pkg = pkgs.firefox;
           config = osConfig;
         };
       };

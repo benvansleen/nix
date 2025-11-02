@@ -77,7 +77,7 @@
     hyprbar = {
       url = "github:benvansleen/hyprbar";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
+        nixpkgs.follows = "nixpkgs-stable";
         systems.follows = "systems";
         pre-commit-hooks.follows = "pre-commit-hooks";
       };
