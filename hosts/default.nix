@@ -96,7 +96,7 @@ in
         ## 2. From client: `waypipe ssh <user>@<host> <command>`
         waypipe
 
-        ((vim_configurable.override { }).customize {
+        ((vim-full.override { }).customize {
           name = "vim";
           vimrcConfig.packages.myplugins = with pkgs.vimPlugins; {
             start = [

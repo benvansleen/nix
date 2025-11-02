@@ -78,9 +78,10 @@ in
         package = pkgs.caddy.withPlugins {
           plugins = [
             "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
-            "github.com/caddy-dns/cloudflare@v0.0.0-20250407183951-bbf79111721a"
+            "github.com/caddy-dns/cloudflare@2fc25ee62f40fe21b240f83ab2fb6e2be6dbb953" # oct 22, 2025
           ];
-          hash = "sha256-8nFRJukvi6amwvrpexj2ahghxZKOiGwWjTxeExE41PQ=";
+          hash = "sha256-qvHoN2nqCjCsQtv0hbPfSRpVaiHUmO1hfhzOZKDsF24=";
+          doInstallCheck = false;
         };
         inherit (lib.constants) email;
         dataDir = "/var/lib/caddy";
@@ -124,6 +125,7 @@ in
           (cloudflare) {
             tls {
               dns cloudflare {$CLOUDFLARE_TOKEN}
+              resolvers 8.8.8.8 8.8.4.4
             }
           }
         ''
