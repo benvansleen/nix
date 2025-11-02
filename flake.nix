@@ -128,7 +128,7 @@
       colmenaHive = colmena.lib.makeHive (import ./hive { inherit inputs lib overlays; });
 
       apps = lib.eachSystem (
-        pkgs:
+        pkgs: _:
         let
           run = import ./run { inherit pkgs lib colmena; };
           create-app = pkg: {
@@ -148,53 +148,56 @@
         ])
       );
 
-      devShells = lib.eachSystem (pkgs: {
-        default =
-          with pkgs;
-          mkShell {
-            buildInputs = [
-              self.checks.${system}.pre-commit-check.enabledPackages
-              colmena.packages.${pkgs.system}.colmena
-            ];
-            inherit (self.checks.${system}.pre-commit-check) shellHook;
-          };
-      }
+      devShells = lib.eachSystem (
+        pkgs: system: {
+          default =
+            with pkgs;
+            mkShell {
+              buildInputs = [
+                self.checks.${system}.pre-commit-check.enabledPackages
+                colmena.packages.${system}.colmena
+              ];
+              inherit (self.checks.${system}.pre-commit-check) shellHook;
+            };
+        }
 
       );
 
-      formatter = lib.eachSystem (pkgs: (treefmtEval pkgs).config.build.wrapper);
-      checks = lib.eachSystem (pkgs: {
-        pre-commit-check = pre-commit-hooks.lib.${pkgs.system}.run {
-          src = ./.;
-          hooks = {
-            check-added-large-files.enable = true;
-            check-merge-conflicts.enable = true;
-            detect-private-keys.enable = true;
-            deadnix.enable = true;
-            end-of-file-fixer.enable = true;
-            flake-checker.enable = true;
-            ripsecrets.enable = true;
-            statix = {
-              enable = true;
-              settings.config = "statix.toml";
-            };
-            treefmt = {
-              enable = true;
-              packageOverrides.treefmt = self.outputs.formatter.${pkgs.system};
-            };
-            typos = {
-              enable = true;
-              settings = {
-                diff = false;
-                ignored-words = [
-                  "artic"
-                  "facter"
-                ];
-                exclude = "*.patch";
+      formatter = lib.eachSystem (pkgs: _: (treefmtEval pkgs).config.build.wrapper);
+      checks = lib.eachSystem (
+        _: system: {
+          pre-commit-check = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              check-added-large-files.enable = true;
+              check-merge-conflicts.enable = true;
+              detect-private-keys.enable = true;
+              deadnix.enable = true;
+              end-of-file-fixer.enable = true;
+              flake-checker.enable = true;
+              ripsecrets.enable = true;
+              statix = {
+                enable = true;
+                settings.config = "statix.toml";
+              };
+              treefmt = {
+                enable = true;
+                packageOverrides.treefmt = self.outputs.formatter.${system};
+              };
+              typos = {
+                enable = true;
+                settings = {
+                  diff = false;
+                  ignored-words = [
+                    "artic"
+                    "facter"
+                  ];
+                  exclude = "*.patch";
+                };
               };
             };
           };
-        };
-      });
+        }
+      );
     };
 }

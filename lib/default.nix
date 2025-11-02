@@ -71,7 +71,15 @@ rec {
       };
     };
 
-  eachSystem = f: lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
+  eachSystem =
+    f:
+    lib.genAttrs (import systems) (
+      system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      f pkgs pkgs.stdenv.hostPlatform.system
+    );
 
   eachUser =
     f:

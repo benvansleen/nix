@@ -6,7 +6,9 @@
 }:
 
 let
-  colmena-bin = "RUST_LOG=error ${lib.getExe colmena.packages.${pkgs.system}.colmena}";
+  colmena-bin = "RUST_LOG=error ${
+    lib.getExe colmena.packages.${pkgs.stdenv.hostPlatform.system}.colmena
+  }";
 in
 rec {
   default = rebuild;
