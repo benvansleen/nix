@@ -62,7 +62,7 @@ rec {
     name = "apply";
     text = ''
       nix flake update secrets
-      ${colmena-bin} apply "''${1:-switch}"
+      ${colmena-bin} apply -v "''${1:-switch}"
     '';
   };
 
