@@ -55,7 +55,7 @@ in
     settings = {
       useStylixTheme = true;
       custom-shaders = [
-        "./retro-terminal-amber.glsl"
+        # "./retro-terminal-amber.glsl"
         # "./shaders/bettercrt.glsl"
       ];
       options = {
@@ -76,10 +76,10 @@ in
 
         bold-is-bright = "false";
 
-        font-family = "3270";
+        font-family = "VictorMono NFM";
         # "theme = gruvbox-material"
         font-size = toString config.stylix.fonts.sizes.terminal;
-        font-feature = "+calt +liga +dlig";
+        font-feature = "+calt, +liga, +dlig";
 
         cursor-invert-fg-bg = "true";
         cursor-opacity = "0.7";
@@ -101,7 +101,7 @@ in
 
         "ctrl+alt+i" = "inspector:toggle";
 
-        "ctrl+w" = "close_surface";
+        "ctrl+w" = "unbind";
 
         "ctrl+alt+t" = "new_tab";
         "ctrl+tab" = "next_tab";

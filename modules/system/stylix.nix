@@ -37,8 +37,8 @@ in
           name = "Fira Code";
         };
         monospace = {
-          package = hack-font;
-          name = "Hack";
+          package = nerd-fonts.victor-mono;
+          name = "Victor Mono";
         };
       };
     };

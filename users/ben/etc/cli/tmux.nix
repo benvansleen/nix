@@ -73,6 +73,7 @@ in
         bind -r ";" command-prompt
         bind n new-window
         bind N new-session
+        bind b choose-session
 
         bind-key | split-window -hc "''${pane_current_path}"
         bind-key -r '\' split-window -hc "''${pane_current_path}"

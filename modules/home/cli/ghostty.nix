@@ -95,7 +95,13 @@ in
               else
                 config.stylix.base16Scheme;
           in
+          # hardcode `background` to align with `gruvbox-material.nvim`
           ''
+            background = #282828
+            foreground = ${theme.base05}
+            cursor-color = ${theme.base05}
+            selection-background = ${theme.base03}
+            selection-foreground = ${theme.base05}
             palette = 0=${theme.base00}
             palette = 1=${theme.base08}
             palette = 2=${theme.base09}
@@ -112,11 +118,6 @@ in
             palette = 13=${theme.base05}
             palette = 14=${theme.base06}
             palette = 15=${theme.base07}
-            background = ${theme.base00}
-            foreground = ${theme.base05}
-            cursor-color = ${theme.base05}
-            selection-background = ${theme.base03}
-            selection-foreground = ${theme.base05}
           '';
       };
     };
