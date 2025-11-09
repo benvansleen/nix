@@ -50,7 +50,7 @@ in
     };
 
     nixpkgs.flake = {
-      setNixPath = false;
+      setNixPath = true;
       setFlakeRegistry = true;
     };
     nix = {
