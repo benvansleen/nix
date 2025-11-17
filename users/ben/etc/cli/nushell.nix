@@ -181,6 +181,69 @@ in
               event: { send: HistoryHintWordComplete }
             }
           ]
+
+
+          # fish-like abbreviations
+          # from https://github.com/nushell/nushell/issues/5597
+          let abbrs = {
+            q: 'exit'
+            cls: 'clear'
+            g: 'git'
+            gs: 'git status'
+            gc: 'git commit'
+            gp: 'git push'
+            sys: 'systemctl'
+            sysu: 'systemctl --user'
+          }
+          $env.config.keybindings ++= [
+            {
+              name: abbr_menu
+              modifier: none
+              keycode: enter
+              mode: [emacs, vi_normal, vi_insert]
+              event: [
+                { send: menu name: abbr_menu }
+                { send: enter }
+              ]
+            }
+            {
+              name: abbr_menu
+              modifier: none
+              keycode: space
+              mode: [emacs, vi_normal, vi_insert]
+              event: [
+                { send: menu name: abbr_menu }
+                { edit: insertchar value: ' ' }
+              ]
+            }
+          ]
+          $env.config.menus ++= [
+            {
+              name: abbr_menu
+              only_buffer_difference: false
+              marker: none
+              type: {
+                layout: columnar
+                columns: 1
+                col_width: 20
+                col_padding: 2
+              }
+              style: {
+                text: green
+                selected_text: green_reverse
+                description_text: yellow
+              }
+              source: { |buffer, position|
+                let match = $abbrs | columns | where $it == $buffer
+                if ($match | is-empty) {
+                  { value: $buffer }
+                } else {
+                  { value: ($abbrs | get $match.0) }
+                }
+              }
+            }
+          ]
+          # end fish-like abbreviations
         '';
         extraConfig = ''
           $env.config.color_config.shape_external = { fg: "#89b482", attr: b}
