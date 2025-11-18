@@ -112,7 +112,7 @@ in
           table.mode = "compact_double";
         };
 
-        configFile.text = ''
+        configFile.text = /* nu */ ''
           $env.ENV_CONVERSIONS = $env.ENV_CONVERSIONS | merge {
               "XDG_DATA_DIRS": {
                   from_string: {|s| $s | split row (char esep) | path expand --no-symlink }

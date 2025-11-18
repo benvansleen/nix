@@ -110,7 +110,7 @@ in
         };
 
         # Remove glyphs from prompt when not in a graphical terminal
-        loginExtra = ''
+        loginExtra = /* sh */ ''
           if [[ $(echo $TTY | sed 's/[0-9]//g') = "/dev/tty" ]]
           then
               OLD_PROMPT=$(echo $PROMPT)

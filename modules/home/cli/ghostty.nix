@@ -96,7 +96,7 @@ in
                 config.stylix.base16Scheme;
           in
           # hardcode `background` to align with `gruvbox-material.nvim`
-          ''
+          /* ini */ ''
             background = #282828
             foreground = ${theme.base05}
             cursor-color = ${theme.base05}

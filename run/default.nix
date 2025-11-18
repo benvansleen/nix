@@ -13,7 +13,7 @@ in
 rec {
   default = rebuild;
 
-  rebuild-diff = pkgs.writers.writeBabashkaBin "rebuild-diff-closures" { } ''
+  rebuild-diff = pkgs.writers.writeBabashkaBin "rebuild-diff-closures" { } /* clojure */ ''
     (ns script
       (:require [babashka.process :refer [shell]]
                 [babashka.fs :as fs]
@@ -35,7 +35,7 @@ rec {
                (to-path current-generation))))
   '';
 
-  boot-partition-space-remaining = pkgs.writers.writeBashBin "boot-partition-space-remaining" { } ''
+  boot-partition-space-remaining = pkgs.writers.writeBashBin "boot-partition-space-remaining" { } /* sh */ ''
     echo "/boot utilization: $(df -P | grep /boot | awk '{ print $5 }')"
   '';
 
@@ -94,7 +94,7 @@ rec {
     pkgs.writeShellApplication {
       name = "set-password";
       runtimeInputs = with pkgs; [ sops ];
-      text = with lib; ''
+      text = with lib; /* sh */ ''
         PASSWORD_FILE=${file}
 
         read -rp "New password: " password

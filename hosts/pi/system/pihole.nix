@@ -95,11 +95,11 @@ in
         ];
       };
     };
-    system.activationScripts.mk-pihole-persist-dirs.text = ''
+    system.activationScripts.mk-pihole-persist-dirs.text = /* sh */ ''
       mkdir -p /etc/pihole
       mkdir -p /etc/dnsmasq.d
     '';
-    sops.templates."pihole.env".content = ''
+    sops.templates."pihole.env".content = /* ini */ ''
       FTLCONF_webserver_api_password=${config.sops.placeholder.pihole_webpassword}
       PIHOLE_PASSWORD=${config.sops.placeholder.pihole_webpassword}
     '';

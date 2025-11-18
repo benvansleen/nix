@@ -32,33 +32,33 @@ in
     services.caddy =
       let
         services = {
-          grafana = ''
+          grafana = /* caddy */ ''
             tailscale_auth
             encode zstd gzip
             reverse_proxy pi:${toString config.modules.grafana.port} {
               header_up X-Webauth-User {http.auth.user.tailscale_user}
             }
           '';
-          maybe = ''
+          maybe = /* caddy */ ''
             encode zstd gzip
             reverse_proxy pi:${toString config.modules.maybe.port}
           '';
-          pihole = ''
+          pihole = /* caddy */ ''
             encode zstd gzip
             redir / /admin{uri}
             reverse_proxy pi:${toString config.modules.pihole.web-ui-port}
           '';
-          prometheus = ''
+          prometheus = /* caddy */ ''
             encode zstd gzip
             reverse_proxy pi:${toString config.modules.prometheus.server.port}
           '';
-          searx = ''
+          searx = /* caddy */ ''
             encode zstd gzip
             reverse_proxy pi:${toString config.modules.searx.port}
           '';
         };
 
-        tailscale = host: config: ''
+        tailscale = host: config: /* caddy */ ''
           :443 {
             bind tailscale/${host}
             tls {
@@ -67,7 +67,7 @@ in
             ${config}
           }
         '';
-        cloudflare = config: ''
+        cloudflare = config: /* caddy */ ''
           import cloudflare
           ${config}
         '';
@@ -88,7 +88,7 @@ in
         logDir = "/var/log/caddy";
 
         environmentFile = config.sops.templates."caddy.env".path;
-        logFormat = ''
+        logFormat = /* caddy */ ''
           output file ${logDir}/caddy_main.log {
             roll_size 100MiB
             roll_keep 5
@@ -100,7 +100,7 @@ in
 
         # TODO: restrict `admin :2019` to just tailnet ips
         # https://caddy.community/t/access-metrics-when-using-dockerized-caddy/16496
-        globalConfig = ''
+        globalConfig = /* caddy */ ''
           on_demand_tls {
             ask http://localhost:9123/ask
           }
@@ -115,27 +115,28 @@ in
             metrics
           }
         '';
-        extraConfig = ''
-          https:// {
-            tls {
-              on_demand
+        extraConfig =
+          /* caddy */ ''
+            https:// {
+              tls {
+                on_demand
+              }
             }
-          }
 
-          (cloudflare) {
-            tls {
-              dns cloudflare {$CLOUDFLARE_TOKEN}
-              resolvers 8.8.8.8 8.8.4.4
+            (cloudflare) {
+              tls {
+                dns cloudflare {$CLOUDFLARE_TOKEN}
+                resolvers 8.8.8.8 8.8.4.4
+              }
             }
-          }
-        ''
-        + (
-          with lib;
-          pipe services [
-            (mapAttrsToList tailscale)
-            (concatStringsSep "\n")
-          ]
-        );
+          ''
+          + (
+            with lib;
+            pipe services [
+              (mapAttrsToList tailscale)
+              (concatStringsSep "\n")
+            ]
+          );
         virtualHosts =
           let
             primary = {

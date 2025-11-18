@@ -17,10 +17,10 @@ let
 
   init-el =
     config.programs.emacs.extraConfig
-    + ''
+    + /* lisp */ ''
       (defvar my/dashboard-img "${cfg.dashboard-img}")
     ''
-    + lib.optionalString cfg.framesOnlyMode ''
+    + lib.optionalString cfg.framesOnlyMode /* lisp */ ''
       (use-package frames-only-mode
         :config
         (dolist (f '(embark-act
@@ -39,7 +39,7 @@ let
       let
         url = "http://127.0.0.1:${toString config.modules.ollama-copilot.port}";
       in
-      ''
+      /* lisp */ ''
         (use-package copilot
           :hook ((prog-mode . copilot-mode)
                  (text-mode . copilot-mode))
