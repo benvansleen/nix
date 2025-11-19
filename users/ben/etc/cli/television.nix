@@ -184,11 +184,12 @@ in
                    tv --inline --autocomplete-prompt $hd --input $beg_input $dir
                      | str substring $final_offset..
                },
-               [$hd, ..$rest] if $hd != "nix" => {
+               [$hd, ..$rest] if not ($hd in ["nix" "git"]) => {
                    let remainder = $rest | str join " " | str downcase
                    tv --inline --autocomplete-prompt $hd --input ("^" + $remainder + " ") 
                      | str substring (($remainder | str length)..)
                },
+               _ => { tv --inline --autocomplete-prompt $lhs },
            } | str trim
 
            if ($output | str length) > 0 {
