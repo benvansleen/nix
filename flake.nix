@@ -83,6 +83,15 @@
       };
     };
 
+    centerpiece = {
+      url = "github:friedow/centerpiece";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
+
     clonix = {
       url = "github:benvansleen/clonix";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -12,7 +12,6 @@ in
 
 {
   config = {
-    home.packages = with pkgs; [ neovide ];
     nvim = {
       enable = true;
       packageDefinitions.replace = {

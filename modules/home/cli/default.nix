@@ -18,7 +18,7 @@ lib.importAll ./.
 
   config = mkIf cfg.enable {
     modules.cli = {
-      alacritty.enable = osConfig.machine.desktop;
+      alacritty.enable = false;
       ghostty.enable = osConfig.machine.desktop;
       nushell.enable = osConfig.machine.desktop;
       tmux = {

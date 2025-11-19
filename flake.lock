@@ -112,6 +112,33 @@
         "type": "github"
       }
     },
+    "centerpiece": {
+      "inputs": {
+        "crane": "crane",
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "treefmt-nix": [
+          "treefmt-nix"
+        ]
+      },
+      "locked": {
+        "lastModified": 1759329435,
+        "narHash": "sha256-WwpziJvHsdDhHVdsZxNJSVgVxy81aa6zDxmJyrzfEP4=",
+        "owner": "friedow",
+        "repo": "centerpiece",
+        "rev": "8628c36df45c56fb67c361ec625bcc72e3fb52b3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "friedow",
+        "repo": "centerpiece",
+        "type": "github"
+      }
+    },
     "clonix": {
       "inputs": {
         "nixpkgs": [
@@ -157,6 +184,21 @@
       "original": {
         "owner": "zhaofengli",
         "repo": "colmena",
+        "type": "github"
+      }
+    },
+    "crane": {
+      "locked": {
+        "lastModified": 1742394900,
+        "narHash": "sha256-vVOAp9ahvnU+fQoKd4SEXB2JG2wbENkpqcwlkIXgUC0=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "70947c1908108c0c551ddfd73d4f750ff2ea67cd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
         "type": "github"
       }
     },
@@ -382,11 +424,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1762892822,
-        "narHash": "sha256-Q5ZQ2R1i5XDUzWL+LfzJxNGB4mvBcCaLW425b27n1WU=",
+        "lastModified": 1763566399,
+        "narHash": "sha256-TGBvHiRarRYVNkahs8e7TL7qqnVL0Jm3lckr+eyBfbA=",
         "owner": "benvansleen",
         "repo": "hyprbar",
-        "rev": "24c56ea14f6a138a164811bb0cbc24989f6d2a43",
+        "rev": "7f5e2dee0747ca1c7292f91a73a8f64a59eaaf91",
         "type": "github"
       },
       "original": {
@@ -716,6 +758,7 @@
     },
     "root": {
       "inputs": {
+        "centerpiece": "centerpiece",
         "clonix": "clonix",
         "colmena": "colmena",
         "disko": "disko",

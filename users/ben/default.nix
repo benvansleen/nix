@@ -3,6 +3,7 @@
   pkgs,
   lib,
   secrets,
+  centerpiece,
   ...
 }:
 
@@ -21,6 +22,9 @@ lib.mkUser {
       directory = home-dir;
       secrets = secrets.${user};
     })
+  ]
+  ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
+    centerpiece.hmModules.x86_64-linux.default
   ];
   extraConfig = {
     sops.secrets = if-using-sops {

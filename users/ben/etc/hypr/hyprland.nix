@@ -36,6 +36,11 @@ let
 
     ${pkgs.hyprland}/bin/hyprctl dispatch movetoworkspace "$new_ws"
   '';
+  omnisearch =
+    if config.modules.window-manager.centerpiece.enable then
+      "centerpiece"
+    else
+      "${lib.getExe pkgs.wofi} --show drun";
 in
 {
   config.wayland.windowManager.hyprland.settings = {
@@ -57,7 +62,7 @@ in
       # "$mainMod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
       "$mainMod, Return, exec, ${lib.getExe terminal}"
       # "$mainMod SHIFT, Return, exec, ~/.config/hypr/special-term"
-      "$mainMod, E, exec, neovide"
+      "$mainMod, E, exec, ${lib.getExe pkgs.neovide}"
       "$mainMod, Q, killactive, "
       "$mainMod SHIFT, Q, exit, "
       "$mainMod, F, fullscreen"
@@ -115,7 +120,7 @@ in
       "$mainMod SHIFT, 9, movetoworkspacesilent, 9"
       "$mainMod SHIFT, 0, movetoworkspacesilent, 10"
 
-      "$mainMod, SPACE, exec, ${pkgs.wofi}/bin/wofi --show drun"
+      "$mainMod, SPACE, exec, ${omnisearch}"
     ]
     ++ lib.optionals (plugin-isEnabled "hyprexpo") [
       "$mainMod, grave, hyprexpo:expo, toggle"
