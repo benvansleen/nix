@@ -241,6 +241,16 @@ in
           command = "nix-search-tv print";
           output = ''{replace:s/\/ /#/|trim}'';
         };
+        keybindings = {
+          ctrl-e = "actions:edit";
+        };
+        actions = {
+          edit = {
+            description = "Opens with `nix edit`";
+            command = ''nix edit '{replace:s/\/ /#/|trim}' '';
+            mode = "fork";
+          };
+        };
       };
       "${cable-dir}/exe.toml".source = toToml "television-cable-exe.toml" {
         metadata = {
