@@ -20,11 +20,18 @@ in
   };
 
   config = mkIf cfg.enable {
-    modules.cli.starship.enable = mkDefault true;
-    modules.impermanence.persistedFiles = [
-      "@config@/nushell/history.sqlite3"
-    ];
-
+    modules = {
+      cli = {
+        starship.enable = mkDefault true;
+        television = {
+          enable = mkDefault true;
+          enableNushellIntegration = true;
+        };
+      };
+      impermanence.persistedFiles = [
+        "@config@/nushell/history.sqlite3"
+      ];
+    };
     programs = {
       atuin = {
         enable = true;
@@ -86,7 +93,7 @@ in
           use_kitty_protocol = true;
 
           completions = {
-            algorithm = "fuzzy";
+            algorithm = "prefix";
             sort = "smart";
             quick = true;
             partial = true;
@@ -245,7 +252,7 @@ in
           ]
           # end fish-like abbreviations
         '';
-        extraConfig = ''
+        extraConfig = /* nu */ ''
           $env.config.color_config.shape_external = { fg: "#89b482", attr: b}
           $env.config.color_config.shape_externalarg = { fg: "#a9b665" }
         '';
