@@ -57,7 +57,7 @@ in
       # "$mainMod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
       "$mainMod, Return, exec, ${lib.getExe terminal}"
       # "$mainMod SHIFT, Return, exec, ~/.config/hypr/special-term"
-      "$mainMod, E, exec, ghostty -e nvim"
+      "$mainMod, E, exec, neovide"
       "$mainMod, Q, killactive, "
       "$mainMod SHIFT, Q, exit, "
       "$mainMod, F, fullscreen"
