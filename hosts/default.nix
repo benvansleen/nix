@@ -1,5 +1,6 @@
 {
   nixos-facter-modules,
+  nixpkgs,
   config,
   pkgs,
   lib,
@@ -60,6 +61,7 @@ in
         dates = "weekly";
         options = "--delete-older-than 30d";
       };
+      registry.nixpkgs.flake = nixpkgs;
       settings = {
         accept-flake-config = true;
         auto-optimise-store = true;
