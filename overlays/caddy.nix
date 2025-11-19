@@ -31,7 +31,7 @@ _final: prev: rec {
                 let
                   withArgs = prev.lib.concatMapStrings (plugin: "--with ${plugin} ") plugins;
                 in
-                ''
+                /* sh */ ''
                   export GOCACHE=$TMPDIR/go-cache
                   export GOPATH="$TMPDIR/go"
                   XCADDY_SKIP_BUILD=1 TMPDIR="$PWD" xcaddy build v${version} ${withArgs}
