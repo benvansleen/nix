@@ -171,6 +171,8 @@ in
            let cmds = ($line | split row " " | where {|part| ($part | str length) > 0})
 
            let output = match $cmds {
+               [] => { tv --inline exe }, 
+               [_] => { tv --inline --autocomplete-prompt $lhs },
                [$hd, $path, ..] if ($path | path exists) => {
                    tv --inline --autocomplete-prompt $hd $path
                },
@@ -187,7 +189,6 @@ in
                    tv --inline --autocomplete-prompt $hd --input ("^" + $remainder + " ") 
                      | str substring (($remainder | str length)..)
                },
-               _ => { tv --inline --autocomplete-prompt $lhs },
            } | str trim
 
            if ($output | str length) > 0 {
@@ -238,6 +239,25 @@ in
         source = {
           command = "nix-search-tv print";
           output = ''{replace:s/\/ /#/|trim}'';
+        };
+      };
+      "${cable-dir}/exe.toml".source = toToml "television-cable-exe.toml" {
+        metadata = {
+          name = "exe";
+          description = "Search executables on $PATH";
+          requirements = [ ];
+        };
+        preview.command = "man --no-subpages '{split:/:-1}' || true";
+        source = {
+          command = ''
+            IFS=: read -ra dirs <<< "$PATH"
+            for d in "''${dirs[@]}"; do
+                for f in "$d"/*; do
+                    [[ -f $f && -x $f ]] && printf '%s\n' "$f"
+                done
+            done
+          '';
+          output = ''{split:/:-1}'';
         };
       };
       "${cable-dir}/files.toml".source = toToml "television-cable-files.toml" {
