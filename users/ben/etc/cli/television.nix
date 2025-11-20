@@ -165,41 +165,66 @@ in
     };
     programs.nushell.extraConfig = mkIf cfg.enableNushellIntegration /* nu */ ''
       def tv_smart_autocomplete [] {
-           let line = (commandline)
-           let cursor = (commandline get-cursor)
-           let lhs = ($line | str substring 0..$cursor)
-           let cmds = ($line | split row " " | where {|part| ($part | str length) > 0})
+        let line = (commandline)
+        let cursor = (commandline get-cursor)
 
-           let output = match $cmds {
-               [] => { tv --inline exe }, 
-               [_] => { tv --inline --autocomplete-prompt $lhs },
-               [$hd, $path, ..] if ($path | path exists) => {
-                   tv --inline --autocomplete-prompt $hd $path
-               },
-               [$hd, $path, ..] if (($path | str starts-with "..") or ($path | str starts-with "./")) => {
-                   let final_sep = $path | str index-of -e "/"
-                   let dir = $path | str substring ..$final_sep | path expand
-                   let beg_input = "^" + ($path | str substring ($final_sep + 1)..) + " "
-                   let final_offset = ($path | str length) - $final_sep - 1
-                   tv --inline --autocomplete-prompt $hd --input $beg_input $dir
-                     | str substring $final_offset..
-               },
-               [$hd, ..$rest] if not ($hd in ["nix" "git"]) => {
-                   let remainder = $rest | str join " " | str downcase
-                   tv --inline --autocomplete-prompt $hd --input ("^" + $remainder + " ") 
-                     | str substring (($remainder | str length)..)
-               },
-               _ => { tv --inline --autocomplete-prompt $lhs },
-           } | str trim
+        def search_prefix [prefix] {
+          "^" + ($prefix | str downcase) + " "
+        }
 
-           if ($output | str length) > 0 {
-               let rhs = ($line | str substring $cursor..)
-               let result = $lhs + $output
-               let new_line = $result + $rhs
-               let new_cursor = ($result | str length)
-               commandline edit --replace $new_line
-               commandline set-cursor $new_cursor
-           }
+        def search_in_path [hd path remainder] {
+            let beg_input = search_prefix $remainder
+            let final_offset = ($path | str length)
+            tv --inline --autocomplete-prompt $hd --input $beg_input $path
+            | str substring $final_offset..
+        }
+
+        let lhs = ($line | str substring 0..$cursor)
+        let cmds = ($line | split row " " | where {|part| ($part | str length) > 0})
+        let tl = if ($cmds | is-empty) { null } else { $cmds | last }
+
+        let output = match $cmds {
+          [] => { 
+            history 
+            | get command 
+            | each {|c| $c | str trim}
+            | uniq 
+            | to text 
+            | tv --inline --input-header "History" 
+          }, 
+          [$hd] if not ($lhs | str ends-with " ") => { 
+            let new_command = tv --inline exe --input (search_prefix $hd)
+            commandline edit --replace $new_command
+            return
+          }
+          [$hd, ..] if ($tl | path exists) => {
+            let sep_needed = if ($tl | str ends-with "/") { "" } else { "/" }
+            $sep_needed + (tv --inline --autocomplete-prompt $hd ($tl | path expand))
+          },
+          [$hd, ..] if ($tl | str starts-with ".") => {
+            mut path_parts = $tl | path split
+            mut remainder = ""
+            while not ($path_parts | is-empty) and not ($path_parts | path join | path exists) {
+              $remainder += $path_parts | last | str reverse
+              $path_parts = $path_parts | drop
+            }
+            if ($path_parts | is-empty) {
+              tv --inline --autocomplete-prompt $hd --input $tl
+            } else {
+              search_in_path $hd ($path_parts | path join | path expand) ($remainder | str reverse)
+            }
+          },
+          _ => { tv --inline --autocomplete-prompt $lhs },
+        } | str trim
+
+        if ($output | str length) > 0 {
+            let rhs = ($line | str substring $cursor..)
+            let result = $lhs + $output
+            let new_line = $result + $rhs
+            let new_cursor = ($result | str length)
+            commandline edit --replace $new_line
+            commandline set-cursor $new_cursor
+        }
       }
 
       $env.config.keybindings ++= [
@@ -220,9 +245,8 @@ in
           mode: [vi_normal vi_insert emacs]
           event: {
             until: [
-              { send: menu name: completion_menu }
               { send: menunext }
-              { edit: complete }
+              { send: menu name: completion_menu }
             ]
           }
         }
@@ -269,6 +293,7 @@ in
             done
           '';
           output = ''{split:/:-1}'';
+          display = ''{split:/:-1}'';
         };
       };
       "${cable-dir}/files.toml".source = toToml "television-cable-files.toml" {
@@ -318,7 +343,7 @@ in
           "fd -t d"
           "fd -t d -H"
         ];
-        preview.command = "ls -la --color=always '{}'";
+        preview.command = "eza -la --color=always '{}'";
         # keybindings = {
         #   left = "actions:goto_parent_dir";
         # };
