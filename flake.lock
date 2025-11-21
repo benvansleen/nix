@@ -562,6 +562,21 @@
         "type": "github"
       }
     },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1762847253,
+        "narHash": "sha256-BWWnUUT01lPwCWUvS0p6Px5UOBFeXJ8jR+ZdLX8IbrU=",
+        "owner": "nixos",
+        "repo": "nixos-hardware",
+        "rev": "899dc449bc6428b9ee6b3b8f771ca2b0ef945ab9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixos-hardware",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1763283776,
@@ -639,11 +654,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1763565578,
-        "narHash": "sha256-rxtfjiLcAXOb6RwVK6wYOuWHcgrcDQCiaOh3Vu+w00g=",
+        "lastModified": 1763688627,
+        "narHash": "sha256-2jRE5qzI99Htt3QQY/QfRJ5zFKHToGaliFMcyPv5Ujc=",
         "owner": "benvansleen",
         "repo": "nvim",
-        "rev": "7c5f7429afe2ab8f90148f398b8e5be6400c1bce",
+        "rev": "439cd5be32354a7998ca9567bf061b6e92b42f0a",
         "type": "github"
       },
       "original": {
@@ -769,6 +784,7 @@
         "impermanence": "impermanence",
         "nix-index-database": "nix-index-database",
         "nixos-facter-modules": "nixos-facter-modules",
+        "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable",
         "nvim": "nvim",

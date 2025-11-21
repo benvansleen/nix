@@ -1,10 +1,15 @@
-{ pkgs, ... }:
+{ pkgs, nixos-hardware, ... }:
 
 {
+  imports = with nixos-hardware.nixosModules; [
+    common-cpu-amd
+    common-cpu-amd-pstate
+    common-gpu-amd
+    common-pc
+    common-pc-ssd
+  ];
   config = {
     hardware = {
-      ## TODO: add amd ryzen-specific support (eg for zen temp monitoring)
-
       amdgpu = {
         initrd.enable = true;
         opencl.enable = true;
