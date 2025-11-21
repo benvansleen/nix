@@ -147,32 +147,14 @@
       colmenaHive = colmena.lib.makeHive (import ./hive { inherit inputs lib overlays; });
 
       nixosConfigurations = {
-        amd = lib.nixosSystem {
-          pkgs = import nixpkgs {
-            inherit overlays;
-            system = "x86_64-linux";
-            rocmSupport = true;
-          };
-          specialArgs = inputs;
-          modules = [
-            ./modules/system
-            ./hosts
-            ./users
-            ./hosts/amd
-          ];
+        amd = lib.mkSystem ./hosts/amd {
+          inherit overlays;
+          system = "x86_64-linux";
+          rocmSupport = true;
         };
-        pi = lib.nixosSystem {
-          pkgs = import nixpkgs {
-            inherit overlays;
-            system = "aarch64-linux";
-          };
-          specialArgs = inputs;
-          modules = [
-            ./modules/system
-            ./hosts
-            ./users
-            ./hosts/pi
-          ];
+        pi = lib.mkSystem ./hosts/pi {
+          inherit overlays;
+          system = "aarch64-linux";
         };
       };
 
@@ -204,12 +186,10 @@
             mkShell {
               buildInputs = [
                 self.checks.${system}.pre-commit-check.enabledPackages
-                colmena.packages.${system}.colmena
               ];
               inherit (self.checks.${system}.pre-commit-check) shellHook;
             };
         }
-
       );
 
       formatter = lib.eachSystem (pkgs: _: (treefmtEval pkgs).config.build.wrapper);
