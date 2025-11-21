@@ -42,6 +42,7 @@ in
       firefox.enable = mkDefault true;
       fonts.enable = mkDefault false;
       home-manager.enable = mkDefault true;
+      nixos-cli.enable = mkDefault true;
       sops = {
         enable = mkDefault true;
         system-secrets = secrets.system;

@@ -41,6 +41,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixos-cli = {
+      url = "github:nix-community/nixos-cli";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "flake-compat";
+        nix-options-doc.inputs.nixpkgs.follows = "nixpkgs";
+      };
+    };
+
     colmena = {
       url = "github:zhaofengli/colmena";
       inputs = {
@@ -136,6 +145,36 @@
     in
     {
       colmenaHive = colmena.lib.makeHive (import ./hive { inherit inputs lib overlays; });
+
+      nixosConfigurations = {
+        amd = lib.nixosSystem {
+          pkgs = import nixpkgs {
+            inherit overlays;
+            system = "x86_64-linux";
+            rocmSupport = true;
+          };
+          specialArgs = inputs;
+          modules = [
+            ./modules/system
+            ./hosts
+            ./users
+            ./hosts/amd
+          ];
+        };
+        pi = lib.nixosSystem {
+          pkgs = import nixpkgs {
+            inherit overlays;
+            system = "aarch64-linux";
+          };
+          specialArgs = inputs;
+          modules = [
+            ./modules/system
+            ./hosts
+            ./users
+            ./hosts/pi
+          ];
+        };
+      };
 
       apps = lib.eachSystem (
         pkgs: _:
