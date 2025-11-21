@@ -18,9 +18,11 @@ in
             local = {
               dir = "/persist";
               exclude = [
+                "/tmp"
                 "**/llama/models/"
                 "**/.cache/"
                 "**/.local/"
+                "**/Code/**/target/"
               ];
             };
             targetDir = "${lib.constants.backup-path}/${deploymentName}";
