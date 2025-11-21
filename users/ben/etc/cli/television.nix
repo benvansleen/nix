@@ -192,16 +192,11 @@ in
             | to text 
             | tv --inline --input-header "History" 
           }, 
-          [$hd] if not ($lhs | str ends-with " ") => { 
-            let new_command = tv --inline exe --input (search_prefix $hd)
-            commandline edit --replace $new_command
-            return
-          }
           [$hd, ..] if ($tl | path exists) => {
             let sep_needed = if ($tl | str ends-with "/") { "" } else { "/" }
             $sep_needed + (tv --inline --autocomplete-prompt $hd ($tl | path expand))
           },
-          [$hd, ..] if ($tl | str starts-with ".") => {
+          [$hd, ..] if ($tl | str starts-with ".") or ($tl | str starts-with "/") => {
             mut path_parts = $tl | path split
             mut remainder = ""
             while not ($path_parts | is-empty) and not ($path_parts | path join | path exists) {
@@ -213,6 +208,15 @@ in
             } else {
               search_in_path $hd ($path_parts | path join | path expand) ($remainder | str reverse)
             }
+          },
+          [$hd] if not ($lhs | str ends-with " ") => { 
+            let new_command = tv --inline exe --input (search_prefix $hd)
+            commandline edit --replace $new_command
+            return
+          },
+          [$hd, ..] => {
+            tv --inline --autocomplete-prompt $hd --input $tl 
+            | str substring ($tl | str length)..
           },
           _ => { tv --inline --autocomplete-prompt $lhs },
         } | str trim
@@ -306,8 +310,8 @@ in
           ];
         };
         source.command = [
-          "fd -t f"
-          "fd -t f -H"
+          "fd -t f -L"
+          "fd -t f -H -L"
         ];
         preview = {
           command = "bat -n --color=always '{}'";
@@ -340,8 +344,8 @@ in
           requirements = [ "fd" ];
         };
         source.command = [
-          "fd -t d"
-          "fd -t d -H"
+          "fd -t d -L"
+          "fd -t d -H -L"
         ];
         preview.command = "eza -la --color=always '{}'";
         # keybindings = {
