@@ -38,6 +38,19 @@ rec {
 
   importAll = dir: { imports = nixFilesInDir dir; };
 
+  mkSystem =
+    host: nixpkgs-config:
+    lib.nixosSystem {
+      inherit specialArgs;
+      pkgs = import nixpkgs nixpkgs-config;
+      modules = [
+        ../modules/system
+        ../hosts
+        ../users
+        host
+      ];
+    };
+
   allHomeModules =
     with lib;
     [ ../modules/home ]
