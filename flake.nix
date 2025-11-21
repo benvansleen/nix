@@ -50,15 +50,6 @@
       };
     };
 
-    colmena = {
-      url = "github:zhaofengli/colmena";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        stable.follows = "nixpkgs-stable";
-        flake-compat.follows = "flake-compat";
-      };
-    };
-
     stylix = {
       url = "github:nix-community/stylix";
       inputs = {
@@ -133,7 +124,6 @@
       self,
       nixpkgs,
       home-manager,
-      colmena,
       pre-commit-hooks,
       treefmt-nix,
       ...
@@ -144,8 +134,6 @@
       lib = nixpkgs.lib.extend (_final: _prev: home-manager.lib // (import ./lib lib inputs));
     in
     {
-      colmenaHive = colmena.lib.makeHive (import ./hive { inherit inputs lib overlays; });
-
       nixosConfigurations = {
         amd = lib.mkSystem ./hosts/amd {
           inherit overlays;
@@ -161,7 +149,7 @@
       apps = lib.eachSystem (
         pkgs: _:
         let
-          run = import ./run { inherit pkgs lib colmena; };
+          run = import ./run { inherit pkgs lib; };
           create-app = pkg: {
             type = "app";
             program = lib.getExe pkg;

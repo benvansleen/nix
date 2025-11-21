@@ -7,7 +7,7 @@
 
 let
   if-not-desktop = attr: if !osConfig.machine.desktop then attr else null;
-  flake-outputs = ''(builtins.getFlake ${self.outPath}).outputs.colmenaHive.${osConfig.machine.name}'';
+  flake-outputs = ''(builtins.getFlake ${self.outPath}).outputs.nixosConfigurations.${osConfig.machine.name}'';
 in
 
 {

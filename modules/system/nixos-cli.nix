@@ -29,6 +29,7 @@ in
           use_nvd = true;
         };
         apply = {
+          ignore_dirty_tree = true;
           use_git_commit_msg = true;
           use_nom = true;
         };

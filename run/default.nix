@@ -1,14 +1,11 @@
 {
   pkgs,
   lib,
-  colmena,
   ...
 }:
 
 let
-  colmena-bin = "RUST_LOG=error ${
-    lib.getExe colmena.packages.${pkgs.stdenv.hostPlatform.system}.colmena
-  }";
+  colmena-bin = "RUST_LOG=error ${lib.getExe pkgs.colmena}";
 in
 rec {
   default = rebuild;
