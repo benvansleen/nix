@@ -39,11 +39,16 @@ rec {
   importAll = dir: { imports = nixFilesInDir dir; };
 
   mkSystem =
-    host: nixpkgs-config:
+    overlays: host: nixpkgs-config:
     lib.nixosSystem {
       inherit specialArgs;
-      pkgs = import nixpkgs nixpkgs-config;
       modules = [
+        {
+          nixpkgs = {
+            inherit overlays;
+            config = nixpkgs-config;
+          };
+        }
         ../modules/system
         ../hosts
         ../users

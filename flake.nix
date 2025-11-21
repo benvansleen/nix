@@ -132,16 +132,15 @@
       treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
       overlays = import ./overlays (inputs // { inherit (nixpkgs) lib; });
       lib = nixpkgs.lib.extend (_final: _prev: home-manager.lib // (import ./lib lib inputs));
+      mkSystem = lib.mkSystem overlays;
     in
     {
       nixosConfigurations = {
-        amd = lib.mkSystem ./hosts/amd {
-          inherit overlays;
+        amd = mkSystem ./hosts/amd {
           system = "x86_64-linux";
           rocmSupport = true;
         };
-        pi = lib.mkSystem ./hosts/pi {
-          inherit overlays;
+        pi = mkSystem ./hosts/pi {
           system = "aarch64-linux";
         };
       };
