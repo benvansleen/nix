@@ -654,11 +654,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1763688627,
-        "narHash": "sha256-2jRE5qzI99Htt3QQY/QfRJ5zFKHToGaliFMcyPv5Ujc=",
+        "lastModified": 1763782987,
+        "narHash": "sha256-BOoLVj5tPw4dooPWw73RpHF3LkhuVx1bGl4khpO+PF8=",
         "owner": "benvansleen",
         "repo": "nvim",
-        "rev": "439cd5be32354a7998ca9567bf061b6e92b42f0a",
+        "rev": "d852efc583d7937ba40b8cd8b82f5765eebee89e",
         "type": "github"
       },
       "original": {
