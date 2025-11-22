@@ -125,8 +125,7 @@ rec {
       if [[ "$HOST" == "$(hostname)" ]]; then
           ${lib.constants.privilege-escalation} nix run nixpkgs#nixos-facter -- -o "$DEST"
       else
-          ${colmena-bin} exec -v --on "$HOST" \
-            ${lib.constants.privilege-escalation} nix run nixpkgs#nixos-facter -- -o "/tmp/facter.json"
+          ssh "root@$HOST" nix run nixpkgs#nixos-facter -- -o "/tmp/facter.json"
           scp "root@$HOST:/tmp/facter.json" "$DEST"
       fi
     '';
