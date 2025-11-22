@@ -26,7 +26,7 @@ in
           };
 
           extra.nixdExtras = {
-            nixpkgs.expr = ''import ${pkgs.path} {}'';
+            nixpkgs.expr = ''import ${pkgs.path} { }'';
             nixos_options = ''${flake-outputs}.options'';
             home_manager_options = ''${flake-outputs}.options.home-manager.users.type.getSubOptions [ ]'';
           };

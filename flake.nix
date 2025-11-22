@@ -122,27 +122,18 @@
   outputs =
     {
       self,
-      nixpkgs,
-      home-manager,
       pre-commit-hooks,
       treefmt-nix,
       ...
     }@inputs:
     let
-      treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-      overlays = import ./overlays (inputs // { inherit (nixpkgs) lib; });
-      lib = nixpkgs.lib.extend (_final: _prev: home-manager.lib // (import ./lib lib inputs));
-      mkSystem = lib.mkSystem overlays;
+      lib = import ./lib inputs;
+      mkSystem = lib.mkSystem (import ./overlays (inputs // { inherit lib; }));
     in
     {
       nixosConfigurations = {
-        amd = mkSystem ./hosts/amd {
-          system = "x86_64-linux";
-          rocmSupport = true;
-        };
-        pi = mkSystem ./hosts/pi {
-          system = "aarch64-linux";
-        };
+        amd = mkSystem ./hosts/amd;
+        pi = mkSystem ./hosts/pi;
       };
 
       apps = lib.eachSystem (
@@ -179,7 +170,9 @@
         }
       );
 
-      formatter = lib.eachSystem (pkgs: _: (treefmtEval pkgs).config.build.wrapper);
+      formatter = lib.eachSystem (
+        pkgs: _: (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build.wrapper
+      );
       checks = lib.eachSystem (
         _: system: {
           pre-commit-check = pre-commit-hooks.lib.${system}.run {

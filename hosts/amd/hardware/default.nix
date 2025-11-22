@@ -1,4 +1,8 @@
-{ pkgs, nixos-hardware, ... }:
+{
+  pkgs,
+  nixos-hardware,
+  ...
+}:
 
 {
   imports = with nixos-hardware.nixosModules; [
@@ -9,6 +13,15 @@
     common-pc-ssd
   ];
   config = {
+    nix.settings.system-features = [ "gccarch-znver5" ];
+    nixpkgs = {
+      config.rocmSupport = true;
+      hostPlatform = {
+        system = "x86_64-linux";
+        # gcc.arch = "znver5";
+      };
+    };
+
     hardware = {
       amdgpu = {
         initrd.enable = true;
