@@ -41,12 +41,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    colmena = {
-      url = "github:zhaofengli/colmena";
+    nixos-cli = {
+      url = "github:nix-community/nixos-cli";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        stable.follows = "nixpkgs-stable";
         flake-compat.follows = "flake-compat";
+        nix-options-doc.inputs.nixpkgs.follows = "nixpkgs";
       };
     };
 
@@ -122,25 +122,24 @@
   outputs =
     {
       self,
-      nixpkgs,
-      home-manager,
-      colmena,
       pre-commit-hooks,
       treefmt-nix,
       ...
     }@inputs:
     let
-      treefmtEval = pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-      overlays = import ./overlays (inputs // { inherit (nixpkgs) lib; });
-      lib = nixpkgs.lib.extend (_final: _prev: home-manager.lib // (import ./lib lib inputs));
+      lib = import ./lib inputs;
+      mkSystem = lib.mkSystem (import ./overlays (inputs // { inherit lib; }));
     in
     {
-      colmenaHive = colmena.lib.makeHive (import ./hive { inherit inputs lib overlays; });
+      nixosConfigurations = {
+        amd = mkSystem ./hosts/amd;
+        pi = mkSystem ./hosts/pi;
+      };
 
       apps = lib.eachSystem (
         pkgs: _:
         let
-          run = import ./run { inherit pkgs lib colmena; };
+          run = import ./run { inherit pkgs lib; };
           create-app = pkg: {
             type = "app";
             program = lib.getExe pkg;
@@ -165,15 +164,15 @@
             mkShell {
               buildInputs = [
                 self.checks.${system}.pre-commit-check.enabledPackages
-                colmena.packages.${system}.colmena
               ];
               inherit (self.checks.${system}.pre-commit-check) shellHook;
             };
         }
-
       );
 
-      formatter = lib.eachSystem (pkgs: _: (treefmtEval pkgs).config.build.wrapper);
+      formatter = lib.eachSystem (
+        pkgs: _: (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build.wrapper
+      );
       checks = lib.eachSystem (
         _: system: {
           pre-commit-check = pre-commit-hooks.lib.${system}.run {

@@ -5,13 +5,11 @@ with inputs;
   (final: _prev: {
     stable = import nixpkgs-stable {
       inherit (final) config;
-      inherit (final.stdenv.hostPlatform) system;
     };
   })
 
   (final: _prev: {
     unfree = import nixpkgs {
-      inherit (final.stdenv.hostPlatform) system;
       config = final.config // {
         allowUnfreePredicate =
           pkg:
@@ -72,5 +70,4 @@ with inputs;
   })
 
   emacs-overlay.overlays.default
-  colmena.overlays.default
 ]

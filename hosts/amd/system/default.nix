@@ -59,8 +59,8 @@ in
     nix = {
       gc.automatic = lib.mkForce false;
       settings = {
-        cores = lib.mkForce 12;
-        max-jobs = 6;
+        cores = lib.mkForce 6;
+        max-jobs = "auto";
       };
     };
 

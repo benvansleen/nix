@@ -2,6 +2,8 @@
 
 {
   config = {
+    nixpkgs.hostPlatform.system = "aarch64-linux";
+
     boot = {
       kernelPackages = pkgs.linuxKernel.packages.linux_rpi4;
       initrd.availableKernelModules = [
