@@ -22,6 +22,21 @@ in
       prebuildOptionCache = false;
       useActivationInterface = true;
       config = {
+        aliases = {
+          test = [
+            "apply"
+            "--no-boot"
+          ];
+          boot = [
+            "apply"
+            "--no-activate"
+          ];
+          switch = [ "apply" ];
+          rollback = [
+            "generation"
+            "rollback"
+          ];
+        };
         general = {
           auto_rollback = true;
           color = true;
