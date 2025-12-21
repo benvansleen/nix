@@ -21,6 +21,7 @@ lib.importAll ./.
       alacritty.enable = false;
       ghostty.enable = osConfig.machine.desktop;
       nushell.enable = osConfig.machine.desktop;
+      opencode.enable = true;
       tmux = {
         enable = osConfig.machine.desktop;
         enable-resurrect = osConfig.machine.desktop;
