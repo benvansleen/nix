@@ -43,6 +43,11 @@ lib.importAll ./.
       size = 16;
     };
 
+    home.packages = with pkgs; [
+      wl-clipboard
+      cliphist
+    ];
+
     programs = {
       hyprlock = {
         enable = true;

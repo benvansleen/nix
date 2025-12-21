@@ -57,6 +57,11 @@ in
       "QT_QPA_PLATFORM,wayland"
     ];
 
+    exec-once = [
+      "wl-paste --type text --watch cliphist store"
+      "wl-paste --type image --watch cliphist store"
+    ];
+
     "$mainMod" = "SUPER";
     bind = [
       # "$mainMod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
