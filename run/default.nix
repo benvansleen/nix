@@ -23,13 +23,12 @@ rec {
               second
               Integer/parseInt)
           to-path #(str "/nix/var/nix/profiles/system-" % "-link")
-          previous-generation (to-path (- current-generation 1))]
+          previous-generation (to-path (- current-generation 1))
+          current-generation (to-path current-generation)]
       (when (fs/exists? previous-generation)
         (println (str "Version "
                       previous-generation " -> " current-generation ":"))
-        (shell "${lib.getExe pkgs.dix}"
-               previous-generation
-               (to-path current-generation))))
+        (shell "${lib.getExe pkgs.dix}" previous-generation current-generation)))
   '';
 
   boot-partition-space-remaining = pkgs.writers.writeBashBin "boot-partition-space-remaining" { } /* sh */ ''
