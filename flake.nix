@@ -135,6 +135,7 @@
     {
       nixosConfigurations = {
         amd = mkSystem ./hosts/amd;
+        laptop = mkSystem ./hosts/laptop;
         pi = mkSystem ./hosts/pi;
       };
 
