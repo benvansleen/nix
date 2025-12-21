@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  extra-container,
   ...
 }:
 
@@ -16,7 +17,12 @@ in
     disable-podman-dns = mkEnableOption "disable DNS in podman";
   };
 
+  imports = [
+    extra-container.nixosModules.default
+  ];
+
   config = mkIf cfg.enable {
+    programs.extra-container.enable = true;
     virtualisation = {
       oci-containers.backend = "podman";
       podman = {
@@ -45,6 +51,7 @@ in
       };
 
       systemPackages = with pkgs; [
+        nixos-container
         podman-compose
         podman-tui
         dive

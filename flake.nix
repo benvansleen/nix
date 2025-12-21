@@ -98,6 +98,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    extra-container.url = "github:erikarvstedt/extra-container";
+
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
