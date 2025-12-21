@@ -18,7 +18,7 @@
             content = {
               type = "filesystem";
               format = "vfat";
-              mountPoint = "/boot";
+              mountpoint = "/boot";
               mountOptions = [
                 "defaults"
                 "umask=0077"
@@ -27,28 +27,31 @@
           };
           luks = {
             size = "100%";
-            name = "cryptroot";
-            settings = {
-              allowDiscards = true;
-            };
             content = {
-              type = "btrfs";
-              extraArgs = [ "-f" ];
-              subvolumes = {
-                "/nix" = {
-                  mountpoint = "/nix";
-                  mountOptions = [
-                    "noatime"
-                    "noacl"
-                  ];
-                };
-                "/persist" = {
-                  mountpoint = "/persist";
-                  mountOptions = [ "compress=zstd" ];
-                };
-                "/swap" = {
-                  mountpoint = "/.swap";
-                  swap.swapfile.size = "24G";
+              type = "luks";
+              name = "cryptroot";
+              settings = {
+                allowDiscards = true;
+              };
+              content = {
+                type = "btrfs";
+                extraArgs = [ "-f" ];
+                subvolumes = {
+                  "/nix" = {
+                    mountpoint = "/nix";
+                    mountOptions = [
+                      "noatime"
+                      "noacl"
+                    ];
+                  };
+                  "/persist" = {
+                    mountpoint = "/persist";
+                    mountOptions = [ "compress=zstd" ];
+                  };
+                  "/swap" = {
+                    mountpoint = "/.swap";
+                    swap.swapfile.size = "24G";
+                  };
                 };
               };
             };
