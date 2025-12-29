@@ -16,7 +16,7 @@
   disko.devices = {
     disk.main = {
       type = "disk";
-      device = "/dev/nvme0";
+      device = "/dev/nvme0n1";
       content = {
         type = "gpt";
         partitions = {
@@ -40,7 +40,7 @@
               format = "xfs";
               mountpoint = "/nix/store";
               mountOptions = [ "defaults" "noatime" "logbsize=256k" ];
-              extraArgs = [ "-m reflink=1" ];
+              extraArgs = [ "-m" "reflink=1" ];
             };
           };
           luks = {
@@ -78,7 +78,6 @@
         "size=16G"
         "defaults"
         "mode=755"
-        "compress=zstd"
       ];
     };
   };
