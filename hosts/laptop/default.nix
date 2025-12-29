@@ -6,6 +6,6 @@ lib.importAll ./.
     name = "laptop";
     desktop = true;
     powerful = false;
-    allowUnfree = true;
+    allowUnfree = false;
   };
 }

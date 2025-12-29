@@ -193,8 +193,9 @@ in
 
     users.mutableUsers = false;
     users.users.root = {
-      hashedPassword = null;
-      hashedPasswordFile = mkIf config.modules.sops.enable config.sops.secrets.root-password.path;
+      # hashedPassword = null;
+      # hashedPasswordFile = mkIf config.modules.sops.enable config.sops.secrets.root-password.path;
+      password = "temp";
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINioMpgKUSAxRhCf7rpH7n1OJgpGog2Uxm+jYfCwS4PL benvansleen@gmail.com"
       ];

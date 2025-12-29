@@ -683,16 +683,16 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1765779637,
-        "narHash": "sha256-KJ2wa/BLSrTqDjbfyNx70ov/HdgNBCBBSQP3BIzKnv4=",
+        "lastModified": 1766885793,
+        "narHash": "sha256-P6RVkrM9JLCW6xBjSwHfgTOQ1JwBUma5xe5LI8xAPC0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "1306659b587dc277866c7b69eb97e5f07864d8c4",
+        "rev": "9ef261221d1e72399f2036786498d78c38185c46",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixos-unstable",
+        "ref": "nixos-25.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -917,11 +917,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1763784307,
-        "narHash": "sha256-5RKxgCMtAiTtpgC64uVj5poHcojLMwPQEEEgon2l4VE=",
+        "lastModified": 1766356400,
+        "narHash": "sha256-jTa9rNJ7ZAPS/NuyB4EF2J2z2iVtgE34YALMKh+N02M=",
         "ref": "refs/heads/master",
-        "rev": "1588e05e676ec0e37966c982a5640b4c950d5acb",
-        "revCount": 25,
+        "rev": "2c65d297de37c09e0727f2757ef24d52d58ada42",
+        "revCount": 26,
         "type": "git",
         "url": "ssh://git@github.com/benvansleen/secrets.git"
       },

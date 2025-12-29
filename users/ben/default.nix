@@ -53,7 +53,8 @@ lib.mkUser {
     users.users.${user} = {
       isNormalUser = true;
       shell = if config.machine.desktop then pkgs.nushell else pkgs.zsh;
-      hashedPasswordFile = if-using-sops config.sops.secrets."${user}-password".path;
+      # hashedPasswordFile = if-using-sops config.sops.secrets."${user}-password".path;
+      password = "temp";
       home = home-dir;
 
       description = "Ben Van Sleen";

@@ -1,11 +1,19 @@
-{ disko, ... }:
+{ disko, pkgs, ... }:
 
 {
   imports = [
     disko.nixosModules.disko
   ];
 
-  config.disko.devices = {
+  config = {
+    boot.initrd.systemd = {
+      enable = true;
+      enableTpm2 = true;
+    };
+    security.tpm2.enable = true;
+    environment.systemPackages = with pkgs; [ tpm2-tss tpm2-tools ];
+
+  disko.devices = {
     disk.main = {
       type = "disk";
       device = "/dev/nvme0n1";
@@ -42,6 +50,7 @@
               name = "cryptroot";
               settings = {
                 allowDiscards = true;
+                crypttabExtraOpts = [ "tpm2-device=auto" "tpm2-measure-pcr=yes" ];
               };
               content = {
                 type = "btrfs";
@@ -72,5 +81,6 @@
         "compress=zstd"
       ];
     };
+  };
   };
 }
