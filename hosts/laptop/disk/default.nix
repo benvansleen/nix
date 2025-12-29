@@ -13,7 +13,7 @@
         type = "gpt";
         partitions = {
           ESP = {
-            size = "512M";
+            size = "1024M";
             type = "EF00";
             content = {
               type = "filesystem";
@@ -23,6 +23,16 @@
                 "defaults"
                 "umask=0077"
               ];
+            };
+          };
+          nix = {
+            size = "250G";
+            content = {
+              type = "filesystem";
+              format = "xfs";
+              mountpoint = "/nix/store";
+              mountOptions = [ "defaults" "noatime" "logbsize=256k" ];
+              extraArgs = [ "-m reflink=1" ];
             };
           };
           luks = {
@@ -37,13 +47,6 @@
                 type = "btrfs";
                 extraArgs = [ "-f" ];
                 subvolumes = {
-                  "/nix" = {
-                    mountpoint = "/nix";
-                    mountOptions = [
-                      "noatime"
-                      "noacl"
-                    ];
-                  };
                   "/persist" = {
                     mountpoint = "/persist";
                     mountOptions = [ "compress=zstd" ];
