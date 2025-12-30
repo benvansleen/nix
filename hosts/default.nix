@@ -88,6 +88,7 @@ in
         builders-use-substitutes = true;
         cores = 0;
         connect-timeout = 5;
+        download-buffer-size = 524288000;
         experimental-features = [
           "nix-command"
           "flakes"
