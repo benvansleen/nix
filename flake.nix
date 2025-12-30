@@ -78,7 +78,7 @@
     };
 
     hyprbar = {
-      url = "github:benvansleen/hyprbar";
+      url = "github:benvansleen/hyprbar/add-laptop-config";
       inputs = {
         nixpkgs.follows = "nixpkgs-stable";
         systems.follows = "systems";
