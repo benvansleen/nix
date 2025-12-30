@@ -69,6 +69,7 @@ lib.importAll ./.
                     # TODO: fix when moving to colmena
                     "pi:${toString config.modules.prometheus.client.port}"
                     "amd:${toString config.modules.prometheus.client.port}"
+                    "laptop:${toString config.modules.prometheus.client.port}"
                   ];
                 }
               ];

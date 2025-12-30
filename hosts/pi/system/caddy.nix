@@ -80,7 +80,7 @@ in
             "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
             "github.com/caddy-dns/cloudflare@2fc25ee62f40fe21b240f83ab2fb6e2be6dbb953" # oct 22, 2025
           ];
-          hash = "sha256-mNvsriftGlsBFKPMPVcZq4KXTac97411nNXYmUrkoG0=";
+          hash = "sha256-9Mwt8JU0786iThE7R1935S5iv1ilR4UC/2yJ58poQj8=";
           doInstallCheck = false;
         };
         inherit (lib.constants) email;
