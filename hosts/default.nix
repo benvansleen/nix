@@ -56,7 +56,26 @@ in
       setFlakeRegistry = true;
     };
     nix = {
+      buildMachines = [
+        {
+          hostName = "amd";
+          sshUser = "remotebuild";
+          protocol = "ssh-ng";
+          systems = [
+            "x86_64-linux"
+            "aarch64-linux"
+          ];
+          speedFactor = 10;
+          maxJobs = 32;
+          supportedFeatures = [
+            "nixos-test"
+            "big-parallel"
+            "kvm"
+          ];
+        }
+      ];
       channel.enable = false;
+      distributedBuilds = true;
       gc = {
         automatic = true;
         dates = "weekly";
@@ -66,8 +85,10 @@ in
       settings = {
         accept-flake-config = true;
         auto-optimise-store = true;
+        builders-use-substitutes = true;
         cores = 0;
         connect-timeout = 5;
+        download-buffer-size = 524288000;
         experimental-features = [
           "nix-command"
           "flakes"

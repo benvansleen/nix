@@ -54,6 +54,7 @@ in
         ];
       };
       searx.enable = false;
+      zsa.enable = false;
     };
 
     nix = {
@@ -61,27 +62,6 @@ in
       settings = {
         cores = lib.mkForce 6;
         max-jobs = "auto";
-      };
-    };
-
-    boot = {
-      binfmt.emulatedSystems = [
-        "wasm32-wasi"
-        "x86_64-windows"
-        "aarch64-linux"
-      ];
-      initrd.systemd.enable = true;
-      loader = {
-        efi = {
-          canTouchEfiVariables = true;
-          efiSysMountPoint = "/boot";
-        };
-        grub = {
-          enable = true;
-          useOSProber = true;
-          efiSupport = true;
-          device = "nodev";
-        };
       };
     };
 
@@ -110,16 +90,6 @@ in
       };
 
       irqbalance.enable = false;
-      thermald.enable = false;
-    };
-
-    ## TODO: move to `modules.remotebuilder.enable = true`
-    nix.settings.trusted-users = [ "remotebuild" ];
-    users.groups.remotebuild = { };
-    users.users.remotebuild = {
-      isSystemUser = true;
-      group = "remotebuild";
-      useDefaultShell = true;
     };
 
     # Experimental
@@ -132,6 +102,6 @@ in
     # this value at the release version of the first install of this system.
     # Before changing this value read the documentation for this option
     # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-    system.stateVersion = "24.11"; # Did you read the comment?
+    system.stateVersion = "25.11"; # Did you read the comment?
   };
 }

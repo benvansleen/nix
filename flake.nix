@@ -9,7 +9,7 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
     systems.url = "github:nix-systems/default";
     secrets = {
@@ -40,6 +40,8 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    lanzaboote.url = "github:nix-community/lanzaboote";
 
     nixos-cli = {
       url = "github:nix-community/nixos-cli";
@@ -76,7 +78,7 @@
     };
 
     hyprbar = {
-      url = "github:benvansleen/hyprbar";
+      url = "github:benvansleen/hyprbar/add-laptop-config";
       inputs = {
         nixpkgs.follows = "nixpkgs-stable";
         systems.follows = "systems";
@@ -135,6 +137,7 @@
     {
       nixosConfigurations = {
         amd = mkSystem ./hosts/amd;
+        laptop = mkSystem ./hosts/laptop;
         pi = mkSystem ./hosts/pi;
       };
 

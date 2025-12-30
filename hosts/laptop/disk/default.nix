@@ -1,0 +1,131 @@
+{
+  disko,
+  lanzaboote,
+  pkgs,
+  lib,
+  ...
+}:
+
+{
+  imports = [
+    disko.nixosModules.disko
+    lanzaboote.nixosModules.lanzaboote
+  ];
+
+  config = {
+    modules.impermanence.persistedDirectories = [
+      "/var/lib/sbctl"
+    ];
+
+    boot = {
+      bootspec.enable = true;
+      loader.systemd-boot.enable = lib.mkForce false; # replaced by lanzaboote
+      lanzaboote = {
+        enable = true;
+        pkiBundle = "/var/lib/sbctl";
+        autoGenerateKeys.enable = true;
+        ## 1. Boot into nixos (requires disabling secure boot)
+        ## 2. Ensure `sudo nix run nixpkgs#sbctl verify` shows boot images are signed (excl. kernels)
+        ## 3. Clear all existing boot keys in BIOS
+        ## 4. `sudo nix run nixpkgs#sbctl enroll-keys -- --microsoft`
+        ## 5. May need to re-enroll luks decryption key in TPM
+        autoEnrollKeys = {
+          enable = false;
+          autoReboot = false;
+        };
+      };
+    };
+
+    boot.initrd.systemd = {
+      enable = true;
+      tpm2.enable = true;
+    };
+    security.tpm2.enable = true;
+    environment.systemPackages = with pkgs; [
+      tpm2-tss
+      tpm2-tools
+    ];
+
+    disko.devices = {
+      disk.main = {
+        type = "disk";
+        device = "/dev/nvme0n1";
+        content = {
+          type = "gpt";
+          partitions = {
+            ESP = {
+              size = "1024M";
+              type = "EF00";
+              content = {
+                type = "filesystem";
+                format = "vfat";
+                mountpoint = "/boot";
+                mountOptions = [
+                  "defaults"
+                  "umask=0077"
+                ];
+              };
+            };
+            nix = {
+              size = "250G";
+              content = {
+                type = "filesystem";
+                format = "xfs";
+                mountpoint = "/nix";
+                mountOptions = [
+                  "defaults"
+                  "noatime"
+                  "logbsize=256k"
+                ];
+                extraArgs = [
+                  "-m"
+                  "reflink=1"
+                ];
+              };
+            };
+            luks = {
+              ## Upon first boot, imperatively store decryption key in motherboard TPM2 module
+              ## After running, partition is automatically decrypted on boot
+              ## `sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/nvme0n1p3`
+              size = "100%";
+              content = {
+                type = "luks";
+                name = "cryptroot";
+                settings = {
+                  allowDiscards = true;
+                  crypttabExtraOpts = [
+                    "tpm2-device=auto"
+                    "tpm2-measure-pcr=yes"
+                  ];
+                };
+                content = {
+                  type = "btrfs";
+                  extraArgs = [ "-f" ];
+                  subvolumes = {
+                    "/persist" = {
+                      mountpoint = "/persist";
+                      mountOptions = [ "compress=zstd" ];
+                    };
+                    "/swap" = {
+                      mountpoint = "/.swap";
+                      swap.swapfile.size = "24G";
+                    };
+                  };
+                };
+              };
+            };
+          };
+        };
+      };
+
+      nodev."/" = {
+        fsType = "tmpfs";
+        mountOptions = [
+          "size=16G"
+          "defaults"
+          "mode=755"
+        ];
+      };
+    };
+  };
+}
