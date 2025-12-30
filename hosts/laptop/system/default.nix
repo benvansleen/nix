@@ -65,25 +65,6 @@ in
       };
     };
 
-    boot = {
-      binfmt.emulatedSystems = [
-        "x86_64-windows"
-      ];
-      initrd.systemd.enable = true;
-      loader = {
-        efi = {
-          canTouchEfiVariables = true;
-          efiSysMountPoint = "/boot";
-        };
-        grub = {
-          enable = true;
-          useOSProber = true;
-          efiSupport = true;
-          device = "nodev";
-        };
-      };
-    };
-
     networking = {
       # nftables.enable = true;
       networkmanager = {

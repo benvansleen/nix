@@ -1,14 +1,44 @@
-{ disko, pkgs, ... }:
+{
+  disko,
+  lanzaboote,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
     disko.nixosModules.disko
+    lanzaboote.nixosModules.lanzaboote
   ];
 
   config = {
+    modules.impermanence.persistedDirectories = [
+      "/var/lib/sbctl"
+    ];
+
+    boot = {
+      bootspec.enable = true;
+      loader.systemd-boot.enable = lib.mkForce false; # replaced by lanzaboote
+      lanzaboote = {
+        enable = true;
+        pkiBundle = "/var/lib/sbctl";
+        autoGenerateKeys.enable = true;
+        ## 1. Boot into nixos (requires disabling secure boot)
+        ## 2. Ensure `sudo nix run nixpkgs#sbctl verify` shows boot images are signed (excl. kernels)
+        ## 3. Clear all existing boot keys in BIOS
+        ## 4. `sudo nix run nixpkgs#sbctl enroll-keys -- --microsoft`
+        ## 5. May need to re-enroll luks decryption key in TPM
+        autoEnrollKeys = {
+          enable = false;
+          autoReboot = false;
+        };
+      };
+    };
+
     boot.initrd.systemd = {
       enable = true;
-      enableTpm2 = true;
+      tpm2.enable = true;
     };
     security.tpm2.enable = true;
     environment.systemPackages = with pkgs; [
