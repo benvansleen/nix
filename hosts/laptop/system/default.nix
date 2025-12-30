@@ -109,7 +109,7 @@ in
       };
 
       irqbalance.enable = false;
-      thermald.enable = false;
+      thermald.enable = true;
     };
 
     # Experimental
