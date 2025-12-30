@@ -11,34 +11,34 @@ in
   config = {
     modules = {
       clonix = {
-        # enable = true;
-        # deployments = [
-        #   rec {
-        #     deploymentName = "backup-${config.machine.name}";
-        #     local = {
-        #       dir = "/persist";
-        #       exclude = [
-        #         "/tmp"
-        #         "**/llama/models/"
-        #         "**/.cache/"
-        #         "**/.local/"
-        #         "**/Code/**/target/"
-        #       ];
-        #     };
-        #     targetDir = "${lib.constants.backup-path}/${deploymentName}";
-        #     remote = {
-        #       enable = true;
-        #       ipOrHostname = "pi";
-        #       user.name = "root";
-        #     };
-        #     should-propagate-file-deletion = true;
-        #     timer = {
-        #       enable = true;
-        #       OnCalendar = "hourly";
-        #       Persistent = true;
-        #     };
-        #   }
-        # ];
+        enable = true;
+        deployments = [
+          rec {
+            deploymentName = "backup-${config.machine.name}";
+            local = {
+              dir = "/persist";
+              exclude = [
+                "/tmp"
+                "**/llama/models/"
+                "**/.cache/"
+                "**/.local/"
+                "**/Code/**/target/"
+              ];
+            };
+            targetDir = "${lib.constants.backup-path}/${deploymentName}";
+            remote = {
+              enable = true;
+              ipOrHostname = "pi";
+              user.name = "root";
+            };
+            should-propagate-file-deletion = true;
+            timer = {
+              enable = true;
+              OnCalendar = "hourly";
+              Persistent = true;
+            };
+          }
+        ];
       };
       impermanence = {
         enable = true;
@@ -90,7 +90,6 @@ in
       };
 
       irqbalance.enable = false;
-      thermald.enable = true;
     };
 
     # Experimental
