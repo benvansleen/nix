@@ -54,6 +54,9 @@
               };
             };
             luks = {
+              ## Upon first boot, imperatively store decryption key in motherboard TPM2 module
+              ## After running, partition is automatically decrypted on boot
+              ## `sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/nvme0n1p3`
               size = "100%";
               content = {
                 type = "luks";
