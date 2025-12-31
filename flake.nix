@@ -9,8 +9,8 @@
   };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
     systems.url = "github:nix-systems/default";
     secrets = {
       url = "git+ssh://git@github.com/benvansleen/secrets.git";
@@ -41,14 +41,23 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    lanzaboote.url = "github:nix-community/lanzaboote";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        pre-commit.inputs.flake-compat.follows = "flake-compat";
+      };
+    };
 
     nixos-cli = {
       url = "github:nix-community/nixos-cli";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-compat.follows = "flake-compat";
-        nix-options-doc.inputs.nixpkgs.follows = "nixpkgs";
+        optnix.inputs = {
+          nixpkgs.follows = "nixpkgs";
+          flake-compat.follows = "flake-compat";
+        };
       };
     };
 
@@ -80,7 +89,8 @@
     hyprbar = {
       url = "github:benvansleen/hyprbar/add-laptop-config";
       inputs = {
-        nixpkgs.follows = "nixpkgs-stable";
+        ## hyprbar needs its own `nixpkgs` until migration to current version of astal
+        # nixpkgs.follows = "nixpkgs-stable";
         systems.follows = "systems";
         pre-commit-hooks.follows = "pre-commit-hooks";
       };
@@ -100,7 +110,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    extra-container.url = "github:erikarvstedt/extra-container";
+    extra-container = {
+      url = "github:erikarvstedt/extra-container";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nix-index-database = {
       url = "github:nix-community/nix-index-database";

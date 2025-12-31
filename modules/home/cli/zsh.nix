@@ -53,6 +53,7 @@ in
         autocd = true;
         autosuggestion.enable = true;
         defaultKeymap = "viins";
+        dotDir = config.home.homeDirectory; # # pre-26.05 behavior
 
         history = {
           expireDuplicatesFirst = true;
