@@ -56,7 +56,7 @@ in
       setFlakeRegistry = true;
     };
     nix = {
-      buildMachines = [
+      buildMachines = builtins.filter (m: m.hostName != config.machine.name) [
         {
           hostName = "amd";
           sshUser = "remotebuild";
