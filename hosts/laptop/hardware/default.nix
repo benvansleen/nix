@@ -21,18 +21,24 @@
     powerManagement.powertop.enable = true;
     services = {
       thermald.enable = true;
-      tlp = {
+
+      ## disable default power management in favor of `auto-cpufreq`
+      power-profiles-daemon.enable = false;
+      auto-cpufreq = {
         enable = true;
         settings = {
-          CPU_SCALING_GOVERNOR_ON_AC = "performance";
-          CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-
-          # Energy Performance Preference (EPP)
-          # This is supported by i7-8565U
-          CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
-          CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
-          # Optional: Help laptop stay cool and quiet on battery
-          CPU_BOOST_ON_BAT = 0;
+          battery = {
+            governor = "powersave";
+            turbo = "never";
+            energy_performance_preference = "power";
+            energy_perf_bias = "power";
+          };
+          charger = {
+            governor = "performance";
+            turbo = "auto";
+            energy_performance_preference = "performance";
+            energy_perf_bias = "performance";
+          };
         };
       };
     };
