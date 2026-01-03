@@ -1,13 +1,11 @@
 {
   disko,
-  lanzaboote,
   ...
 }:
 
 {
   imports = [
     disko.nixosModules.disko
-    lanzaboote.nixosModules.lanzaboote
   ];
 
   config = {
