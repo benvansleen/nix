@@ -18,6 +18,10 @@
     };
     security.tpm2.enable = true;
     services.fstrim.enable = true;
+    modules.btrfs = {
+      enable = true;
+      mountpoint = "/persist";
+    };
     disko.devices = {
       disk.main = {
         type = "disk";
