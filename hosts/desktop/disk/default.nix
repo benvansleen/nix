@@ -94,13 +94,6 @@
                       mountpoint = "/persist/home";
                       mountOptions = [ "compress=zstd" ];
                     };
-                    "/var-log" = {
-                      mountpoint = "/var/log";
-                      mountOptions = [
-                        "compress=zstd"
-                        "noatime"
-                      ];
-                    };
                     "/var-lib-containers" = {
                       mountpoint = "/var/lib/containers";
                       mountOptions = [
