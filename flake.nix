@@ -149,7 +149,7 @@
     in
     {
       nixosConfigurations = {
-        amd = mkSystem ./hosts/amd;
+        desktop = mkSystem ./hosts/desktop;
         laptop = mkSystem ./hosts/laptop;
         pi = mkSystem ./hosts/pi;
       };

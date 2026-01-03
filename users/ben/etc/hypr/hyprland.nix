@@ -226,7 +226,7 @@ in
       disable_hyprland_logo = true;
     };
   }
-  // lib.optionalAttrs (osConfig.machine.name == "amd") (
+  // lib.optionalAttrs (osConfig.machine.name == "desktop") (
     let
       left = "desc:LG Electronics BK550Y 009MXSK5P902";
       right = "desc:LG Electronics BK550Y 009MXAY5P912";
