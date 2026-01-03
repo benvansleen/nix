@@ -11,7 +11,7 @@ in
   config = {
     modules = {
       clonix = {
-        enable = true;
+        enable = false; # TODO: temporarily disable while restoring data post-repartition
         deployments = [
           rec {
             deploymentName = "backup-${config.machine.name}";
