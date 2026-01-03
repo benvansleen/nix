@@ -214,7 +214,8 @@ in
             commandline edit --replace $new_command
             return
           },
-          [$hd, ..] => {
+          # TODO: check if $hd is not in `shell_integration` cmds above
+          [$hd, ..] if not ($hd in ["nix" "git"]) => {
             tv --inline --autocomplete-prompt $hd --input $tl 
             | str substring ($tl | str length)..
           },

@@ -17,11 +17,12 @@ in
   config = mkIf cfg.enable {
     fonts = {
       enableDefaultPackages = true;
-      packages = with pkgs; [
+      packages = with pkgs.nerd-fonts; [
         iosevka
-        hack-font
-        nerd-fonts.fira-code
-        nerd-fonts._3270
+        fira-code
+        hack
+        _3270
+        victor-mono
       ];
 
       fontconfig = {
