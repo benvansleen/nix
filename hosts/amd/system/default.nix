@@ -49,6 +49,7 @@ in
         enable = true;
         authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
         tailscale-up-extra-args = [
+          "--ssh"
           "--accept-routes"
           "--exit-node=auto:any"
         ];
