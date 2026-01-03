@@ -77,10 +77,10 @@ in
         enableReload = false;
         package = pkgs.caddy.withPlugins {
           plugins = [
-            "github.com/tailscale/caddy-tailscale@v0.0.0-20250207163903-69a970c84556"
+            "github.com/tailscale/caddy-tailscale@413764819c5e29dc98d864aaf960ae0f83e00bc5" # jan 3, 2026
             "github.com/caddy-dns/cloudflare@2fc25ee62f40fe21b240f83ab2fb6e2be6dbb953" # oct 22, 2025
           ];
-          hash = "sha256-9Mwt8JU0786iThE7R1935S5iv1ilR4UC/2yJ58poQj8=";
+          hash = "sha256-xeSjIvJHyQOKNdyGX7PHKY5+zt3gZl5SVQC7rcx3OIQ=";
           doInstallCheck = false;
         };
         inherit (lib.constants) email;
