@@ -16,7 +16,7 @@
         enable = true;
         tpm2.enable = true;
       };
-      efi.efiSysMountPoint = "/boot";
+      loader.efi.efiSysMountPoint = "/boot";
     };
     security.tpm2.enable = true;
     services.fstrim.enable = true;
