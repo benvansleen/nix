@@ -41,6 +41,8 @@ in
         ## replaced by lanzaboote
         systemd-boot.enable = mkForce false;
         grub.enable = mkForce false;
+
+        efi.canTouchEfiVariables = true;
       };
       lanzaboote = {
         enable = true;

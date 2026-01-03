@@ -11,9 +11,12 @@
   ];
 
   config = {
-    boot.initrd.systemd = {
-      enable = true;
-      tpm2.enable = true;
+    boot = {
+      initrd.systemd = {
+        enable = true;
+        tpm2.enable = true;
+      };
+      efi.efiSysMountPoint = "/boot";
     };
     security.tpm2.enable = true;
     services.fstrim.enable = true;
