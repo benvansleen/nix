@@ -87,10 +87,9 @@
     };
 
     hyprbar = {
-      url = "github:benvansleen/hyprbar/add-laptop-config";
+      url = "github:benvansleen/hyprbar";
       inputs = {
-        ## hyprbar needs its own `nixpkgs` until migration to current version of astal
-        # nixpkgs.follows = "nixpkgs-stable";
+        nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
         pre-commit-hooks.follows = "pre-commit-hooks";
       };
