@@ -19,6 +19,7 @@ in
         environment = {
           ## using tailscale ssh
           ${if !isLocalBackup then "BORG_RSH" else null} = "ssh -o StrictHostKeyChecking=accept-new";
+          BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
         };
 
         compression = "auto,zstd";
