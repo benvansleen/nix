@@ -475,16 +475,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1767551840,
-        "narHash": "sha256-6pFKoK/BQzxpa1fRpX/W1FvlCa5ceD2qjPfyaq+zC7E=",
+        "lastModified": 1767570087,
+        "narHash": "sha256-etpJUgYTTnu5wJHtVgLPrvwVKoOhjBLlObp5yv9DIPg=",
         "owner": "benvansleen",
         "repo": "hyprbar",
-        "rev": "9e8e156972274ef6f821ee7531695f7079414faf",
+        "rev": "506144b910d174e673e494b2a9804bb6e888de50",
         "type": "github"
       },
       "original": {
         "owner": "benvansleen",
-        "ref": "astal-v4-migration",
         "repo": "hyprbar",
         "type": "github"
       }

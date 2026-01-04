@@ -87,7 +87,7 @@
     };
 
     hyprbar = {
-      url = "github:benvansleen/hyprbar/astal-v4-migration";
+      url = "github:benvansleen/hyprbar";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         systems.follows = "systems";
