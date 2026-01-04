@@ -53,8 +53,7 @@ lib.mkUser {
     users.users.${user} = {
       isNormalUser = true;
       shell = if config.machine.desktop then pkgs.nushell else pkgs.zsh;
-      # hashedPasswordFile = if-using-sops config.sops.secrets."${user}-password".path;
-      password = "temp"; # TODO: temporarily disable sops password for nixos reinstall
+      hashedPasswordFile = if-using-sops config.sops.secrets."${user}-password".path;
       home = home-dir;
 
       description = "Ben Van Sleen";
