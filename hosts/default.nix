@@ -58,7 +58,7 @@ in
     nix = {
       buildMachines = builtins.filter (m: m.hostName != config.machine.name) [
         {
-          hostName = "amd";
+          hostName = "desktop";
           sshUser = "remotebuild";
           protocol = "ssh-ng";
           systems = [

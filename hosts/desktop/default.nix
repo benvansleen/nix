@@ -3,7 +3,7 @@
 lib.importAll ./.
 // {
   config.machine = {
-    name = "amd";
+    name = "desktop";
     desktop = true;
     powerful = true;
     allowUnfree = true;

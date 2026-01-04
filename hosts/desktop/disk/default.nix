@@ -1,7 +1,4 @@
-{
-  disko,
-  ...
-}:
+{ disko, ... }:
 
 {
   imports = [
@@ -18,6 +15,14 @@
     };
     security.tpm2.enable = true;
     services.fstrim.enable = true;
+
+    swapDevices = [ ];
+    zramSwap = {
+      enable = true;
+      algorithm = "ztd";
+      memoryPercent = 50;
+    };
+
     modules = {
       btrfs = {
         enable = true;
@@ -27,8 +32,8 @@
     };
     disko.devices = {
       disk.main = {
-        type = "disk";
         device = "/dev/nvme0n1";
+        type = "disk";
         content = {
           type = "gpt";
           partitions = {
@@ -46,7 +51,7 @@
               };
             };
             nix = {
-              size = "250G";
+              size = "500G";
               content = {
                 type = "filesystem";
                 format = "xfs";
@@ -54,7 +59,7 @@
                 mountOptions = [
                   "defaults"
                   "noatime"
-                  "logbsize=256k"
+                  "nodiratime"
                 ];
                 extraArgs = [
                   "-m"
@@ -83,11 +88,21 @@
                   subvolumes = {
                     "/persist" = {
                       mountpoint = "/persist";
+                      mountOptions = [
+                        "compress=zstd"
+                        "noatime"
+                      ];
+                    };
+                    "/persist-home" = {
+                      mountpoint = "/persist/home";
                       mountOptions = [ "compress=zstd" ];
                     };
-                    "/swap" = {
-                      mountpoint = "/.swap";
-                      swap.swapfile.size = "24G";
+                    "/var-lib-containers" = {
+                      mountpoint = "/var/lib/containers";
+                      mountOptions = [
+                        "noatime"
+                        "nodatacow" # CoW bad for container layers
+                      ];
                     };
                   };
                 };
@@ -100,11 +115,12 @@
       nodev."/" = {
         fsType = "tmpfs";
         mountOptions = [
-          "size=16G"
+          "size=64G"
           "defaults"
           "mode=755"
         ];
       };
+
     };
   };
 }

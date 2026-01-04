@@ -45,7 +45,6 @@ in
         persistRoot = "/persist";
       };
       prometheus.client.enable = true;
-      secureboot.enable = true;
       tailscale = {
         enable = true;
         authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
