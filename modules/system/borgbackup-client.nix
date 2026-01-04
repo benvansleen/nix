@@ -4,17 +4,22 @@ let
   inherit (lib)
     mkIf
     ;
+
+  isLocalBackup = config.machine.name == lib.constants.backup-machine;
+  host = if !isLocalBackup then "root@${lib.constants.backup-machine}:" else "";
   backupConfig = import ../../shared/backups.nix;
 in
 {
   config = mkIf (backupConfig.clients ? ${config.machine.name}) {
     services.borgbackup.jobs = {
       "${config.machine.name}-backups" = {
-        inherit (backupConfig.clients.${config.machine.name}) paths;
-        repo = "root@${lib.constants.backup-machine}:${lib.constants.backup-path}/borgbackup/${config.machine.name}";
+        inherit (backupConfig.clients.${config.machine.name}) paths exclude;
+        repo = "${host}${lib.constants.backup-path}/borgbackup/${config.machine.name}";
 
-        ## using tailscale ssh
-        environment.BORG_RSH = "ssh -o StrictHostKeyChecking=accept-new";
+        environment = {
+          ## using tailscale ssh
+          ${if !isLocalBackup then "BORG_RSH" else null} = "ssh -o StrictHostKeyChecking=accept-new";
+        };
 
         compression = "auto,zstd";
         encryption.mode = "none"; # TODO: add encryption w/ key managed by sops
