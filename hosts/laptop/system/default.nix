@@ -11,7 +11,7 @@ in
   config = {
     modules = {
       clonix = {
-        enable = true;
+        enable = false;
         deployments = [
           rec {
             deploymentName = "backup-${config.machine.name}";
@@ -82,6 +82,15 @@ in
     };
 
     services = {
+      ## when laptop idles, all open terminals get broadcasted a
+      ## "system suspending NOW" message. This configures logind
+      ## not to broadcast this message.
+      logind.settings = {
+        Login = {
+          WallMessage = false;
+        };
+      };
+
       openssh = {
         enable = true;
         settings = {
