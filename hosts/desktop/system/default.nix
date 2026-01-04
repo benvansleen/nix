@@ -45,7 +45,6 @@ in
         persistRoot = "/persist";
       };
       prometheus.client.enable = true;
-      secureboot.enable = true;
       tailscale = {
         enable = true;
         authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
@@ -66,20 +65,11 @@ in
       };
     };
 
-    boot = {
-      binfmt.emulatedSystems = [
-        "wasm32-wasi"
-        "x86_64-windows"
-        "aarch64-linux"
-      ];
-      initrd.systemd.enable = true;
-      loader = {
-        efi = {
-          canTouchEfiVariables = true;
-          efiSysMountPoint = "/boot";
-        };
-      };
-    };
+    boot.binfmt.emulatedSystems = [
+      "wasm32-wasi"
+      "x86_64-windows"
+      "aarch64-linux"
+    ];
 
     networking = {
       # nftables.enable = true;

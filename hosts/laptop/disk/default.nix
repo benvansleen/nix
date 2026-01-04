@@ -18,9 +18,12 @@
     };
     security.tpm2.enable = true;
     services.fstrim.enable = true;
-    modules.btrfs = {
-      enable = true;
-      mountpoint = "/persist";
+    modules = {
+      btrfs = {
+        enable = true;
+        mountpoint = "/persist";
+      };
+      secureboot.enable = true;
     };
     disko.devices = {
       disk.main = {

@@ -23,9 +23,12 @@
       memoryPercent = 50;
     };
 
-    modules.btrfs = {
-      enable = true;
-      mountpoint = "/persist";
+    modules = {
+      btrfs = {
+        enable = true;
+        mountpoint = "/persist";
+      };
+      secureboot.enable = true;
     };
     disko.devices = {
       disk.main = {
