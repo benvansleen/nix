@@ -22,6 +22,9 @@ in
           BORG_UNKNOWN_UNENCRYPTED_REPO_ACCESS_IS_OK = "yes";
         };
 
+        ## do not fail job bc file changed on disk during backup
+        failOnWarnings = false;
+
         compression = "auto,zstd";
         encryption.mode = "none"; # TODO: add encryption w/ key managed by sops
 
