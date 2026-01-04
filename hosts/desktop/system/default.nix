@@ -109,6 +109,8 @@ in
       thermald.enable = false;
     };
 
+    powerManagement.cpuFreqGovernor = "schedutil";
+
     ## TODO: move to `modules.remotebuilder.enable = true`
     nix.settings.trusted-users = [ "remotebuild" ];
     users.groups.remotebuild = { };
