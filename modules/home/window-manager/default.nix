@@ -86,6 +86,8 @@ lib.importAll ./.
       );
     };
     services = {
+      ## Jan 5 2026: hyprpaper on unstable changed config formats. home-manager hasn't caught up yet
+      hyprpaper.package = pkgs.stable.hyprpaper;
       hypridle = {
         enable = true;
         settings = {

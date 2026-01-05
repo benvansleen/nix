@@ -29,9 +29,7 @@ lib.importAll ./.
       zsh.enable = true;
     };
 
-    home.packages = with pkgs; [
-      pipr
-    ];
+    home.packages = with pkgs; [ ];
 
     programs = {
       readline = {
