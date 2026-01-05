@@ -1,6 +1,6 @@
 {
   config,
-  osConfig,
+  # osConfig,
   pkgs,
   lib,
   ...
@@ -67,14 +67,15 @@ let
 
   emacs-pkg = pkgs.emacs-unstable-pgtk;
   emacs = pkgs.emacsWithPackagesFromUsePackage {
-    package = lib.optimizeForThisHostIfPowerful {
-      config = osConfig;
-      pkg = emacs-pkg;
-      extraFlags = [
-        "-pipe"
-        "-fomit-frame-pointer"
-      ];
-    };
+    package = emacs-pkg;
+    # package = lib.optimizeForThisHostIfPowerful {
+    #   config = osConfig;
+    #   pkg = emacs-pkg;
+    #   extraFlags = [
+    #     "-pipe"
+    #     "-fomit-frame-pointer"
+    #   ];
+    # };
     config = init-el;
     defaultInitFile = true;
     alwaysEnsure = true;

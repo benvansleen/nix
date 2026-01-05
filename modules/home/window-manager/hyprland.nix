@@ -19,14 +19,16 @@ in
   config = mkIf cfg.enable {
     wayland.windowManager.hyprland = {
       enable = osConfig.machine.desktop;
-      package = lib.optimizeForThisHostIfPowerful {
-        config = osConfig;
-        pkg = pkgs.hyprland;
-      };
-      portalPackage = lib.optimizeForThisHostIfPowerful {
-        config = osConfig;
-        pkg = pkgs.xdg-desktop-portal-hyprland;
-      };
+      package = pkgs.hyprland;
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
+      # package = lib.optimizeForThisHostIfPowerful {
+      #   config = osConfig;
+      #   pkg = pkgs.stable.hyprland;
+      # };
+      # portalPackage = lib.optimizeForThisHostIfPowerful {
+      #   config = osConfig;
+      #   pkg = pkgs.stable.xdg-desktop-portal-hyprland;
+      # };
       systemd.enable = false; # Conflicts with UWSM
       plugins = with pkgs.hyprlandPlugins; [
       ];
