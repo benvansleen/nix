@@ -10,10 +10,7 @@ in
   config = mkIf cfg.enable {
     services.podman.enable = true;
     modules.impermanence.persistedDirectories = [
-      {
-        directory = "@data@/containers";
-        method = "symlink";
-      }
+      "@data@/containers"
       "@cache@/containers"
     ];
   };

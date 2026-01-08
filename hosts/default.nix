@@ -153,11 +153,6 @@ in
       };
     };
 
-    programs = {
-      # Allow home.persistence.allowOther
-      fuse.userAllowOther = mkIf config.modules.impermanence.enable true;
-    };
-
     security = {
       doas = {
         enable = lib.constants.privilege-escalation == "doas";

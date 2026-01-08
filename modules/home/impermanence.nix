@@ -93,14 +93,15 @@ in
       ) cfg.persistedDirectories;
     in
     mkIf systemUsesImpermanence {
-      home.persistence.${cfg.persistDir} = {
+      home.persistence.${impermanence.persistRoot} = {
         inherit directories;
         files = [ ".ssh/known_hosts" ] ++ files;
-        allowOther = true;
       };
 
       home.activation."rm-persisted-files" = lib.hm.dag.entryBefore [ "checkLinkTargets" ] ''
-        for f in ${toString config.home.persistence.${cfg.persistDir}.files}; do
+        for f in ${
+          toString (lib.map (f: f.filePath) config.home.persistence.${impermanence.persistRoot}.files)
+        }; do
             echo "Removing $f"
             rm $f || true
         done

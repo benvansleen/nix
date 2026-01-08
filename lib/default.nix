@@ -57,7 +57,15 @@ let
         with lib;
         [ ../modules/home ]
         ++ (pipe specialArgs [
-          (filterAttrs (_moduleName: module: module ? homeManagerModules))
+          (filterAttrs (
+            moduleName: module:
+            ## The Home Manager flake outputs are deprecated!
+            ## The Home Manager module will be automatically imported by the NixOS
+            ## module. Please remove any manual imports.
+            ## See https://github.com/nix-community/impermanence?tab=readme-ov-file#home-manager
+            ## for updated usage instructions.
+            moduleName != "impermanence" && module ? homeManagerModules
+          ))
           (mapAttrsToList (
             moduleName:
             {
