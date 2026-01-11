@@ -47,11 +47,6 @@ in
           };
         };
     };
-    persistDir = mkOption {
-      type = types.str;
-      default = "${impermanence.persistRoot}${cfg.homeDir.root}";
-      description = "Where to persist files";
-    };
 
     persistedFiles = mkOption {
       type = with types; listOf str;

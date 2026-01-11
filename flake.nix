@@ -110,6 +110,10 @@
       };
     };
 
+    opencode = {
+      url = "github:anomalyco/opencode";
+    };
+
     clonix = {
       url = "github:benvansleen/clonix";
       inputs.nixpkgs.follows = "nixpkgs";

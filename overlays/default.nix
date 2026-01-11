@@ -70,4 +70,8 @@ with inputs;
   })
 
   emacs-overlay.overlays.default
+
+  (final: _prev: {
+    opencode = opencode.packages.${final.stdenv.hostPlatform.system}.default;
+  })
 ]
