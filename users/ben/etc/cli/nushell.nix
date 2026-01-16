@@ -28,11 +28,8 @@ in
           enableNushellIntegration = true;
         };
       };
-      impermanence.persistedFiles = [
-        "@config@/nushell/history.sqlite3"
-        "@config@/nushell/history.sqlite3-shm"
-        "@config@/nushell/history.sqlite3-wal"
-        "@config@/nushell/history.txt"
+      impermanence.persistedDirectories = [
+        "@config@/nushell"
       ];
     };
     programs = {
