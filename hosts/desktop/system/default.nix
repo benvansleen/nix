@@ -55,6 +55,7 @@ in
         ];
       };
       searx.enable = false;
+      remotebuilder.enable = true;
     };
 
     nix = {
@@ -101,14 +102,6 @@ in
 
     powerManagement.cpuFreqGovernor = "schedutil";
 
-    ## TODO: move to `modules.remotebuilder.enable = true`
-    nix.settings.trusted-users = [ "remotebuild" ];
-    users.groups.remotebuild = { };
-    users.users.remotebuild = {
-      isSystemUser = true;
-      group = "remotebuild";
-      useDefaultShell = true;
-    };
 
     # Experimental
     ## Currently get `mkcomposefs: command not found` error
