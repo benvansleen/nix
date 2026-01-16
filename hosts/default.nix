@@ -185,6 +185,13 @@ in
       };
     };
 
+    systemd.oomd = {
+      enable = true;
+      enableRootSlice = true;
+      enableSystemSlice = true;
+      enableUserSlices = true;
+    };
+
     system.activationScripts = {
       diffGens = ''
         ${lib.getExe pkgs.dix} /run/current-system "$systemConfig"

@@ -61,8 +61,9 @@ in
     nix = {
       gc.automatic = lib.mkForce false;
       settings = {
-        cores = lib.mkForce 6;
-        max-jobs = "auto";
+        cores = 0;
+        max-jobs = 8;
+        max-substitution-jobs = "48";
       };
     };
 
@@ -73,12 +74,10 @@ in
     ];
 
     networking = {
-      # nftables.enable = true;
+      nftables.enable = true;
       networkmanager = {
         enable = true;
-        # wifi.backend = "iwd";
       };
-      # wireless.iwd.enable = true;
     };
 
     ## Without this, rebuilding os hangs
@@ -95,13 +94,37 @@ in
           KbdInteractiveAuthentication = false;
         };
       };
+      scx = {
+        enable = true;
+        scheduler = "scx_rusty";
+        extraArgs = [
+          "--cache-level"
+          "3"
 
-      irqbalance.enable = false;
-      thermald.enable = false;
+          "--interval"
+          "3.0"
+
+          "--load-half-life"
+          "1.5"
+
+          "--greedy-threshold"
+          "2"
+
+          "--direct-greedy-under"
+          "85"
+
+          "--slice-us-underutil"
+          "20000"
+
+          "--slice-us-overutil"
+          "3000"
+
+          "--balanced-kworkers"
+        ];
+      };
+      irqbalance.enable = true;
     };
-
     powerManagement.cpuFreqGovernor = "schedutil";
-
 
     # Experimental
     ## Currently get `mkcomposefs: command not found` error
