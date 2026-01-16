@@ -30,6 +30,9 @@ in
       };
       impermanence.persistedFiles = [
         "@config@/nushell/history.sqlite3"
+        "@config@/nushell/history.sqlite3-shm"
+        "@config@/nushell/history.sqlite3-wal"
+        "@config@/nushell/history.txt"
       ];
     };
     programs = {

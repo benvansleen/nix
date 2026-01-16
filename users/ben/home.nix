@@ -81,7 +81,10 @@ in
         nixd
       ];
 
-      file.".ssh/config".text = "IdentityFile ${homeDir.root}/.ssh/master";
+      file.".ssh/config".text = ''
+        IdentityFile ${homeDir.root}/.ssh/master
+        UpdateHostKeys no
+      '';
     };
 
     xdg =
