@@ -7,7 +7,7 @@
 
 let
   if-not-desktop = attr: if !osConfig.machine.desktop then attr else null;
-  flake-outputs = ''(builtins.getFlake ${self.outPath}).outputs.nixosConfigurations.${osConfig.machine.name}'';
+  flake-outputs = "(builtins.getFlake ${self.outPath}).outputs.nixosConfigurations.${osConfig.machine.name}";
 in
 {
   config = {
@@ -25,9 +25,9 @@ in
           };
 
           extra.nixdExtras = {
-            nixpkgs.expr = ''import ${pkgs.path} { }'';
-            nixos_options = ''${flake-outputs}.options'';
-            home_manager_options = ''${flake-outputs}.options.home-manager.users.type.getSubOptions [ ]'';
+            nixpkgs.expr = "import ${pkgs.path} { }";
+            nixos_options = "${flake-outputs}.options";
+            home_manager_options = "${flake-outputs}.options.home-manager.users.type.getSubOptions [ ]";
           };
         };
       };

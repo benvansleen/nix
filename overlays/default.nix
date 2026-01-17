@@ -4,12 +4,14 @@ with inputs;
 [
   (final: _prev: {
     stable = import nixpkgs-stable {
+      inherit (final.stdenv.hostPlatform) system;
       inherit (final) config;
     };
   })
 
   (final: _prev: {
     unfree = import nixpkgs {
+      inherit (final.stdenv.hostPlatform) system;
       config = final.config // {
         allowUnfreePredicate =
           pkg:

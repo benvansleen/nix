@@ -297,8 +297,8 @@ in
                 done
             done
           '';
-          output = ''{split:/:-1}'';
-          display = ''{split:/:-1}'';
+          output = "{split:/:-1}";
+          display = "{split:/:-1}";
         };
       };
       "${cable-dir}/files.toml".source = toToml "television-cable-files.toml" {
