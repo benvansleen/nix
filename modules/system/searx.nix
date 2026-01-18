@@ -33,7 +33,7 @@ in
       enable = true;
       package = pkgs.searxng;
       redisCreateLocally = false;
-      runInUwsgi = false;
+      configureUwsgi = false;
       uwsgiConfig = {
         disable-logging = false;
         http = ":${toString cfg.port}";
