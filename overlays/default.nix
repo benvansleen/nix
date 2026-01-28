@@ -38,7 +38,7 @@ with inputs;
         passthru
         meta
         ;
-      cargoHash = "sha256-O6+bWEL+/71Mcafx8H3O+tz3Ay5bhAe9FKz22Vd37eU=";
+      cargoHash = "sha256-GkTgqiSZuiT/RjjaBzRKXk0dwNaz/sSbCPu2cOas564=";
       cargoPatches = (prev.nushell.cargoPatches or [ ]) ++ [
         ./patches/nushell/cargo.patch
       ];

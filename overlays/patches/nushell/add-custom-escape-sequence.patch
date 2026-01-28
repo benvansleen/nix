@@ -1,36 +1,57 @@
-From fbd5ef43d56fc03e0778b35ed1f01860a5e3dfe2 Mon Sep 17 00:00:00 2001
+From 4a10b36f36dcdfbc73ffa752a44ddd75eb06de12 Mon Sep 17 00:00:00 2001
 From: ben <benvansleen@gmail.com>
-Date: Sun, 29 Jun 2025 14:02:02 -0400
-Subject: [PATCH] add custom escape sequence
+Date: Wed, 28 Jan 2026 18:25:51 -0500
+Subject: [PATCH 1/2] add custom escape sequence using new reedline approach
 
 ---
- crates/nu-cli/src/repl.rs | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ crates/nu-cli/src/completions/base.rs |  1 +
+ crates/nu-cli/src/reedline_config.rs  | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/crates/nu-cli/src/repl.rs b/crates/nu-cli/src/repl.rs
-index a4ca2903c..8b00fb9f7 100644
---- a/crates/nu-cli/src/repl.rs
-+++ b/crates/nu-cli/src/repl.rs
-@@ -14,6 +14,7 @@ use crate::{
-     util::eval_source,
+diff --git a/crates/nu-cli/src/completions/base.rs b/crates/nu-cli/src/completions/base.rs
+index 6395b05a7..98f6c1f99 100644
+--- a/crates/nu-cli/src/completions/base.rs
++++ b/crates/nu-cli/src/completions/base.rs
+@@ -34,6 +34,7 @@ impl SemanticSuggestion {
+         SemanticSuggestion {
+             suggestion: Suggestion {
+                 value: suggestion.value,
++                display_override: None,
+                 description: suggestion.description,
+                 extra: suggestion.extra,
+                 append_whitespace: suggestion.append_whitespace,
+diff --git a/crates/nu-cli/src/reedline_config.rs b/crates/nu-cli/src/reedline_config.rs
+index dd1171ba4..079925d35 100644
+--- a/crates/nu-cli/src/reedline_config.rs
++++ b/crates/nu-cli/src/reedline_config.rs
+@@ -12,6 +12,7 @@ use nu_protocol::{
+     extract_value,
  };
- use crossterm::cursor::SetCursorStyle;
-+use crossterm::event::KeyCode;
- use log::{error, trace, warn};
- use miette::{ErrReport, IntoDiagnostic, Result};
- use nu_cmd_base::util::get_editor;
-@@ -1185,7 +1186,11 @@ fn setup_keybindings(engine_state: &EngineState, line_editor: Reedline) -> Reedl
-                 insert_keybindings,
-                 normal_keybindings,
-             } => {
--                let edit_mode = Box::new(Vi::new(insert_keybindings, normal_keybindings));
-+                let edit_mode = Box::new(Vi::new(
-+                    insert_keybindings,
-+                    normal_keybindings,
-+                    (KeyCode::Char('j'), KeyCode::Char('j')),
-+                ));
-                 line_editor.with_edit_mode(edit_mode)
-             }
-         },
+ use reedline::{
++    KeyCombination,
+     ColumnarMenu, DescriptionMenu, DescriptionMode, EditCommand, IdeMenu, Keybindings, ListMenu,
+     MenuBuilder, Reedline, ReedlineEvent, ReedlineMenu, TextObject, TextObjectScope,
+     TextObjectType, TraversalDirection, default_emacs_keybindings, default_vi_insert_keybindings,
+@@ -720,6 +721,20 @@ pub(crate) fn create_keybindings(config: &Config) -> Result<KeybindingsMode, She
+     let mut insert_keybindings = default_vi_insert_keybindings();
+     let mut normal_keybindings = default_vi_normal_keybindings();
+ 
++    insert_keybindings.add_sequence_binding(
++        vec![
++            KeyCombination {
++                modifier: KeyModifiers::NONE,
++                key_code: KeyCode::Char('j'),
++            },
++            KeyCombination {
++                modifier: KeyModifiers::NONE,
++                key_code: KeyCode::Char('j'),
++            },
++        ],
++        ReedlineEvent::ViChangeMode("normal".into()),
++    );
++
+     match config.edit_mode {
+         EditBindings::Emacs => {
+             add_menu_keybindings(&mut emacs_keybindings);
 -- 
-2.49.0
+2.52.0
