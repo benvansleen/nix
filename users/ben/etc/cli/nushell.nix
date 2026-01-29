@@ -25,7 +25,7 @@ in
         starship.enable = mkDefault true;
         television = {
           enable = mkDefault true;
-          enableNushellIntegration = true;
+          enableNushellIntegration = false;
         };
       };
       impermanence.persistedDirectories = [
@@ -127,6 +127,16 @@ in
               }
           }
 
+          $env.config.keybindings ++= [
+            {
+              name: jj_escape_insert_mode
+              modifier: none
+              keycode: [ char_j, char_j ]
+              mode: vi_insert
+              event: { send: vichangemode, mode: normal }
+            }
+          ]
+
           $env.config.menus ++= [{
               name: help_menu
               only_buffer_difference: true # Search is done on the text written after activating the menu
@@ -151,10 +161,7 @@ in
               only_buffer_difference: false # Search is done on the text written after activating the menu
               marker: "| "                  # Indicator that appears with the menu is active
               type: {
-                  layout: columnar          # Type of menu
-                  columns: 4                # Number of columns where the options are displayed
-                  col_width: 20             # Optional value. If missing all the screen width is used to calculate column width
-                  col_padding: 2            # Padding between columns
+                  layout: skim
               }
               style: {
                   text: green                   # Text style

@@ -24,36 +24,28 @@ with inputs;
     };
   })
 
-  (_final: prev: {
-    nushell = prev.rustPlatform.buildRustPackage {
-      inherit (prev.nushell)
-        src
-        version
-        name
-        pname
-        buildInputs
-        nativeBuildInputs
-        propagatedBuildInputs
-        checkPhase
-        passthru
-        meta
-        ;
-      cargoHash = "sha256-GkTgqiSZuiT/RjjaBzRKXk0dwNaz/sSbCPu2cOas564=";
-      cargoPatches = (prev.nushell.cargoPatches or [ ]) ++ [
-        ./patches/nushell/cargo.patch
-      ];
-      patches = (prev.nushell.patches or [ ]) ++ [
-        ./patches/nushell/add-custom-escape-sequence.patch
-      ];
-    };
+  (final: prev: {
+    nushell = prev.nushell.overrideAttrs (old: rec {
+      src = final.fetchFromGitHub {
+        owner = "benvansleen";
+        repo = old.pname;
+        rev = "test/keychords-and-skim";
+        hash = "sha256-0HYczT0iA1r8VIt8HJ4hw6McM3m9wVSbDZvKt0P5+m4=";
+      };
+      cargoBuildFeatures = [ "skim" ];
+      cargoDeps = final.rustPlatform.fetchCargoVendor {
+        inherit src;
+        hash = "sha256-teoexaaYib4JbYaxE4NRrffLLO1DqjQPv02tRiqtt0s=";
+      };
+    });
   })
 
-  (prev: final: {
+  (final: _prev: {
     inherit (final.unfree) copilot-language-server;
-    ollama-copilot = prev.buildGoModule rec {
+    ollama-copilot = final.buildGoModule rec {
       pname = "ollama-copilot";
       version = "master";
-      src = prev.fetchFromGitHub {
+      src = final.fetchFromGitHub {
         owner = "benvansleen";
         repo = pname;
         rev = "master";
