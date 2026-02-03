@@ -47,6 +47,7 @@ in
           ignore_dirty_tree = true;
           use_git_commit_msg = true;
           use_nom = true;
+          reexec_as_root = true;
         };
       };
     };
