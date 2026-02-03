@@ -122,5 +122,8 @@
       };
 
     };
+    fileSystems = {
+      "/var/lib/containers".neededForBoot = true;
+    };
   };
 }

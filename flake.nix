@@ -84,7 +84,7 @@
     };
 
     nvim = {
-      url = "github:benvansleen/nvim";
+      url = "github:benvansleen/nvim/migrate-to-nix-wrapper-modules";
       inputs = {
         nixpkgs.follows = "nixpkgs";
         pre-commit-hooks.follows = "pre-commit-hooks";

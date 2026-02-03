@@ -6,30 +6,17 @@
 }:
 
 let
-  if-not-desktop = attr: if !osConfig.machine.desktop then attr else null;
+  # if-not-desktop = attr: if !osConfig.machine.desktop then attr else null;
   flake-outputs = "(builtins.getFlake ${self.outPath}).outputs.nixosConfigurations.${osConfig.machine.name}";
 in
 {
   config = {
-    nvim = {
+    wrappers.neovim = {
       enable = true;
-      packageDefinitions.replace = {
-        nvim = _: {
-          settings = {
-            aliases = [
-              "vim"
-              "vi"
-            ];
-            ${if-not-desktop "neovim-unwrapped"} = null;
-            wrapRc = true;
-          };
-
-          extra.nixdExtras = {
-            nixpkgs.expr = "import ${pkgs.path} { }";
-            nixos_options = "${flake-outputs}.options";
-            home_manager_options = "${flake-outputs}.options.home-manager.users.type.getSubOptions [ ]";
-          };
-        };
+      settings = {
+        nixdNixpkgsPath = "import ${pkgs.path} { }";
+        nixdNixosPath = "${flake-outputs}.options";
+        nixdHomeManagerPath = "${flake-outputs}.options.home-manager.users.type.getSubOptions [ ]";
       };
     };
 
