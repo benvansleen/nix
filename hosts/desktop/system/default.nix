@@ -40,6 +40,7 @@ in
           }
         ];
       };
+      crossplatform-builder.enable = true;
       impermanence = {
         enable = true;
         persistRoot = "/persist";
@@ -66,12 +67,6 @@ in
         max-substitution-jobs = "48";
       };
     };
-
-    boot.binfmt.emulatedSystems = [
-      "wasm32-wasi"
-      "x86_64-windows"
-      "aarch64-linux"
-    ];
 
     networking = {
       nftables.enable = true;
