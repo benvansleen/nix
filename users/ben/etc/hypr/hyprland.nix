@@ -36,11 +36,14 @@ let
 
     ${pkgs.hyprland}/bin/hyprctl dispatch movetoworkspace "$new_ws"
   '';
+
   omnisearch =
     if config.modules.window-manager.centerpiece.enable then
       "centerpiece"
     else
       "${lib.getExe pkgs.wofi} --show drun";
+
+  guiEditor = config.wrappers.neovim.hosts.neovide.package;
 in
 {
   config.wayland.windowManager.hyprland.settings = {
@@ -67,7 +70,7 @@ in
       # "$mainMod, Return, exec, ${pkgs.alacritty}/bin/alacritty"
       "$mainMod, Return, exec, ${lib.getExe terminal}"
       # "$mainMod SHIFT, Return, exec, ~/.config/hypr/special-term"
-      "$mainMod, E, exec, ${lib.getExe pkgs.neovide}"
+      "$mainMod, E, exec, ${lib.getExe guiEditor}"
       "$mainMod, Q, killactive, "
       "$mainMod SHIFT, Q, exit, "
       "$mainMod, F, fullscreen"
