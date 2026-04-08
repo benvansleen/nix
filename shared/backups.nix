@@ -2,7 +2,16 @@
   clients = {
     desktop = {
       paths = [ "/persist" ];
-      exclude = [ ];
+      exclude = [
+        "sh:**/llama/models/**"
+        "sh:**/llama/llama-models/**"
+        "sh:**/ollama/blobs/**"
+
+        "sh:**/node_modules/**"
+        "sh:**/.venv/**"
+        "sh:**/target/debug/**"
+        "sh:**/target/release/**"
+      ];
     };
     laptop = {
       paths = [ "/persist" ];
