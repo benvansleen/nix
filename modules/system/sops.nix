@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   sops-nix,
   ...
 }:
@@ -29,11 +30,23 @@ in
     sops-nix.nixosModules.sops
   ];
 
-  config = mkIf cfg.enable {
-    # The persisted /etc isn't mounted fast enough
-    # From https://github.com/profiluefter/nixos-config/blob/09a56c8096c7cbc00b0fbd7f7c75d6451af8f267/sops.nix
-    sops = cfg.system-secrets "${
-      if impermanence-cfg.enable then persistRoot else ""
-    }/etc/ssh/ssh_host_ed25519_key";
-  };
+  config = mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        # The persisted /etc isn't mounted fast enough
+        # From https://github.com/profiluefter/nixos-config/blob/09a56c8096c7cbc00b0fbd7f7c75d6451af8f267/sops.nix
+        sops = cfg.system-secrets "${
+          if impermanence-cfg.enable then persistRoot else ""
+        }/etc/ssh/ssh_host_ed25519_key";
+      }
+      (lib.mkIf pkgs.stdenv.hostPlatform.isAarch64 {
+        sops.package = (pkgs.callPackage "${sops-nix}" { }).sops-install-secrets.overrideAttrs (_: {
+          outputs = [ "out" ];
+          dontFixup = true;
+          dontStrip = true;
+          postInstall = "";
+        });
+      })
+    ]
+  );
 }
