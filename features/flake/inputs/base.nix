@@ -101,24 +101,6 @@ _: {
       };
     };
 
-    hyprbar = {
-      url = "github:benvansleen/hyprbar";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
-        pre-commit-hooks.follows = "pre-commit-hooks";
-      };
-    };
-
-    centerpiece = {
-      url = "github:friedow/centerpiece";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-        treefmt-nix.follows = "treefmt-nix";
-      };
-    };
-
     opencode = {
       url = "github:anomalyco/opencode";
     };

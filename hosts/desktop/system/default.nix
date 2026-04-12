@@ -42,12 +42,10 @@ in
       };
       crossplatform-builder.enable = true;
       impermanence = {
-        enable = true;
         persistRoot = "/persist";
       };
       prometheus.client.enable = true;
       tailscale = {
-        enable = true;
         authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
         tailscale-up-extra-args = [
           "--ssh"

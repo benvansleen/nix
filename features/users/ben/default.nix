@@ -4,14 +4,25 @@
   ...
 }:
 let
-  localLib = import ../../../lib inputs;
   user = "ben";
   homeDir = "/home/${user}";
 in
 {
+  flake-file.inputs.centerpiece = {
+    url = "github:friedow/centerpiece";
+    inputs = {
+      nixpkgs.follows = "nixpkgs";
+      home-manager.follows = "home-manager";
+      treefmt-nix.follows = "treefmt-nix";
+    };
+  };
+
   flake.modules.homeManager.ben = {
-    imports = localLib.allHomeModules ++ [
+    imports = [
+      (inputs.nvim.homeManagerModules.default or inputs.nvim.homeManagerModules.nvim)
+      (inputs.sops-nix.homeManagerModules.default or inputs.sops-nix.homeManagerModules.sops)
       (import ../../../users/ben/home.nix {
+        inherit inputs;
         inherit user;
         directory = homeDir;
         secrets = inputs.secrets.${user};
@@ -31,6 +42,7 @@ in
     {
       home-manager.users.${user}.imports = [
         inputs.self.modules.homeManager.ben
+        inputs.self.modules.homeManager.impermanence
       ]
       ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
         inputs.centerpiece.hmModules.x86_64-linux.default

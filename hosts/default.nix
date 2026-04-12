@@ -39,15 +39,12 @@ in
     modules = {
       containers.enable = mkDefault true;
       display-manager.enable = mkDefault true;
-      firefox.enable = mkDefault true;
       fonts.enable = mkDefault false;
-      home-manager.enable = mkDefault true;
       nixos-cli.enable = mkDefault true;
       sops = {
         enable = mkDefault true;
         system-secrets = secrets.system;
       };
-      stylix.enable = mkDefault true;
       zsa.enable = mkDefault true;
     };
 

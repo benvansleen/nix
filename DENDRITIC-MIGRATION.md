@@ -411,6 +411,7 @@ Current status:
 - Feature directories remain grouped by concern, but exported names do not mirror directory depth.
 - `homeManager` is preferred over `home-manager` for new public feature names.
 - `laptop` now also evaluates through the new flat-name host-module path.
+- `desktop`, `laptop`, and `pi` host modules now import `homeManager`, `firefox`, `tailscale`, and `impermanence` explicitly where appropriate.
 
 ### Phase 2: Host Conversions
 
@@ -429,6 +430,7 @@ Current status:
 
 - `desktop`, `laptop`, and `pi` now use `flake.modules.nixos.<host>`.
 - `pi` still needs a real provisioned file at `/run/secrets/grafana-secret-key` for deployment-time Grafana startup.
+- Global host defaults for `firefox`, `home-manager`, and `stylix` have been removed in favor of host imports.
 
 ### Phase 3: Feature Migration
 
@@ -443,6 +445,14 @@ Checklist:
 - [ ] Migrate remaining reusable app and service modules.
 - [ ] Add feature-local inputs where a module is the natural owner of a niche dependency.
 - [ ] Replace host-side `config.modules.*.enable` usage with imports for migrated features.
+
+Current status:
+
+- Flat wrappers now exist for `stylix`, `tailscale`, and `impermanence` under `features/services/`.
+- Host composition now selects these features via imports instead of relying on `hosts/default.nix` defaults.
+- Host-local option sets still carry feature-specific configuration data such as Tailscale auth arguments and impermanence persistence roots.
+- `ben` no longer depends on `allHomeModules`; Home Manager dependencies are now imported explicitly.
+- `hyprbar` and `centerpiece` are now feature-local `flake-file` inputs, colocated with the features that use them.
 
 ### Phase 4: Cleanup
 

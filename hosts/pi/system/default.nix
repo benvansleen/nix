@@ -49,10 +49,8 @@ lib.importAll ./.
         disable-podman-dns = true;
       };
       display-manager.enable = false;
-      firefox.enable = false;
       fonts.enable = false;
       grafana.enable = true;
-      home-manager.enable = true;
       impermanence.enable = false;
       maybe.enable = true;
       pihole.enable = true;
@@ -119,9 +117,7 @@ lib.importAll ./.
         port = 8888;
       };
       sops.enable = true;
-      stylix.enable = false;
       tailscale = {
-        enable = true;
         authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
         tailscale-up-extra-args = [
           "--ssh"
