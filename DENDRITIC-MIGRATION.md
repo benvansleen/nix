@@ -93,6 +93,14 @@ Use this rule consistently:
 
 This keeps the root clear while still allowing `flake-file` to colocate an input with its actual usage.
 
+In practice, prefer moving an input out of `features/flake/inputs/base.nix` as soon as there is a clear owning flake-class feature module for it.
+
+Keep an input in the shared base only when one of these is true:
+
+- it is part of the flake bootstrap itself
+- it is consumed broadly enough that no single feature owns it cleanly yet
+- the current consuming code is still plain NixOS/Home Manager module code rather than a flake-class feature module
+
 ### Composition Policy
 
 Composition should move toward module `imports`, not global loading plus booleans.
@@ -412,6 +420,11 @@ Current status:
 - `homeManager` is preferred over `home-manager` for new public feature names.
 - `laptop` now also evaluates through the new flat-name host-module path.
 - `desktop`, `laptop`, and `pi` host modules now import `homeManager`, `firefox`, `tailscale`, and `impermanence` explicitly where appropriate.
+- `desktop`, `laptop`, and `pi` now also import `sops` explicitly.
+- `desktop`, `laptop`, and `pi` now also import `containers` and `nixosCli` explicitly.
+- `desktop` and `laptop` now import `displayManager` explicitly.
+- `desktop` now imports `zsa` explicitly.
+- host flake modules no longer import `../../modules/system`
 
 ### Phase 2: Host Conversions
 
@@ -431,6 +444,9 @@ Current status:
 - `desktop`, `laptop`, and `pi` now use `flake.modules.nixos.<host>`.
 - `pi` still needs a real provisioned file at `/run/secrets/grafana-secret-key` for deployment-time Grafana startup.
 - Global host defaults for `firefox`, `home-manager`, and `stylix` have been removed in favor of host imports.
+- Global host default selection for `sops` has also been removed in favor of host imports.
+- Global host default selection for `containers`, `display-manager`, and `nixos-cli` has also been removed in favor of host imports.
+- `modules/system` is no longer part of host assembly; it now acts only as backing implementation for feature wrappers that still need migration.
 
 ### Phase 3: Feature Migration
 
@@ -449,10 +465,18 @@ Checklist:
 Current status:
 
 - Flat wrappers now exist for `stylix`, `tailscale`, and `impermanence` under `features/services/`.
+- Flat wrappers now exist for `sops`, `stylix`, `tailscale`, and `impermanence` under `features/services/`.
+- Flat wrappers now exist for `sops`, `stylix`, `tailscale`, and `impermanence` under `features/services/`.
+- Additional flat wrappers now exist under `features/system/` for `containers`, `displayManager`, `nixosCli`, and `zsa`.
+- Additional flat wrappers now exist under `features/system/` for `btrfs`, `containers`, `crossplatformBuilder`, `displayManager`, `fonts`, `nixosCli`, `secureboot`, and `zsa`.
+- Additional flat wrappers now exist under `features/services/` for `clonix`, `grafana`, `prometheusClient`, `prometheusServer`, `remotebuilder`, `searx`, and `unbound`.
 - Host composition now selects these features via imports instead of relying on `hosts/default.nix` defaults.
 - Host-local option sets still carry feature-specific configuration data such as Tailscale auth arguments and impermanence persistence roots.
 - `ben` no longer depends on `allHomeModules`; Home Manager dependencies are now imported explicitly.
 - `hyprbar` and `centerpiece` are now feature-local `flake-file` inputs, colocated with the features that use them.
+- `sops` itself remains a shared infrastructure feature because its input and secret provider are cross-cutting, but host selection is now explicit.
+- `stylix`, `impermanence`, `nvim`, `nix-index-database`, `extra-container`, `nixos-cli`, `hyprbar`, and `centerpiece` are now declared closer to their owning features instead of in the shared base input file.
+- The remaining work to retire `modules/system/` is now mostly moving implementation bodies from that directory into `features/`, not changing host composition entrypoints.
 
 ### Phase 4: Cleanup
 

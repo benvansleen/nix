@@ -37,15 +37,6 @@ in
     facter.report = secrets.hardware."${config.machine.name}-facter.json";
 
     modules = {
-      containers.enable = mkDefault true;
-      display-manager.enable = mkDefault true;
-      fonts.enable = mkDefault false;
-      nixos-cli.enable = mkDefault true;
-      sops = {
-        enable = mkDefault true;
-        system-secrets = secrets.system;
-      };
-      zsa.enable = mkDefault true;
     };
 
     nixpkgs.flake = {

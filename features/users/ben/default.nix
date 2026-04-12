@@ -17,6 +17,15 @@ in
     };
   };
 
+  flake-file.inputs.nvim = {
+    url = "github:benvansleen/nvim/migrate-to-nix-wrapper-modules";
+    inputs = {
+      nixpkgs.follows = "nixpkgs";
+      pre-commit-hooks.follows = "pre-commit-hooks";
+      treefmt-nix.follows = "treefmt-nix";
+    };
+  };
+
   flake.modules.homeManager.ben = {
     imports = [
       (inputs.nvim.homeManagerModules.default or inputs.nvim.homeManagerModules.nvim)

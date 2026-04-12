@@ -45,11 +45,8 @@ lib.importAll ./.
         ];
       };
       containers = {
-        enable = true;
         disable-podman-dns = true;
       };
-      display-manager.enable = false;
-      fonts.enable = false;
       grafana.enable = true;
       impermanence.enable = false;
       maybe.enable = true;
@@ -131,7 +128,6 @@ lib.importAll ./.
         port = 5335;
         num-threads = 4;
       };
-      zsa.enable = false;
     };
 
     environment.systemPackages = with pkgs; [

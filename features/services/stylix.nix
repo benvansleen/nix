@@ -1,9 +1,17 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
 {
+  flake-file.inputs.stylix = {
+    url = "github:nix-community/stylix";
+    inputs = {
+      nixpkgs.follows = "nixpkgs";
+      systems.follows = "systems";
+    };
+  };
+
   flake.modules.nixos.stylix = {
     imports = [ ../../modules/system/stylix.nix ];
 
-    config.modules.stylix.enable = true;
+    config.modules.stylix.enable = lib.mkDefault true;
   };
 
   flake.modules.homeManager.stylix = {

@@ -43,47 +43,6 @@ _: {
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    impermanence = {
-      url = "github:nix-community/impermanence";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-      };
-    };
-
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        pre-commit.inputs.flake-compat.follows = "flake-compat";
-      };
-    };
-
-    nixos-cli = {
-      url = "github:nix-community/nixos-cli";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-compat.follows = "flake-compat";
-        optnix.inputs = {
-          nixpkgs.follows = "nixpkgs";
-          flake-compat.follows = "flake-compat";
-        };
-      };
-    };
-
-    stylix = {
-      url = "github:nix-community/stylix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
-      };
-    };
-
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs = {
@@ -92,32 +51,8 @@ _: {
       };
     };
 
-    nvim = {
-      url = "github:benvansleen/nvim/migrate-to-nix-wrapper-modules";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        pre-commit-hooks.follows = "pre-commit-hooks";
-        treefmt-nix.follows = "treefmt-nix";
-      };
-    };
-
     opencode = {
       url = "github:anomalyco/opencode";
-    };
-
-    clonix = {
-      url = "github:benvansleen/clonix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    extra-container = {
-      url = "github:erikarvstedt/extra-container";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     pre-commit-hooks = {
