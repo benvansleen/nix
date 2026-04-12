@@ -8,7 +8,7 @@
       inputs.self.modules.nixos.containers
       inputs.self.modules.nixos.displayManager
       inputs.self.modules.nixos.nixosCli
-      inputs.self.modules.nixos.prometheusClient
+      inputs.self.modules.nixos."prometheus/client"
       inputs.self.modules.nixos.secureboot
       inputs.self.modules.nixos.searx
       inputs.self.modules.nixos.sops

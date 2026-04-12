@@ -1,13 +1,11 @@
-{ lib, ... }:
+{ inputs, ... }:
 {
-  flake-file.inputs.nix-index-database = {
-    url = "github:nix-community/nix-index-database";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
-
   flake.modules.nixos.homeManager = {
-    imports = [ ../../modules/system/home-manager.nix ];
+    imports = [ inputs.home-manager.nixosModules.home-manager ];
 
-    config.modules.home-manager.enable = lib.mkDefault true;
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+    };
   };
 }

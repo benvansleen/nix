@@ -1,8 +1,29 @@
-{ lib, ... }:
 {
-  flake.modules.nixos.fonts = {
-    imports = [ ../../modules/system/fonts.nix ];
+  flake.modules.nixos.fonts =
+    {
+      pkgs,
+      ...
+    }:
+    {
+      config = {
+        fonts = {
+          enableDefaultPackages = true;
+          packages = with pkgs.nerd-fonts; [
+            iosevka
+            fira-code
+            hack
+            _3270
+            victor-mono
+          ];
 
-    config.modules.fonts.enable = lib.mkDefault true;
-  };
+          fontconfig = {
+            defaultFonts = {
+              serif = [ "Iosevka Etoile" ];
+              sansSerif = [ "Iosevka Aile" ];
+              monospace = [ "Hack" ];
+            };
+          };
+        };
+      };
+    };
 }

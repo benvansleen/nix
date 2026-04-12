@@ -1,3 +1,4 @@
+## TODO: move to packages/
 { pkgs, image, ... }:
 
 pkgs.stdenv.mkDerivation {

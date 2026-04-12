@@ -21,15 +21,6 @@ _: {
     flake-file.url = "github:vic/flake-file";
     import-tree.url = "github:vic/import-tree";
 
-    secrets = {
-      url = "git+ssh://git@github.com/benvansleen/secrets.git";
-      # url = "path:/home/ben/.config/nix/secrets";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
-      };
-    };
-
     nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
     nixos-hardware.url = "github:nixos/nixos-hardware";
 

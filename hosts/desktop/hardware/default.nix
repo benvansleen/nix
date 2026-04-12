@@ -64,7 +64,7 @@
         '';
       });
     };
-    modules.impermanence.persistedDirectories = [
+    persist.directories = [
       "/var/lib/OpenRGB"
     ];
   };

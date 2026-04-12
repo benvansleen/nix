@@ -1,8 +1,13 @@
-{ lib, ... }:
 {
-  flake.modules.nixos.zsa = {
-    imports = [ ../../modules/system/zsa.nix ];
-
-    config.modules.zsa.enable = lib.mkDefault true;
-  };
+  flake.modules.nixos.zsa =
+    {
+      pkgs,
+      ...
+    }:
+    {
+      config = {
+        hardware.keyboard.zsa.enable = true;
+        environment.systemPackages = with pkgs; [ unfree.keymapp ];
+      };
+    };
 }

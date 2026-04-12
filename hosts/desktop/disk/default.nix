@@ -1,4 +1,4 @@
-{ disko, ... }:
+{ disko, config, ... }:
 
 {
   imports = [
@@ -23,12 +23,12 @@
       memoryPercent = 50;
     };
 
+    persist.root = "/persist";
     modules = {
       btrfs = {
-        enable = true;
-        mountpoint = "/persist";
+        mountpoint = config.persist.root;
       };
-      secureboot.enable = true;
+      # secureboot.enable = true;
     };
     disko.devices = {
       disk.main = {

@@ -1,8 +1,14 @@
-{ lib, ... }:
 {
   flake.modules.nixos.crossplatformBuilder = {
-    imports = [ ../../modules/system/crossplatform-builder.nix ];
-
-    config.modules.crossplatform-builder.enable = lib.mkDefault true;
+    config = {
+      boot.binfmt.emulatedSystems = [
+        "wasm32-wasi"
+        "x86_64-windows"
+        "aarch64-linux"
+      ];
+      systemd.services.nix-daemon.requires = [ "systemd-binfmt.service" ];
+      # nix.settings.extra-sandbox-paths = [ "/run/binfmt" ];
+      # systemd.services.nix-daemon.after = [ "systemd-binfmt.service" ];
+    };
   };
 }

@@ -10,6 +10,39 @@ in
 {
   config = {
     modules = {
+      tailscale = {
+        authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
+        tailscale-up-extra-args = [
+          "--ssh"
+          "--accept-routes"
+          "--exit-node=auto:any"
+        ];
+      };
+    };
+
+    nix = {
+      gc.automatic = lib.mkForce false;
+      settings = {
+        cores = 0;
+        max-jobs = 8;
+        max-substitution-jobs = "48";
+      };
+    };
+
+    networking = {
+      nftables.enable = true;
+      networkmanager = {
+        enable = true;
+      };
+    };
+
+    ## Without this, rebuilding os hangs
+    systemd = {
+      services.NetworkManager-wait-online.enable = false;
+      network.wait-online.enable = false;
+    };
+
+    services = {
       clonix = {
         enable = false; # TODO: temporarily disable while restoring data post-repartition
         deployments = [
@@ -40,46 +73,6 @@ in
           }
         ];
       };
-      crossplatform-builder.enable = true;
-      impermanence = {
-        persistRoot = "/persist";
-      };
-      prometheus.client.enable = true;
-      tailscale = {
-        authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
-        tailscale-up-extra-args = [
-          "--ssh"
-          "--accept-routes"
-          "--exit-node=auto:any"
-        ];
-      };
-      searx.enable = false;
-      remotebuilder.enable = true;
-    };
-
-    nix = {
-      gc.automatic = lib.mkForce false;
-      settings = {
-        cores = 0;
-        max-jobs = 8;
-        max-substitution-jobs = "48";
-      };
-    };
-
-    networking = {
-      nftables.enable = true;
-      networkmanager = {
-        enable = true;
-      };
-    };
-
-    ## Without this, rebuilding os hangs
-    systemd = {
-      services.NetworkManager-wait-online.enable = false;
-      network.wait-online.enable = false;
-    };
-
-    services = {
       openssh = {
         enable = true;
         settings = {
