@@ -58,17 +58,18 @@ Hosts are assembled from features, but are not considered part of the reusable `
 
 ### Naming Convention
 
-Use path-derived exported names wherever possible.
+Use flat exported feature names.
+
+Directories are for organization. Public `flake.modules` names should stay simple and semantic.
 
 Examples:
 
-- `features/nixos/system/base.nix` -> `self.modules.nixos.system.base`
-- `features/nixos/services/tailscale.nix` -> `self.modules.nixos.services.tailscale`
-- `features/homeManager/apps/firefox.nix` -> `self.modules.homeManager.apps.firefox`
-- `features/users/ben/default.nix` -> `self.modules.nixos.users.ben` and `self.modules.homeManager.users.ben`
-- `hosts/desktop/default.nix` -> `self.modules.nixos.hosts.desktop`
+- `features/programs/firefox.nix` -> `self.modules.nixos.firefox` and `self.modules.homeManager.firefox`
+- `features/services/homeManager.nix` -> `self.modules.nixos.homeManager`
+- `features/users/ben/default.nix` -> `self.modules.nixos.ben` and `self.modules.homeManager.ben`
+- `hosts/desktop/flake-module.nix` -> `self.modules.nixos.desktop`
 
-Prefer attribute paths over flattened string names.
+Do not try to mirror deep directory structure in the exported attr path. `flake.modules` works best when directories express grouping and exported names express features.
 
 ### Shared Code Placement
 
@@ -99,7 +100,7 @@ Composition should move toward module `imports`, not global loading plus boolean
 Preferred:
 
 ```nix
-imports = [ inputs.self.modules.nixos.services.tailscale ];
+imports = [ inputs.self.modules.nixos.tailscale ];
 ```
 
 Legacy pattern to retire gradually:
@@ -122,8 +123,8 @@ Users are first-class reusable features.
 
 For example, `ben` should eventually be represented as:
 
-- `self.modules.nixos.users.ben`
-- `self.modules.homeManager.users.ben`
+- `self.modules.nixos.ben`
+- `self.modules.homeManager.ben`
 
 The NixOS side creates and configures the system user and wires Home Manager when appropriate.
 
@@ -135,9 +136,9 @@ Hosts are final compositions stored under `hosts/` and exported as NixOS host mo
 
 Examples:
 
-- `self.modules.nixos.hosts.desktop`
-- `self.modules.nixos.hosts.laptop`
-- `self.modules.nixos.hosts.pi`
+- `self.modules.nixos.desktop`
+- `self.modules.nixos.laptop`
+- `self.modules.nixos.pi`
 
 Each host should mostly consist of imports plus host-local overrides.
 
@@ -201,24 +202,16 @@ features/
       overlays.nix
   generic/
     constants.nix
-  nixos/
-    system/
-      base.nix
-    services/
-      home-manager.nix
-      stylix.nix
-      tailscale.nix
-      impermanence.nix
-    apps/
-      firefox.nix
-  homeManager/
-    base/
-      cli.nix
-    apps/
-      firefox.nix
-      emacs.nix
-    desktop/
-      window-manager.nix
+  services/
+    homeManager.nix
+    stylix.nix
+    tailscale.nix
+    impermanence.nix
+  programs/
+    firefox.nix
+    emacs.nix
+  desktop/
+    window-manager.nix
   users/
     ben/
       default.nix
@@ -261,14 +254,14 @@ This is especially desirable for niche dependencies that only exist to support o
 
 The eventual `features/users/ben/default.nix` should likely define both:
 
-- `flake.modules.nixos.users.ben`
-- `flake.modules.homeManager.users.ben`
+- `flake.modules.nixos.ben`
+- `flake.modules.homeManager.ben`
 
 The NixOS module should import the HM user module or otherwise wire it in as part of a multi-context feature.
 
 ### Host Module
 
-The eventual `hosts/desktop/default.nix` should mostly compose features.
+The eventual `hosts/desktop/flake-module.nix` should mostly compose features.
 
 Roughly:
 
@@ -277,13 +270,13 @@ Roughly:
 {
   flake.modules.nixos.hosts.desktop = {
     imports = [
-      inputs.self.modules.nixos.system.base
-      inputs.self.modules.nixos.services.home-manager
-      inputs.self.modules.nixos.services.stylix
-      inputs.self.modules.nixos.services.tailscale
-      inputs.self.modules.nixos.services.impermanence
-      inputs.self.modules.nixos.apps.firefox
-      inputs.self.modules.nixos.users.ben
+      inputs.self.modules.nixos.system-base
+      inputs.self.modules.nixos.homeManager
+      inputs.self.modules.nixos.stylix
+      inputs.self.modules.nixos.tailscale
+      inputs.self.modules.nixos.impermanence
+      inputs.self.modules.nixos.firefox
+      inputs.self.modules.nixos.ben
     ];
 
     # desktop-specific overrides
@@ -307,30 +300,32 @@ Current responsibilities to relocate:
 
 Most of these should migrate into:
 
-- `features/nixos/services/*`
-- `features/nixos/apps/*`
-- `features/nixos/system/*`
+- `features/services/*`
+- `features/programs/*`
+- `features/system/*`
 
 Examples:
 
-- `modules/system/home-manager.nix` -> `features/nixos/services/home-manager.nix`
-- `modules/system/stylix.nix` -> `features/nixos/services/stylix.nix`
-- `modules/system/tailscale.nix` -> `features/nixos/services/tailscale.nix`
-- `modules/system/firefox.nix` -> `features/nixos/apps/firefox.nix`
+- `modules/system/home-manager.nix` -> `features/services/homeManager.nix`
+- `modules/system/stylix.nix` -> `features/services/stylix.nix`
+- `modules/system/tailscale.nix` -> `features/services/tailscale.nix`
+- `modules/system/firefox.nix` -> `features/programs/firefox.nix`
 
 ### Current `modules/home/*`
 
-Most of these should migrate into:
+Most of these should migrate into shared feature directories wherever a feature spans both contexts.
 
-- `features/homeManager/base/*`
-- `features/homeManager/apps/*`
-- `features/homeManager/desktop/*`
+Likely destinations:
+
+- `features/programs/*`
+- `features/desktop/*`
+- `features/base/*`
 
 Examples:
 
-- `modules/home/firefox.nix` -> `features/homeManager/apps/firefox.nix`
-- `modules/home/emacs/default.nix` -> `features/homeManager/apps/emacs.nix`
-- `modules/home/window-manager/default.nix` -> `features/homeManager/desktop/window-manager.nix`
+- `modules/home/firefox.nix` -> `features/programs/firefox.nix`
+- `modules/home/emacs/default.nix` -> `features/programs/emacs.nix`
+- `modules/home/window-manager/default.nix` -> `features/desktop/window-manager.nix`
 
 ### Current `users/ben/*`
 
@@ -365,15 +360,21 @@ Deliverables:
 
 Checklist:
 
-- [ ] Add `flake-file` input and module bootstrap.
-- [ ] Add `flake-parts` input and modules support.
-- [ ] Add `import-tree` input.
-- [ ] Create `flake-file.nix` as the handwritten root.
-- [ ] Generate `flake.nix` from `flake-file.nix`.
-- [ ] Import both `./features` and `./hosts` recursively.
-- [ ] Move current `apps`, `checks`, `devShells`, and `formatter` into `perSystem` without behavior changes.
-- [ ] Move `nixosConfigurations` into a flake-parts module.
-- [ ] Verify `nix flake check` still evaluates.
+- [x] Add `flake-file` input and module bootstrap.
+- [x] Add `flake-parts` input and modules support.
+- [x] Add `import-tree` input.
+- [x] Create `flake-file.nix` as the handwritten root.
+- [x] Generate `flake.nix` from `flake-file.nix`.
+- [x] Import both `./features` and `./hosts` recursively.
+- [x] Move current `apps`, `checks`, `devShells`, and `formatter` into `perSystem` without behavior changes.
+- [x] Move `nixosConfigurations` into a flake-parts module.
+- [x] Verify `nix flake check` evaluates for all hosts.
+
+Current status:
+
+- `desktop`, `laptop`, and `pi` all evaluate through the new flake entrypoint.
+- `nix flake check` passes on the working tree.
+- `pi` now uses an explicit Grafana file-provider secret path instead of relying on the removed upstream default.
 
 ### Phase 1: First Vertical Slice
 
@@ -383,28 +384,33 @@ Objective:
 
 Initial slice:
 
-- Home Manager service wiring
-- Firefox in both NixOS and Home Manager
+- Home Manager bootstrap wiring
+- Firefox as a unified multi-context feature
 - user `ben`
 - host `desktop`
 
 Deliverables:
 
-- `features/nixos/services/home-manager.nix`
-- `features/nixos/apps/firefox.nix`
-- `features/homeManager/apps/firefox.nix`
+- `features/services/homeManager.nix`
+- `features/programs/firefox.nix`
 - `features/users/ben/default.nix`
-- `hosts/desktop/default.nix` converted to dendritic composition
+- `hosts/desktop/flake-module.nix`
 
 Checklist:
 
-- [ ] Port `modules/system/home-manager.nix` into `features/nixos/services/home-manager.nix`.
-- [ ] Port `modules/system/firefox.nix` into `features/nixos/apps/firefox.nix`.
-- [ ] Port `modules/home/firefox.nix` into `features/homeManager/apps/firefox.nix`.
-- [ ] Create `features/users/ben/default.nix` as a multi-context feature.
-- [ ] Convert `hosts/desktop/default.nix` to import-based composition.
-- [ ] Keep compatibility with any remaining old modules the slice still depends on.
-- [ ] Verify `nixos-rebuild build --flake .#desktop` or equivalent evaluation succeeds.
+- [x] Add `features/services/homeManager.nix` as the first bootstrap service feature.
+- [x] Add `features/programs/firefox.nix` as a unified multi-context feature.
+- [x] Create `features/users/ben/default.nix` as a multi-context feature.
+- [x] Convert `hosts/desktop/flake-module.nix` to import-based composition.
+- [x] Keep compatibility with remaining old Home Manager modules through transitional imports.
+- [x] Verify desktop evaluates through the new host-module path.
+
+Current status:
+
+- Public `flake.modules` names are now flat feature names.
+- Feature directories remain grouped by concern, but exported names do not mirror directory depth.
+- `homeManager` is preferred over `home-manager` for new public feature names.
+- `laptop` now also evaluates through the new flat-name host-module path.
 
 ### Phase 2: Host Conversions
 
@@ -414,10 +420,15 @@ Objective:
 
 Checklist:
 
-- [ ] Convert `hosts/laptop/default.nix` to import-based composition.
-- [ ] Convert `hosts/pi/default.nix` to import-based composition.
+- [x] Convert `hosts/laptop/flake-module.nix` to import-based composition.
+- [x] Convert `hosts/pi/flake-module.nix` to import-based composition.
 - [ ] Decide which host-private modules remain under each host versus becoming reusable features.
-- [ ] Verify all hosts evaluate through the new `flake.nixosConfigurations` path.
+- [x] Verify all hosts evaluate through the new `flake.nixosConfigurations` path.
+
+Current status:
+
+- `desktop`, `laptop`, and `pi` now use `flake.modules.nixos.<host>`.
+- `pi` still needs a real provisioned file at `/run/secrets/grafana-secret-key` for deployment-time Grafana startup.
 
 ### Phase 3: Feature Migration
 
@@ -458,7 +469,8 @@ These rules are intended to keep the migration predictable.
 - Every file under `features/` should be a real flake-class module suitable for recursive import.
 - Keep host-specific code under `hosts/` unless it is genuinely reusable.
 - Keep root-owned inputs minimal.
-- Prefer path-derived names over invented flat names.
+- Prefer flat feature names in `flake.modules`.
+- Use directories for organization, not as a namespace that must be mirrored in exported names.
 
 ## Verification Checklist
 

@@ -28,6 +28,7 @@ let
                   (filetype == "regular")
                   (hasSuffix ".nix" name)
                   (name != "default.nix")
+                  (name != "flake-module.nix")
                 ]
               )
             ]

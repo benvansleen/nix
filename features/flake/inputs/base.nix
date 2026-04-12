@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+_: {
   flake-file.nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"

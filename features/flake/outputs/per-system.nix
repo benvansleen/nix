@@ -1,7 +1,5 @@
 {
   inputs,
-  self,
-  lib,
   ...
 }:
 let

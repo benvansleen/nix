@@ -32,6 +32,8 @@ in
           http_addr = "0.0.0.0";
           http_port = cfg.port;
         };
+        # TODO: Preserve pre-26.05 behavior until this moves to explicit secret management.
+        security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
       };
     };
 

@@ -1,12 +1,25 @@
 { inputs, ... }:
 let
   localLib = import ../../../lib inputs;
-  mkSystem = localLib.mkSystem (import ../../../overlays (inputs // { lib = localLib; }));
+  overlays = import ../../../overlays (inputs // { lib = localLib; });
+  mkFlakeHostSystem =
+    hostModule:
+    localLib.nixosSystem {
+      specialArgs = inputs;
+      modules = [
+        {
+          nixpkgs = {
+            inherit overlays;
+          };
+        }
+        hostModule
+      ];
+    };
 in
 {
   flake.nixosConfigurations = {
-    desktop = mkSystem ../../../hosts/desktop;
-    laptop = mkSystem ../../../hosts/laptop;
-    pi = mkSystem ../../../hosts/pi;
+    desktop = mkFlakeHostSystem inputs.self.modules.nixos.desktop;
+    laptop = mkFlakeHostSystem inputs.self.modules.nixos.laptop;
+    pi = mkFlakeHostSystem inputs.self.modules.nixos.pi;
   };
 }
