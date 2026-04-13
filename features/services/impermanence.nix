@@ -92,7 +92,6 @@
         ...
       }:
       {
-        imports = [ ../../modules/home/impermanence.nix ];
         options.persist = {
           files = lib.mkOption {
             type = with lib.types; listOf str;

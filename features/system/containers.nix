@@ -58,4 +58,12 @@
           ];
         };
     };
+
+  flake.modules.homeManager.containers = {
+    services.podman.enable = true;
+    persist.directories = [
+      "@data@/containers"
+      "@cache@/containers"
+    ];
+  };
 }

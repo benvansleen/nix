@@ -46,4 +46,12 @@
         })
       ];
     };
+
+  flake.modules.homeManager.sops =
+    { config, ... }:
+    {
+      imports = [
+        (inputs.sops-nix.homeManagerModules.default or inputs.sops-nix.homeManagerModules.sops)
+      ];
+    };
 }
