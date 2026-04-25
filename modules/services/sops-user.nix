@@ -1,22 +1,48 @@
 { inputs, ... }:
 
 {
-  flake.lib.sops-user =
-    username:
-    { config, ... }:
+  flake.modules.nixos.sops-user =
+    { config, lib, ... }:
     {
       imports = [ inputs.self.modules.nixos.sops ];
 
+      options.modules.sops-user = with lib; {
+        username = mkOption {
+          type = types.str;
+          description = "username of sops-user";
+        };
+      };
+
       config =
         let
-          user = config.users.users.${username};
+          cfg = config.modules.sops-user;
+          user = config.users.users.${cfg.username};
         in
         {
-          home-manager.users.${username}.imports = [
+          home-manager.users.${cfg.username}.imports = [
             inputs.self.modules.homeManager.sops
+            {
+              sops = inputs.secrets.${cfg.username} "${user.home}/.ssh/master";
+            }
           ];
 
-          users.users.${username}.hashedPasswordFile = config.sops.secrets."${user}-password".path;
+          sops.secrets = {
+            ssh_master_pem = {
+              path = "${user}/.ssh/master";
+              owner = user;
+            };
+            ssh_master_pub = {
+              path = "${user}/.ssh/master.pub";
+              owner = user;
+            };
+          };
+          # By default, nix-sops will create the .ssh directory as owned by root.
+          system.activationScripts."user-owns-.ssh".text = ''
+            chown ${cfg.username} ${user.home}/.ssh
+          '';
+
+          users.users.${cfg.username}.hashedPasswordFile =
+            config.sops.secrets."${cfg.username}-password".path;
         };
     };
 }

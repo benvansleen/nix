@@ -7,35 +7,103 @@ let
   homeDir = "/home/${user}";
 in
 {
-  flake.modules.homeManager.${user} = {
+  flake.modules.homeManager.${user} =
+    {
+      osConfig,
+      pkgs,
+      lib,
+      ...
+    }:
+    {
+      imports = with inputs.self.modules.homeManager; [
+        ben-cli
+        ben-programs
+        ben-stylix
+        ben-windowManager
 
-    # home-manager.users.${user}.imports =
-    #   with inputs.self.modules.homeManager;
-    #   [
-    #     ben
-    #     impermanence
-    #     sops
-    #   ]
-    #   ++ lib.optionals (pkgs.stdenv.hostPlatform.system == "x86_64-linux") [
-    #     inputs.centerpiece.hmModules.x86_64-linux.default
-    #   ];
+        impermanence
+        firefox
+        ollamaCopilot
+      ];
 
-    imports = [
-      inputs.self.modules.homeManager.ben-cli
-      inputs.self.modules.homeManager.ben-hyprland
-      inputs.self.modules.homeManager.ben-programs
-      inputs.self.modules.homeManager.ben-stylix
+      config =
+        let
+          dirs = {
+            root = homeDir;
+            config = ".config";
+            data = ".local/share";
+            state = ".local/state";
+            cache = ".cache";
+          };
+        in
+        {
+          persist.directories = [
+            "${dirs.config}/nix"
+            "Code"
+            "Documents"
+            "Downloads"
+            "Pictures"
+          ]
+          ++ lib.optionals osConfig.services.hardware.openrgb.enable [
+            "${dirs.config}/OpenRGB"
+          ];
 
-      inputs.self.modules.homeManager.impermanence
+          modules = {
+            ollama-copilot = {
+              num-tokens = 30;
+              model = "hf.co/unsloth/Qwen3-30B-A3B-Instruct-2507-GGUF:Q4_K_XL";
+              system = "respond only by completing the code. What you write after <MID> will be directly inserted between <PRE> and <SUF>.";
+            };
+            windowManager = {
+              terminal = pkgs.ghostty;
+            };
+          };
 
-      (import ../../../users/ben/home.nix {
-        inherit inputs;
-        inherit user;
-        directory = homeDir;
-        secrets = inputs.secrets.${user};
-      })
-    ];
-  };
+          home = {
+            username = user;
+            homeDirectory = dirs.root;
+            packages = with pkgs; [
+              bandwhich
+              bottom
+              nix-output-monitor
+              nh
+              nixd
+            ];
+
+            file.".ssh/config".text = ''
+              IdentityFile ${dirs.root}/.ssh/master
+              UpdateHostKeys no
+            '';
+          };
+
+          xdg = {
+            enable = true;
+            configHome = "${dirs.root}/${dirs.config}";
+            dataHome = "${dirs.root}/${dirs.data}";
+            stateHome = "${dirs.root}/${dirs.state}";
+          };
+
+          programs = {
+            bottom.enable = true;
+            git = {
+              enable = true;
+              settings = {
+                user = {
+                  name = user;
+                  email = "benvansleen@gmail.com";
+                };
+                init.defaultBranch = "master";
+              };
+            };
+          };
+
+          sops = inputs.secrets.${user} "${dirs.root}/.ssh/master" // {
+            secrets.github_copilot.path = "${dirs.config}/github-copilot/apps.json";
+          };
+
+          home.stateVersion = "24.11";
+        };
+    };
 
   flake.modules.nixos.${user} =
     {
@@ -44,28 +112,15 @@ in
       ...
     }:
     {
-      imports = [
-        (inputs.self.lib.sops-user user)
+      imports = with inputs.self.modules.nixos; [
+        sops-user
       ];
 
       home-manager.users.${user}.imports = [
         inputs.self.modules.homeManager.${user}
       ];
 
-      sops.secrets = {
-        ssh_master_pem = {
-          path = "${config.users.users.${user}}/.ssh/master";
-          owner = user;
-        };
-        ssh_master_pub = {
-          path = "${config.users.users.${user}}/.ssh/master.pub";
-          owner = user;
-        };
-      };
-      # By default, nix-sops will create the .ssh directory as owned by root.
-      system.activationScripts."user-owns-.ssh".text = ''
-        chown ${user} ${config.users.users.${user}.home}/.ssh
-      '';
+      modules.sops-user.username = user;
 
       programs = {
         hyprland = {

@@ -25,7 +25,7 @@
             enableTelevisionIntegration = false;
           };
         };
-        modules.impermanence.persistedDirectories = [
+        persist.directories = [
           "@config@/television/cable"
           "@cache@/nix-search-tv"
         ];

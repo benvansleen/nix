@@ -110,7 +110,7 @@
     in
     {
       config = {
-        modules.impermanence.persistedFiles = [ "@data@/zsh/history" ];
+        persist.files = [ "@data@/zsh/history" ];
 
         programs.zsh = {
           shellAliases =

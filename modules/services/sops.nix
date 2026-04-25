@@ -34,6 +34,15 @@
           sops = inputs.secrets.system "${
             if (config.environment ? persistence) then config.persist.root else ""
           }/etc/ssh/ssh_host_ed25519_key";
+
+          users.mutableUsers = false;
+          users.users.root = {
+            hashedPassword = null;
+            hashedPasswordFile = config.sops.secrets.root-password.path;
+            openssh.authorizedKeys.keys = [
+              "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINioMpgKUSAxRhCf7rpH7n1OJgpGog2Uxm+jYfCwS4PL benvansleen@gmail.com"
+            ];
+          };
         }
 
         (lib.mkIf pkgs.stdenv.hostPlatform.isAarch64 {
@@ -47,11 +56,9 @@
       ];
     };
 
-  flake.modules.homeManager.sops =
-    { config, ... }:
-    {
-      imports = [
-        (inputs.sops-nix.homeManagerModules.default or inputs.sops-nix.homeManagerModules.sops)
-      ];
-    };
+  flake.modules.homeManager.sops = {
+    imports = [
+      (inputs.sops-nix.homeManagerModules.default or inputs.sops-nix.homeManagerModules.sops)
+    ];
+  };
 }

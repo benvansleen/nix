@@ -1,7 +1,13 @@
+{ inputs, ... }:
+
 {
   flake.modules.homeManager.ben-stylix =
     { pkgs, osConfig, ... }:
     {
+      imports = with inputs.self.modules.homeManager; [
+        stylix
+      ];
+
       stylix = {
         enable = osConfig.machine.desktop;
         autoEnable = true;
