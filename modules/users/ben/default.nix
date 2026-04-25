@@ -21,6 +21,7 @@ in
     #   ];
 
     imports = [
+      inputs.self.modules.homeManager.ben-cli
       inputs.self.modules.homeManager.ben-ghostty
       inputs.self.modules.homeManager.ben-nvim
 
