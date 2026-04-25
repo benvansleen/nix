@@ -22,8 +22,9 @@ in
 
     imports = [
       inputs.self.modules.homeManager.ben-cli
-      inputs.self.modules.homeManager.ben-ghostty
-      inputs.self.modules.homeManager.ben-nvim
+      inputs.self.modules.homeManager.ben-hyprland
+      inputs.self.modules.homeManager.ben-programs
+      inputs.self.modules.homeManager.ben-stylix
 
       inputs.self.modules.homeManager.impermanence
 
