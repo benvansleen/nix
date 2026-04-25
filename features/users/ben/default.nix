@@ -1,6 +1,5 @@
 {
   inputs,
-  lib,
   ...
 }:
 let
@@ -8,7 +7,7 @@ let
   homeDir = "/home/${user}";
 in
 {
-  flake.modules.homeManager.ben = {
+  flake.modules.homeManager.${user} = {
 
     # home-manager.users.${user}.imports =
     #   with inputs.self.modules.homeManager;
@@ -26,7 +25,6 @@ in
       inputs.self.modules.homeManager.ben-nvim
 
       inputs.self.modules.homeManager.impermanence
-      inputs.self.modules.homeManager.sops
 
       (import ../../../users/ben/home.nix {
         inherit inputs;
@@ -37,7 +35,7 @@ in
     ];
   };
 
-  flake.modules.nixos.ben =
+  flake.modules.nixos.${user} =
     {
       config,
       pkgs,
@@ -49,8 +47,23 @@ in
       ];
 
       home-manager.users.${user}.imports = [
-        inputs.self.modules.homeManager.ben
+        inputs.self.modules.homeManager.${user}
       ];
+
+      sops.secrets = {
+        ssh_master_pem = {
+          path = "${config.users.users.${user}}/.ssh/master";
+          owner = user;
+        };
+        ssh_master_pub = {
+          path = "${config.users.users.${user}}/.ssh/master.pub";
+          owner = user;
+        };
+      };
+      # By default, nix-sops will create the .ssh directory as owned by root.
+      system.activationScripts."user-owns-.ssh".text = ''
+        chown ${user} ${config.users.users.${user}.home}/.ssh
+      '';
 
       programs = {
         hyprland = {
