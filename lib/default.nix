@@ -49,7 +49,6 @@ let
             { nixpkgs = { inherit overlays; }; }
             ../modules/system
             ../hosts
-            ../users
             host
           ];
         };
@@ -79,22 +78,6 @@ let
           ))
         ]);
 
-      mkUser =
-        {
-          enable,
-          user,
-          extraHomeModules,
-          extraConfig,
-        }:
-        extraConfig
-        // {
-          home-manager = enable {
-            users.${user} = {
-              imports = allHomeModules ++ extraHomeModules;
-            };
-          };
-        };
-
       eachSystem =
         f:
         lib.genAttrs (import systems) (
@@ -109,7 +92,7 @@ let
         f:
         with lib;
         let
-          users = pipe ../users [
+          users = pipe ../modules/users [
             builtins.readDir
             (filterAttrs (_name: filetype: (filetype == "directory")))
             (mapAttrsToList (name: _filetype: name))
