@@ -1,6 +1,6 @@
 {
   flake.modules.homeManager.opencode =
-    { lib, ... }:
+    { config, lib, ... }:
     {
       config = {
         programs.opencode = {
@@ -10,11 +10,11 @@
             theme = lib.mkForce "gruvbox"; # override stylix theme
           };
         };
-        persist.directories = [
-          "@config@/opencode"
-          "@state@/opencode"
-          "@data@/opencode"
-          "@cache@/opencode"
+        persist.directories = with config.xdg; [
+          "${configHome}/opencode"
+          "${stateHome}/opencode"
+          "${dataHome}/opencode"
+          "${cacheHome}/opencode"
         ];
       };
     };

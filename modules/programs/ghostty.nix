@@ -7,7 +7,7 @@
       ...
     }:
     {
-      options.modules.cli.ghostty = with lib; {
+      options.modules.ghostty = with lib; {
         package = mkOption {
           description = "ghostty package";
           type = types.package;

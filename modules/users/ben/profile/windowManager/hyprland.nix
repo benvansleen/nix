@@ -9,7 +9,7 @@
     }:
 
     let
-      inherit (config.modules.window-manager) terminal;
+      inherit (config.modules.windowManager) terminal;
       plugin-isEnabled =
         plugin: lib.elem pkgs.hyprlandPlugins."${plugin}" config.wayland.windowManager.hyprland.plugins;
 
@@ -40,10 +40,7 @@
       '';
 
       omnisearch =
-        if config.modules.window-manager.centerpiece.enable then
-          "centerpiece"
-        else
-          "${lib.getExe pkgs.wofi} --show drun";
+        if config.programs.centerpiece.enable then "centerpiece" else "${lib.getExe pkgs.wofi} --show drun";
 
       guiEditor = config.wrappers.neovim.hosts.neovide.package;
     in

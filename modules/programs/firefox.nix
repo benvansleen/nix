@@ -83,12 +83,12 @@
           cfg = config.modules.firefox;
         in
         {
-          persist.directories = [
+          persist.directories = with config.xdg; [
             ".mozilla"
-            "@cache@/mozilla"
+            "${cacheHome}/mozilla"
 
             ".floorp"
-            "@cache@/floorp"
+            "${cacheHome}/floorp"
           ];
 
           xdg.desktopEntries = {

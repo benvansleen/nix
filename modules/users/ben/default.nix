@@ -21,6 +21,7 @@ in
         ben-stylix
         ben-windowManager
 
+        containers
         impermanence
         firefox
         ollamaCopilot
@@ -64,7 +65,6 @@ in
             homeDirectory = dirs.root;
             packages = with pkgs; [
               bandwhich
-              bottom
               nix-output-monitor
               nh
               nixd

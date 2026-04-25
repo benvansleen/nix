@@ -1,22 +1,16 @@
 {
   flake.modules.homeManager.nushell =
-    { config, pkgs, ... }:
+    {
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
     {
       config = {
         persist.directories = [
-          "@config@/nushell"
+          "${config.xdg.configHome}/nushell"
         ];
-        # modules = {
-        #   cli = {
-        #     television = {
-        #       enable = mkDefault true;
-        #       enableNushellIntegration = false;
-        #     };
-        #   };
-        #   impermanence.persistedDirectories = [
-        #     "@config@/nushell"
-        #   ];
-        # };
         programs = {
           atuin = {
             enable = true;
@@ -50,15 +44,15 @@
               # units
             ];
             shellAliases = with pkgs; {
-              cd = mkIf config.programs.zoxide.enableNushellIntegration "z";
-              sudo = mkIf (lib.constants.privilege-escalation == "doas") "doas";
+              cd = lib.mkIf config.programs.zoxide.enableNushellIntegration "z";
+              sudo = lib.mkIf (lib.constants.privilege-escalation == "doas") "doas";
 
-              htop = "${getExe bottom} -b";
+              htop = "${lib.getExe bottom} -b";
               # ps = "${getExe procs}";
-              grep = "${getExe ripgrep}";
+              grep = "${lib.getExe ripgrep}";
               # find = "${getExe fd}fd";
-              cat = "${getExe bat}";
-              tree = "${getExe eza} --tree";
+              cat = "${lib.getExe bat}";
+              tree = "${lib.getExe eza} --tree";
               # du = "${getExe dust}";
             };
 

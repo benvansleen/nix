@@ -52,9 +52,9 @@ in
             encode zstd gzip
             reverse_proxy pi:${toString config.modules.prometheus.server.port}
           '';
-          searx = /* caddy */ ''
+          searx = lib.mkIf services.searx.enable /* caddy */ ''
             encode zstd gzip
-            reverse_proxy pi:${toString config.modules.searx.port}
+            reverse_proxy pi:${toString config.services.searx.settings.port}
           '';
         };
 

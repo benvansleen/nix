@@ -8,6 +8,7 @@
       ben
 
       btrfs
+      inputs.self.modules.nixos."borgbackup/client"
       clonix
       containers
       crossplatformBuilder
@@ -18,7 +19,6 @@
       nixosCli
       inputs.self.modules.nixos."prometheus/client"
       remotebuilder
-      searx
       secureboot
       sops
       stylix

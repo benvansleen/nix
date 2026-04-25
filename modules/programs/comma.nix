@@ -6,18 +6,20 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  flake.modules.homeManager.comma = {
-    imports = [
-      inputs.nix-index-database.homeModules.nix-index
-    ];
+  flake.modules.homeManager.comma =
+    { config, ... }:
+    {
+      imports = [
+        inputs.nix-index-database.homeModules.nix-index
+      ];
 
-    config = {
-      persist.files = [ "@state@/comma-choices" ];
+      config = {
+        persist.files = [ "${config.xdg.stateHome}/comma-choices" ];
 
-      programs = {
-        nix-index.enable = true;
-        nix-index-database.comma.enable = true;
+        programs = {
+          nix-index.enable = true;
+          nix-index-database.comma.enable = true;
+        };
       };
     };
-  };
 }

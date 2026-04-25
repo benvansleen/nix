@@ -59,11 +59,13 @@
         };
     };
 
-  flake.modules.homeManager.containers = {
-    services.podman.enable = true;
-    persist.directories = [
-      "@data@/containers"
-      "@cache@/containers"
-    ];
-  };
+  flake.modules.homeManager.containers =
+    { config, ... }:
+    {
+      services.podman.enable = true;
+      persist.directories = with config.xdg; [
+        "${dataHome}/containers"
+        "${cacheHome}/containers"
+      ];
+    };
 }

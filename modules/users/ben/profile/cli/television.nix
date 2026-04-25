@@ -26,8 +26,8 @@
           };
         };
         persist.directories = [
-          "@config@/television/cable"
-          "@cache@/nix-search-tv"
+          "${config.xdg.configHome}/television/cable"
+          "${config.xdg.cacheHome}/nix-search-tv"
         ];
         home.file.".config/television/config.toml".source = toToml "television-config.toml" {
           tick_rate = 50;

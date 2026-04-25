@@ -110,8 +110,6 @@
     in
     {
       config = {
-        persist.files = [ "@data@/zsh/history" ];
-
         programs.zsh = {
           shellAliases =
             with lib;

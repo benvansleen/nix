@@ -28,12 +28,12 @@
 
           sops.secrets = {
             ssh_master_pem = {
-              path = "${user}/.ssh/master";
-              owner = user;
+              path = "${user.home}/.ssh/master";
+              owner = cfg.username;
             };
             ssh_master_pub = {
-              path = "${user}/.ssh/master.pub";
-              owner = user;
+              path = "${user.home}/.ssh/master.pub";
+              owner = cfg.username;
             };
           };
           # By default, nix-sops will create the .ssh directory as owned by root.

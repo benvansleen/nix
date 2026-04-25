@@ -55,16 +55,16 @@
           '';
         };
 
-        modules.cli.ghostty.settings = {
+        modules.ghostty.settings = {
           useStylixTheme = true;
           custom-shaders = [
             # "./retro-terminal-amber.glsl"
             # "./shaders/bettercrt.glsl"
           ];
           options = {
-            command = mkIf config.modules.cli.tmux.enable "tmux-attach-to-last-session";
-            confirm-close-surface = mkIf config.modules.cli.tmux.enable "false";
-            app-notifications = mkIf config.modules.cli.tmux.enable "no-clipboard-copy";
+            command = mkIf config.programs.tmux.enable "tmux-attach-to-last-session";
+            confirm-close-surface = mkIf config.programs.tmux.enable "false";
+            app-notifications = mkIf config.programs.tmux.enable "no-clipboard-copy";
 
             resize-overlay = "never";
             window-decoration = "false";

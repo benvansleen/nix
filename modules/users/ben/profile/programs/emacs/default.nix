@@ -2,7 +2,7 @@
 
 {
   flake.modules.homeManager.ben-emacs =
-    { pkgs, ... }:
+    { config, pkgs, ... }:
     {
       imports = with inputs.self.modules.homeManager; [
         emacs
@@ -13,7 +13,7 @@
           delta # required for `magit-delta`
         ];
 
-        persist.directories = [ "@config@/emacs/var" ];
+        persist.directories = [ "${config.xdg.configHome}/emacs/var" ];
 
         modules.emacs = {
           init-el = ./init.el;

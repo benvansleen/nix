@@ -11,7 +11,12 @@
   };
 
   flake.modules.homeManager.ben-nvim =
-    { osConfig, pkgs, ... }:
+    {
+      config,
+      osConfig,
+      pkgs,
+      ...
+    }:
     {
       imports = [
         (inputs.nvim.homeManagerModules.default or inputs.nvim.homeManagerModules.nvim)
@@ -38,12 +43,11 @@
             };
           };
 
-          persist.directories = [
-            "@config@/nvim"
-            "@data@/nvim"
-            "@state@/nvim"
+          persist.directories = with config.xdg; [
+            "${configHome}/nvim"
+            "${dataHome}/nvim"
+            "${stateHome}/nvim"
           ];
         };
-
     };
 }

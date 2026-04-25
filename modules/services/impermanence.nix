@@ -111,29 +111,11 @@
           };
         };
         config =
-          with lib;
           let
-            replace-home-dir = replaceStrings [ "@config@" "@data@" "@state@" "@cache@" ] (
-              let
-                home = config.home.homeDirectory;
-              in
-              [
-                "${home}/.config"
-                "${home}/.local/share"
-                "${home}/.local/state"
-                "${home}/.cache"
-              ]
-            );
-            files = map replace-home-dir config.persist.files;
-            directories = map (
-              dir:
-              let
-                dir' = if isAttrs dir then dir else { directory = dir; };
-              in
-              dir' // { directory = replace-home-dir dir'.directory; }
-            ) config.persist.directories;
+            normalize = lib.strings.removePrefix "${config.home.homeDirectory}/";
+            files = map normalize config.persist.files;
+            directories = map normalize config.persist.directories;
           in
-
           {
             home = {
               persistence.${osConfig.persist.root} = {

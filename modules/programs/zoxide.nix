@@ -7,7 +7,7 @@
     in
     {
       config = mkIf config.programs.zoxide.enable {
-        modules.impermanence.persistedDirectories = [ "@data@/zoxide" ];
+        persist.directories = [ "${config.xdg.dataHome}/zoxide" ];
 
         programs.zsh.shellAliases = mkIf config.programs.zoxide.enableZshIntegration {
           cd = "z";

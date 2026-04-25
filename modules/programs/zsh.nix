@@ -3,6 +3,8 @@
     { config, pkgs, ... }:
     {
       config = {
+        persist.files = [ "${config.xdg.dataHome}/zsh/history" ];
+
         programs = {
           atuin = {
             enable = true;

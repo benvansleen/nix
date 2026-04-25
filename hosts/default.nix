@@ -90,7 +90,6 @@ in
     environment = {
       systemPackages = with pkgs; [
         bat
-        bottom
         fd
         git
         htop-vim

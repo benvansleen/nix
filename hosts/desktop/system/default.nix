@@ -5,7 +5,7 @@
 }:
 
 let
-  if-using-sops = lib.mkIf config.modules.sops.enable;
+  if-using-sops = lib.mkIf (builtins.hasAttr "sops" config);
 in
 {
   config = {
@@ -44,7 +44,7 @@ in
 
     services = {
       clonix = {
-        enable = false; # TODO: temporarily disable while restoring data post-repartition
+        enable = lib.mkForce false; # TODO: temporarily disable while restoring data post-repartition
         deployments = [
           rec {
             deploymentName = "backup-${config.machine.name}";

@@ -15,7 +15,7 @@
         in
         {
           persist.directories = [
-            "@config@/tmux/resurrect"
+            "${config.xdg.configHome}/tmux/resurrect"
           ];
 
           programs.tmux = {
