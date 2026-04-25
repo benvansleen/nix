@@ -1,4 +1,8 @@
 {
+  flake-file.inputs = {
+    opencode.url = "github:anomalyco/opencode";
+  };
+
   flake.modules.homeManager.opencode =
     { config, lib, ... }:
     {

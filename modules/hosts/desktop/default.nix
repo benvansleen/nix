@@ -1,11 +1,12 @@
 { inputs, ... }:
+
 {
   flake.modules.nixos.desktop = {
     imports = with inputs.self.modules.nixos; [
-      ../default.nix
-      ./default.nix
-
-      ben
+      base-host
+      desktop-configuration
+      desktop-disk
+      desktop-hardware
 
       btrfs
       inputs.self.modules.nixos."borgbackup/client"
@@ -14,16 +15,19 @@
       crossplatformBuilder
       displayManager
       firefox
-      homeManager
       impermanence
-      nixosCli
       inputs.self.modules.nixos."prometheus/client"
       remotebuilder
       secureboot
-      sops
       stylix
-      tailscale
       zsa
     ];
+
+    config.machine = {
+      name = "desktop";
+      desktop = true;
+      powerful = true;
+      allowUnfree = true;
+    };
   };
 }

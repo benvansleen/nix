@@ -25,7 +25,7 @@
         let
           cfg = config.modules.tailscale;
         in
-        {
+        lib.mkIf cfg.enable {
           persist.directories = [
             "/var/lib/tailscale"
           ];
@@ -34,8 +34,17 @@
             tailscale
           ];
 
-          # https://github.com/tailscale/tailscale/issues/4432
-          networking.firewall.checkReversePath = "loose";
+          networking = {
+            firewall = {
+              # https://github.com/tailscale/tailscale/issues/4432
+              checkReversePath = "loose";
+
+              # close all ports; only accessible via tailnet
+              allowedTCPPorts = lib.mkForce [ ];
+              allowedUDPPorts = lib.mkForce [ ];
+              trustedInterfaces = [ "tailscale0" ];
+            };
+          };
 
           services.tailscale.enable = true;
           systemd.services.tailscale-autoconnect =

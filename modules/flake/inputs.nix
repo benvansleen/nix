@@ -1,4 +1,4 @@
-_: {
+{
   flake-file.nixConfig = {
     extra-substituters = [
       "https://nix-community.cachix.org"
@@ -21,9 +21,6 @@ _: {
     flake-file.url = "github:vic/flake-file";
     import-tree.url = "github:vic/import-tree";
 
-    nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
-    nixos-hardware.url = "github:nixos/nixos-hardware";
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -40,10 +37,6 @@ _: {
         nixpkgs.follows = "nixpkgs";
         nixpkgs-stable.follows = "nixpkgs-stable";
       };
-    };
-
-    opencode = {
-      url = "github:anomalyco/opencode";
     };
 
     pre-commit-hooks = {
