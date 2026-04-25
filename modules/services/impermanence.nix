@@ -15,15 +15,16 @@
       {
         imports = [ inputs.impermanence.nixosModules.impermanence ];
 
-        options.persist = {
-          root = lib.mkOption {
-            type = lib.types.str;
+        options.persist = with lib; {
+          enable = mkEnableOption "impermanence";
+          root = mkOption {
+            type = types.str;
             default = "/persist";
             example = "/nix/persist";
             description = "where to mount persistent storage";
           };
-          directories = lib.mkOption {
-            type = with lib.types; listOf str;
+          directories = mkOption {
+            type = with types; listOf str;
             default = [ ];
             example = [
               "/var/log"
@@ -31,14 +32,14 @@
             ];
             description = "additional directories to persist";
           };
-          files = lib.mkOption {
-            type = with lib.types; listOf str;
+          files = mkOption {
+            type = with types; listOf str;
             default = [ ];
             description = "additional files to persist";
           };
         };
 
-        config = {
+        config = lib.mkIf config.persist.enable {
           fileSystems.${config.persist.root} = {
             neededForBoot = true;
             options = [ "noexec" ];
@@ -116,7 +117,7 @@
             files = map normalize config.persist.files;
             directories = map normalize config.persist.directories;
           in
-          {
+          lib.mkIf osConfig.persist.enable {
             home = {
               persistence.${osConfig.persist.root} = {
                 inherit directories;

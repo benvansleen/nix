@@ -1,92 +1,15 @@
 {
   nixpkgs,
   home-manager,
-  systems,
   ...
-}@specialArgs:
+}:
 
 let
   constants = import ./constants.nix;
   lib' =
     lib:
-    let
-      nixFilesInDir =
-        dir:
-        with lib;
-        let
-          allTrue = all id;
-        in
-        pipe dir [
-          builtins.readDir
-          (filterAttrs (
-            name: filetype:
-            allTrue [
-              (!hasPrefix "." name)
-              (
-                (filetype == "directory")
-                || allTrue [
-                  (filetype == "regular")
-                  (hasSuffix ".nix" name)
-                  (name != "default.nix")
-                  (name != "flake-module.nix")
-                ]
-              )
-            ]
-          ))
-          (mapAttrsToList (name: _filetype: dir + ("/" + name)))
-        ];
-    in
     rec {
       inherit constants;
-
-      importAll = dir: { imports = nixFilesInDir dir; };
-
-      mkSystem =
-        overlays: host:
-        lib.nixosSystem {
-          inherit specialArgs;
-          modules = [
-            { nixpkgs = { inherit overlays; }; }
-            ../modules/system
-            ../hosts
-            host
-          ];
-        };
-
-      allHomeModules =
-        with lib;
-        [ ../modules/home ]
-        ++ (pipe specialArgs [
-          (filterAttrs (
-            moduleName: module:
-            ## The Home Manager flake outputs are deprecated!
-            ## The Home Manager module will be automatically imported by the NixOS
-            ## module. Please remove any manual imports.
-            ## See https://github.com/nix-community/impermanence?tab=readme-ov-file#home-manager
-            ## for updated usage instructions.
-            moduleName != "impermanence" && module ? homeManagerModules
-          ))
-          (mapAttrsToList (
-            moduleName:
-            {
-              homeManagerModules ? { },
-              homeModules ? { },
-              ...
-            }:
-            homeModules.default or homeModules.${moduleName} or homeManagerModules.default
-              or homeManagerModules.${moduleName} or homeManagerModules.${head (attrNames homeManagerModules)}
-          ))
-        ]);
-
-      eachSystem =
-        f:
-        lib.genAttrs (import systems) (
-          system:
-          let
-            pkgs = nixpkgs.legacyPackages.${system};
-          in
-          f pkgs pkgs.stdenv.hostPlatform.system
-        );
 
       eachUser =
         f:

@@ -15,8 +15,6 @@
       crossplatformBuilder
       displayManager
       firefox
-      impermanence
-      inputs.self.modules.nixos."prometheus/client"
       remotebuilder
       secureboot
       stylix

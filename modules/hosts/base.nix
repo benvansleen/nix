@@ -11,8 +11,10 @@
     {
       imports = with inputs.self.modules.nixos; [
         facter
+        impermanence
         nix
         nixosCli
+        inputs.self.modules.nixos."prometheus/client"
         sops
         tailscale
         users
@@ -32,6 +34,7 @@
       config = {
         modules = {
           tailscale.enable = true;
+          prometheus.client.enable = true;
         };
 
         environment = {

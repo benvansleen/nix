@@ -3,6 +3,7 @@
     { config, lib, ... }:
     {
       options.modules.pihole = with lib; {
+        enable = mkEnableOption "pihole";
         web-ui-port = mkOption {
           type = types.port;
           default = 8080;
@@ -19,7 +20,7 @@
         let
           cfg = config.modules.pihole;
         in
-        {
+        lib.mkIf cfg.enable {
           # DO NOT TOUCH DNS CONFIG
           # will likely break tailscale magicDNS, caddy, and other services
           modules.tailscale.tailscale-up-extra-args = [

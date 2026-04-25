@@ -47,9 +47,9 @@
                   encode zstd gzip
                   reverse_proxy pi:${toString config.modules.prometheus.server.port}
                 '';
-                searx = lib.mkIf services.searx.enable /* caddy */ ''
+                searx = /* caddy */ ''
                   encode zstd gzip
-                  reverse_proxy pi:${toString config.services.searx.settings.port}
+                  reverse_proxy pi:${toString config.modules.searx.port}
                 '';
               };
 
@@ -144,7 +144,7 @@
                   };
                 in
                 {
-                  "grafana.${primary.subdomain}.${primary.domain}" = {
+                  "grafana.${primary.subdomain}.${primary.domain}" = lib.optionalAttrs config.modules.grafana.enable {
                     serverAliases = [
                       "grafana.${secondary.subdomain}.${secondary.domain}"
                     ];
@@ -153,7 +153,7 @@
                     '';
                   };
 
-                  "maybe.${primary.subdomain}.${primary.domain}" = {
+                  "maybe.${primary.subdomain}.${primary.domain}" = lib.optionalAttrs config.modules.maybe.enable {
                     serverAliases = [
                       "maybe.${primary.domain}"
                       "maybe.${secondary.subdomain}.${secondary.domain}"
@@ -161,21 +161,23 @@
                     extraConfig = cloudflare services.maybe;
                   };
 
-                  "pihole.${primary.subdomain}.${primary.domain}" = {
+                  "pihole.${primary.subdomain}.${primary.domain}" = lib.optionalAttrs config.modules.pihole.enable {
                     serverAliases = [
                       "pihole.${secondary.subdomain}.${secondary.domain}"
                     ];
                     extraConfig = cloudflare services.pihole;
                   };
 
-                  "prometheus.${primary.subdomain}.${primary.domain}" = {
-                    serverAliases = [
-                      "prometheus.${secondary.subdomain}.${secondary.domain}"
-                    ];
-                    extraConfig = cloudflare services.prometheus;
-                  };
+                  "prometheus.${primary.subdomain}.${primary.domain}" =
+                    lib.optionalAttrs config.services.prometheus.enable
+                      {
+                        serverAliases = [
+                          "prometheus.${secondary.subdomain}.${secondary.domain}"
+                        ];
+                        extraConfig = cloudflare services.prometheus;
+                      };
 
-                  "searx.${primary.subdomain}.${primary.domain}" = {
+                  "searx.${primary.subdomain}.${primary.domain}" = lib.optionalAttrs config.services.searx.enable {
                     serverAliases = [
                       "${primary.subdomain}.${primary.domain}"
                       "${secondary.domain}"

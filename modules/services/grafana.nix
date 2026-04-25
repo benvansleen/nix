@@ -11,26 +11,30 @@
         };
       };
 
-      config = {
-        services.grafana = {
-          enable = true;
-          settings = {
-            "auth.proxy" = {
-              enabled = true;
-              auto_sign_up = true;
-              enable_login_token = false;
+      config =
+        let
+          cfg = config.modules.grafana;
+        in
+        lib.mkIf cfg.enable {
+          services.grafana = {
+            enable = true;
+            settings = {
+              "auth.proxy" = {
+                enabled = true;
+                auto_sign_up = true;
+                enable_login_token = false;
+              };
+              server = {
+                http_addr = "0.0.0.0";
+                http_port = cfg.port;
+              };
+              # TODO: Preserve pre-26.05 behavior until this moves to explicit secret management.
+              security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
             };
-            server = {
-              http_addr = "0.0.0.0";
-              http_port = config.modules.grafana.port;
-            };
-            # TODO: Preserve pre-26.05 behavior until this moves to explicit secret management.
-            security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
           };
+          persist.directories = with config.services.grafana; [
+            dataDir
+          ];
         };
-        persist.directories = with config.services.grafana; [
-          dataDir
-        ];
-      };
     };
 }

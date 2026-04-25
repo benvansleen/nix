@@ -2,10 +2,11 @@
   flake.modules.nixos.laptop-configuration =
     { config, lib, ... }:
     let
-      if-using-sops = lib.mkIf config.modules.sops.enable;
+      if-using-sops = lib.mkIf (builtins.hasAttr "sops" config);
     in
     {
       config = {
+        persist.root = "/persist";
         modules = {
           clonix = {
             enable = false;
@@ -37,10 +38,6 @@
               }
             ];
           };
-          impermanence = {
-            persistRoot = "/persist";
-          };
-          prometheus.client.enable = true;
           tailscale = {
             authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
             tailscale-up-extra-args = [
@@ -49,9 +46,8 @@
               "--exit-node=auto:any"
             ];
           };
-          searx.enable = false;
-          zsa.enable = false;
         };
+        persist.enable = true;
 
         nix = {
           gc.automatic = lib.mkForce false;

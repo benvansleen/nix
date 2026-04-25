@@ -3,6 +3,7 @@
     { config, lib, ... }:
     {
       options.modules.maybe = with lib; {
+        enable = mkEnableOption "maybe-finance";
         port = mkOption {
           type = types.port;
           default = 3000;
@@ -13,7 +14,7 @@
         let
           cfg = config.modules.maybe;
         in
-        {
+        lib.mkIf cfg.enable {
           virtualisation.oci-containers.containers =
             let
               POSTGRES_USER = "maybe_user";

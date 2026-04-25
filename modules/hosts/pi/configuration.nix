@@ -7,12 +7,11 @@
       ...
     }:
     let
-      if-using-sops = lib.mkIf config.modules.sops.enable;
+      if-using-sops = lib.mkIf (builtins.hasAttr "sops" config);
     in
     {
       config = {
         modules = {
-          caddy.enable = true;
           clonix = {
             enable = true;
             deployments = [
@@ -48,13 +47,10 @@
             disable-podman-dns = true;
           };
           grafana.enable = true;
-          impermanence.enable = false;
           maybe.enable = true;
           pihole.enable = true;
           prometheus = {
-            client.enable = true;
             server = {
-              enable = true;
               scrapeConfigs = [
                 {
                   job_name = "home";
@@ -110,10 +106,8 @@
             };
           };
           searx = {
-            enable = true;
             port = 8888;
           };
-          sops.enable = true;
           tailscale = {
             authKeyFile = if-using-sops config.sops.secrets.tailscale_authkey.path;
             tailscale-up-extra-args = [

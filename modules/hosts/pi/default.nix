@@ -13,9 +13,7 @@
       containers
       grafana
       maybe
-      nixosCli
       pihole
-      inputs.self.modules.nixos."prometheus/client"
       inputs.self.modules.nixos."prometheus/server"
       searx
       unbound

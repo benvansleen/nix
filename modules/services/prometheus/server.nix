@@ -3,7 +3,6 @@
     { config, lib, ... }:
     {
       options.modules.prometheus.server = with lib; {
-        enable = mkEnableOption "prometheus-server";
         port = mkOption {
           type = types.port;
           default = 9001;

@@ -12,11 +12,8 @@
       containers
       displayManager
       firefox
-      impermanence
-      inputs.self.modules.nixos."prometheus/client"
       secureboot
       stylix
-      tailscale
       zsa
     ];
 

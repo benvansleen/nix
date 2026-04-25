@@ -3,6 +3,7 @@
     { config, lib, ... }:
     {
       options.modules.prometheus.client = with lib; {
+        enable = mkEnableOption "prometheus/client";
         port = mkOption {
           type = types.port;
           default = 9002;
@@ -14,7 +15,7 @@
         let
           cfg = config.modules.prometheus.client;
         in
-        {
+        lib.mkIf cfg.enable {
           services.prometheus.exporters = {
             node = {
               enable = true;
