@@ -1,6 +1,13 @@
 { inputs, ... }:
 {
-  flake-file.inputs.hyprbar.url = "github:benvansleen/hyprbar";
+  flake-file.inputs.hyprbar = {
+    url = "github:benvansleen/hyprbar";
+    inputs = {
+      nixpkgs.follows = "nixpkgs";
+      pre-commit-hooks.follows = "pre-commit-hooks";
+      systems.follows = "systems";
+    };
+  };
 
   flake.modules.homeManager.windowManager =
     {

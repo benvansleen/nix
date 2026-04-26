@@ -1,7 +1,14 @@
 { inputs, moduleWithSystem, ... }:
 
 {
-  flake-file.inputs.centerpiece.url = "github:friedow/centerpiece";
+  flake-file.inputs.centerpiece = {
+    url = "github:friedow/centerpiece";
+    inputs = {
+      home-manager.follows = "home-manager";
+      nixpkgs.follows = "nixpkgs";
+      treefmt-nix.follows = "treefmt-nix";
+    };
+  };
 
   flake.modules.homeManager.centerpiece = moduleWithSystem (
     { system, ... }:

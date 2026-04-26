@@ -1,3 +1,5 @@
+{ inputs, ... }:
+
 {
   flake-file.nixConfig = {
     extra-substituters = [
@@ -11,6 +13,23 @@
   flake-file.inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
-    home-manager.url = "github:nix-community/home-manager";
+    flake-file.url = "github:vic/flake-file";
+    systems.url = "github:nix-systems/default";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-compat = {
+      url = "github:nixos/flake-compat";
+      flake = false;
+    };
+    gitignore = {
+      url = "github:hercules-ci/gitignore";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
+
+  imports = [
+    inputs.flake-file.flakeModules.dendritic
+  ];
 }

@@ -1,7 +1,16 @@
 { inputs, ... }:
 
 {
-  flake-file.inputs.nvim.url = "github:benvansleen/nvim/migrate-to-nix-wrapper-modules";
+  flake-file.inputs.nvim = {
+    url = "github:benvansleen/nvim/migrate-to-nix-wrapper-modules";
+    # url = "path:/home/ben/.config/nvim";
+    inputs = {
+      nixpkgs.follows = "nixpkgs";
+      flake-parts.follows = "flake-parts";
+      pre-commit-hooks.follows = "pre-commit-hooks";
+      treefmt-nix.follows = "treefmt-nix";
+    };
+  };
 
   flake.modules.homeManager.ben-nvim =
     {

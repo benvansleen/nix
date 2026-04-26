@@ -2,11 +2,18 @@
 {
   flake-file.inputs = {
 
-    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     secrets = {
       url = "git+ssh://git@github.com/benvansleen/secrets.git";
       # url = "path:/home/ben/.config/nix/secrets";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
     };
   };
 

@@ -2,8 +2,17 @@
 
 {
   flake-file.inputs = {
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
-    opencode.url = "github:anomalyco/opencode";
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nixpkgs-stable.follows = "nixpkgs-stable";
+      };
+    };
+    opencode = {
+      url = "github:anomalyco/opencode";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   flake.overlaid = {
