@@ -2,13 +2,9 @@
 
 {
   flake.constants = {
-    inherit (inputs.secrets.personal-info) email;
+    inherit (inputs.secrets.personal-info) email tailscale-domain tailscale-dns-ip;
     backup-machine = "pi";
     backup-path = "/mnt/storage";
-
-    tailscale-dns-ip = "100.64.0.1";
-    tailscale-domain = "clouded-mimosa.ts.net";
-
     privilege-escalation = "sudo";
   };
 }
