@@ -10,6 +10,7 @@
       inherit (osConfig.users.users.${config.home.username}) shell;
     in
     {
+      config.programs.starship.enable = true;
       config.programs.starship.settings = {
         add_newline = false;
         character = {
