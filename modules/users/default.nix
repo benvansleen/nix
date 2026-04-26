@@ -1,8 +1,8 @@
-{ inputs, ... }:
+{ self, ... }:
 
 {
   flake.modules.nixos.users = {
-    imports = with inputs.self.modules.nixos; [
+    imports = with self.modules.nixos; [
       homeManager
 
       ben

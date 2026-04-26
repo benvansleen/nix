@@ -1,4 +1,5 @@
-{ inputs, ... }:
+{ inputs, self, ... }:
+
 {
   flake-file.inputs.nixos-cli = {
     url = "github:nix-community/nixos-cli";
@@ -36,7 +37,7 @@
           general = {
             auto_rollback = true;
             color = true;
-            root_command = inputs.self.constants.privilege-escalation;
+            root_command = self.constants.privilege-escalation;
             use_nvd = true;
           };
           apply = {

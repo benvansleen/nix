@@ -1,10 +1,10 @@
-{ inputs, ... }:
+{ self, ... }:
 
 {
   flake.modules.homeManager.ben-stylix =
     { pkgs, osConfig, ... }:
     {
-      imports = with inputs.self.modules.homeManager; [
+      imports = with self.modules.homeManager; [
         stylix
       ];
 

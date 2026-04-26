@@ -1,8 +1,8 @@
-{ inputs, ... }:
+{ self, ... }:
 
 {
   flake.modules.nixos.desktop = {
-    imports = with inputs.self.modules.nixos; [
+    imports = with self.modules.nixos; [
       base-host
       desktop-configuration
       desktop-disk

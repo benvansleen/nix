@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, self, ... }:
 
 {
   flake-file.inputs.nvim = {
@@ -26,7 +26,7 @@
 
       config =
         let
-          flake-outputs = "(builtins.getFlake ${inputs.self.outPath}).outputs.nixosConfigurations.${osConfig.machine.name}";
+          flake-outputs = "(builtins.getFlake ${self.outPath}).outputs.nixosConfigurations.${osConfig.machine.name}";
         in
         {
           wrappers.neovim = {

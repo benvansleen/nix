@@ -1,4 +1,5 @@
 { inputs, ... }:
+
 {
   flake-file.inputs.lanzaboote = {
     url = "github:nix-community/lanzaboote";

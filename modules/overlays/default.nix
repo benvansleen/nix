@@ -1,4 +1,9 @@
-{ inputs, lib, ... }:
+{
+  inputs,
+  self,
+  lib,
+  ...
+}:
 
 {
   flake-file.inputs = {
@@ -18,9 +23,9 @@
   flake.overlaid = {
     nixpkgs = {
       overlays = [
-        inputs.self.overlays.default
-        inputs.self.overlays.caddy
-        inputs.self.overlays.lib
+        self.overlays.default
+        self.overlays.caddy
+        self.overlays.lib
         inputs.emacs-overlay.overlay
       ];
 

@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ self, ... }:
 
 {
   flake.modules.nixos.base-host =
@@ -9,12 +9,12 @@
       ...
     }:
     {
-      imports = with inputs.self.modules.nixos; [
+      imports = with self.modules.nixos; [
         facter
         impermanence
         nix
         nixosCli
-        inputs.self.modules.nixos."prometheus/client"
+        self.modules.nixos."prometheus/client"
         sops
         tailscale
         users
@@ -84,7 +84,7 @@
 
         security = {
           doas = {
-            enable = inputs.self.constants.privilege-escalation == "doas";
+            enable = self.constants.privilege-escalation == "doas";
             extraRules = [
               {
                 groups = [ "wheel" ];
@@ -95,7 +95,7 @@
             ];
           };
           sudo = {
-            enable = inputs.self.constants.privilege-escalation == "sudo";
+            enable = self.constants.privilege-escalation == "sudo";
             execWheelOnly = true;
           };
 

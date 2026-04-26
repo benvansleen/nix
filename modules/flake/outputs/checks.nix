@@ -1,4 +1,5 @@
 { inputs, ... }:
+
 {
   flake-file.inputs = {
     pre-commit-hooks = {

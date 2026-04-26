@@ -1,4 +1,5 @@
 { inputs, ... }:
+
 {
   flake-file.inputs.clonix = {
     url = "github:benvansleen/clonix";

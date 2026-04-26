@@ -1,8 +1,8 @@
-{ inputs, ... }:
+{ self, ... }:
 
 {
   flake.modules.nixos.pi = {
-    imports = with inputs.self.modules.nixos; [
+    imports = with self.modules.nixos; [
       base-host
       pi-configuration
       pi-disk
@@ -14,7 +14,7 @@
       grafana
       maybe
       pihole
-      inputs.self.modules.nixos."prometheus/server"
+      self.modules.nixos."prometheus/server"
       searx
       unbound
     ];

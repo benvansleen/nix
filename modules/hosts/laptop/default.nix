@@ -1,7 +1,7 @@
-{ inputs, ... }:
+{ self, ... }:
 {
   flake.modules.nixos.laptop = {
-    imports = with inputs.self.modules.nixos; [
+    imports = with self.modules.nixos; [
       base-host
       laptop-configuration
       laptop-disk

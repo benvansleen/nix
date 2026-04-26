@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ self, ... }:
 
 {
   flake.modules.homeManager.ben-ghostty =
@@ -11,7 +11,7 @@
       inherit (lib) mkIf;
     in
     {
-      imports = [ inputs.self.modules.homeManager.ghostty ];
+      imports = [ self.modules.homeManager.ghostty ];
 
       config = {
         xdg.configFile = {

@@ -1,10 +1,11 @@
-{ inputs, ... }:
+{ self, ... }:
+
 {
   flake.modules.homeManager.ben-cli =
     { osConfig, lib, ... }:
     {
       imports =
-        with inputs.self.modules.homeManager;
+        with self.modules.homeManager;
         [
           atuin
           bottom

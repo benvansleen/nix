@@ -1,10 +1,10 @@
-{ inputs, ... }:
+{ self, ... }:
 
 {
   flake.modules.homeManager.ben-emacs =
     { config, pkgs, ... }:
     {
-      imports = with inputs.self.modules.homeManager; [
+      imports = with self.modules.homeManager; [
         emacs
       ];
 

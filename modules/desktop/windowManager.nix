@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, self, ... }:
 {
   flake-file.inputs.hyprbar = {
     url = "github:benvansleen/hyprbar";
@@ -19,7 +19,7 @@
     {
       imports = [
         (inputs.hyprbar.homeManagerModules.default or inputs.hyprbar.homeManagerModules.hyprbar)
-        inputs.self.modules.homeManager.gnome-xterm-compat
+        self.modules.homeManager.gnome-xterm-compat
       ];
 
       options.modules.windowManager = with lib; {

@@ -1,7 +1,9 @@
 {
   inputs,
+  self,
   ...
 }:
+
 let
   user = "ben";
   homeDir = "/home/${user}";
@@ -15,7 +17,7 @@ in
       ...
     }:
     {
-      imports = with inputs.self.modules.homeManager; [
+      imports = with self.modules.homeManager; [
         ben-cli
         ben-programs
         ben-stylix
@@ -112,12 +114,12 @@ in
       ...
     }:
     {
-      imports = with inputs.self.modules.nixos; [
+      imports = with self.modules.nixos; [
         sops-user
       ];
 
       home-manager.users.${user}.imports = [
-        inputs.self.modules.homeManager.${user}
+        self.modules.homeManager.${user}
       ];
 
       modules.sops-user.username = user;

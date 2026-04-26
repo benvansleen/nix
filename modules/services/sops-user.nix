@@ -1,10 +1,10 @@
-{ inputs, ... }:
+{ inputs, self, ... }:
 
 {
   flake.modules.nixos.sops-user =
     { config, lib, ... }:
     {
-      imports = [ inputs.self.modules.nixos.sops ];
+      imports = [ self.modules.nixos.sops ];
 
       options.modules.sops-user = with lib; {
         username = mkOption {
@@ -20,7 +20,7 @@
         in
         {
           home-manager.users.${cfg.username}.imports = [
-            inputs.self.modules.homeManager.sops
+            self.modules.homeManager.sops
             {
               sops = inputs.secrets.${cfg.username} "${user.home}/.ssh/master";
             }
