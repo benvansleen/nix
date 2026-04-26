@@ -8,9 +8,9 @@
     {
       devShells.default = pkgs.mkShell {
         packages = [
-          config.checks.pre-commit-check.enabledPackages
+          config.pre-commit.settings.enabledPackages
         ];
-        inherit (config.checks.pre-commit-check) shellHook;
+        inherit (config.pre-commit) shellHook;
       };
     };
 }

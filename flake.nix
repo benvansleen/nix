@@ -50,6 +50,14 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs = {
+        flake-compat.follows = "flake-compat";
+        gitignore.follows = "gitignore";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
     gitignore = {
       url = "github:hercules-ci/gitignore";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -62,7 +70,7 @@
       url = "github:benvansleen/hyprbar";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        pre-commit-hooks.follows = "pre-commit-hooks";
+        pre-commit-hooks.follows = "git-hooks";
         systems.follows = "systems";
       };
     };
@@ -102,21 +110,13 @@
       inputs = {
         flake-parts.follows = "flake-parts";
         nixpkgs.follows = "nixpkgs";
-        pre-commit-hooks.follows = "pre-commit-hooks";
+        pre-commit-hooks.follows = "git-hooks";
         treefmt-nix.follows = "treefmt-nix";
       };
     };
     opencode = {
       url = "github:anomalyco/opencode";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    pre-commit-hooks = {
-      url = "github:cachix/git-hooks.nix";
-      inputs = {
-        flake-compat.follows = "flake-compat";
-        gitignore.follows = "gitignore";
-        nixpkgs.follows = "nixpkgs";
-      };
     };
     secrets = {
       url = "git+ssh://git@github.com/benvansleen/secrets.git";

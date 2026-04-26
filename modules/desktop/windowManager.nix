@@ -4,7 +4,7 @@
     url = "github:benvansleen/hyprbar";
     inputs = {
       nixpkgs.follows = "nixpkgs";
-      pre-commit-hooks.follows = "pre-commit-hooks";
+      pre-commit-hooks.follows = "git-hooks";
       systems.follows = "systems";
     };
   };

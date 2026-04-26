@@ -7,7 +7,7 @@
     inputs = {
       nixpkgs.follows = "nixpkgs";
       flake-parts.follows = "flake-parts";
-      pre-commit-hooks.follows = "pre-commit-hooks";
+      pre-commit-hooks.follows = "git-hooks";
       treefmt-nix.follows = "treefmt-nix";
     };
   };

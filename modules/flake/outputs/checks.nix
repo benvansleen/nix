@@ -2,7 +2,7 @@
 
 {
   flake-file.inputs = {
-    pre-commit-hooks = {
+    git-hooks = {
       url = "github:cachix/git-hooks.nix";
       inputs = {
         flake-compat.follows = "flake-compat";
@@ -12,15 +12,14 @@
     };
   };
 
+  imports = [
+    inputs.git-hooks.flakeModule
+  ];
+
   perSystem =
+    { config, ... }:
     {
-      config,
-      system,
-      ...
-    }:
-    {
-      checks.pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
-        src = ../../../.;
+      pre-commit.settings = {
         hooks = {
           check-added-large-files.enable = true;
           check-merge-conflicts.enable = true;
