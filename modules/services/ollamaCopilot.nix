@@ -60,7 +60,7 @@
 
             Service = {
               ExecStart = pkgs.writeShellScript "start-ollama-copilot" ''
-                ${lib.getExe pkgs.ollama-copilot} \
+                ${lib.getExe pkgs.local.ollama-copilot} \
                   -port ":${toString cfg.port}" \
                   -model "${cfg.model}" \
                   -num-predict ${toString cfg.num-tokens} \

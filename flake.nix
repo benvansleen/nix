@@ -118,6 +118,7 @@
       url = "github:anomalyco/opencode";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    pkgs-by-name.url = "github:drupol/pkgs-by-name-for-flake-parts";
     secrets = {
       url = "git+ssh://git@github.com/benvansleen/secrets.git";
       inputs = {

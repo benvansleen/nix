@@ -802,6 +802,21 @@
         "type": "github"
       }
     },
+    "pkgs-by-name": {
+      "locked": {
+        "lastModified": 1769286518,
+        "narHash": "sha256-F7VlUICvYp2wJKyQqM6d46BNEZCzMQ6dMH9zbmjuybc=",
+        "owner": "drupol",
+        "repo": "pkgs-by-name-for-flake-parts",
+        "rev": "7ba1cd4a9a72c9c6c272018a63f090f2c912a171",
+        "type": "github"
+      },
+      "original": {
+        "owner": "drupol",
+        "repo": "pkgs-by-name-for-flake-parts",
+        "type": "github"
+      }
+    },
     "plugins-direnv-nvim": {
       "flake": false,
       "locked": {
@@ -916,6 +931,7 @@
         "nixpkgs-stable": "nixpkgs-stable",
         "nvim": "nvim",
         "opencode": "opencode",
+        "pkgs-by-name": "pkgs-by-name",
         "secrets": "secrets",
         "sops-nix": "sops-nix",
         "stylix": "stylix",

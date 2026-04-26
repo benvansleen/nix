@@ -37,6 +37,7 @@
 
           nushell = {
             enable = true;
+            package = pkgs.nushell;
             plugins = with pkgs.nushellPlugins; [
               # formats
               # gstat

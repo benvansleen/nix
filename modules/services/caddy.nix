@@ -72,7 +72,7 @@
             rec {
               enable = true;
               enableReload = false;
-              package = pkgs.caddy.withPlugins {
+              package = pkgs.local.caddy.withPlugins {
                 plugins = [
                   "github.com/tailscale/caddy-tailscale@bb080c4414acd465d8be93b4d8f907dbb2ab2544" # jan 6, 2026
                   "github.com/caddy-dns/cloudflare@2fc25ee62f40fe21b240f83ab2fb6e2be6dbb953" # oct 22, 2025

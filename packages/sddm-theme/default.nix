@@ -1,5 +1,5 @@
 ## TODO: move to packages/
-{ pkgs, image, ... }:
+{ pkgs, ... }:
 
 pkgs.stdenv.mkDerivation {
   name = "astronaut-theme";
@@ -13,7 +13,7 @@ pkgs.stdenv.mkDerivation {
     mkdir -p $out
     cp -r ./* $out/
     rm $out/Backgrounds/astronaut.png
-    cp ${image} $out/Backgrounds/astronaut.png
+    cp ${./sddm-background.png} $out/Backgrounds/astronaut.png
     sed -i 's|HourFormat=".*"|HourFormat="\n\n\nh:mm ap"|' $out/Themes/astronaut.conf
     sed -i 's|DateFormat=".*"|DateFormat="dddd, MMMM d"|' $out/Themes/astronaut.conf
     sed -i 's|FormPosition=".*"|FormPosition="left"|' $out/Themes/astronaut.conf
