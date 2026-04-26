@@ -14,13 +14,12 @@
 
       isLocalBackup = config.machine.name == self.constants.backup-machine;
       host = if !isLocalBackup then "root@${self.constants.backup-machine}:" else "";
-      backupConfig = import ../../../shared/backups.nix;
     in
     {
-      config = mkIf (backupConfig.clients ? ${config.machine.name}) {
+      config = mkIf (self.borgbackup-machine-config.clients ? ${config.machine.name}) {
         services.borgbackup.jobs = {
           "${config.machine.name}-backups" = {
-            inherit (backupConfig.clients.${config.machine.name}) paths exclude;
+            inherit (self.borgbackup-machine-config.clients.${config.machine.name}) paths exclude;
             repo = "${host}${self.constants.backup-path}/borgbackup/${config.machine.name}";
 
             environment = {
