@@ -1,7 +1,18 @@
 { inputs, ... }:
 
-let
-  treefmt = {
+{
+  flake-file.inputs = {
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  imports = [
+    inputs.treefmt-nix.flakeModule
+  ];
+
+  perSystem = {
     projectRootFile = "flake.nix";
     settings.global.excludes = [
       ".envrc"
@@ -21,21 +32,4 @@ let
 
     # List of formatters available at https://github.com/numtide/treefmt-nix?tab=readme-ov-file#supported-programs
   };
-in
-{
-  flake-file.inputs = {
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-  };
-
-  perSystem =
-    {
-      pkgs,
-      ...
-    }:
-    {
-      formatter = (inputs.treefmt-nix.lib.evalModule pkgs treefmt).config.build.wrapper;
-    };
 }
