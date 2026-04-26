@@ -1,6 +1,8 @@
+{ inputs, ... }:
+
 {
   flake.constants = {
-    email = "benvansleen@gmail.com";
+    inherit (inputs.secrets.personal-info) email;
     backup-machine = "pi";
     backup-path = "/mnt/storage";
 
