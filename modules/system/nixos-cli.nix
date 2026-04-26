@@ -14,11 +14,11 @@
     imports = [ inputs.nixos-cli.nixosModules.nixos-cli ];
 
     config = {
-      services.nixos-cli = {
+      programs.nixos-cli = {
         enable = true;
-        prebuildOptionCache = false;
-        useActivationInterface = true;
-        config = {
+        option-cache.enable = false;
+        activation-interface.enable = true;
+        settings = {
           aliases = {
             test = [
               "apply"

@@ -103,6 +103,8 @@
           programs.firefox = {
             enable = true;
             package = cfg.browser-pkg;
+            ## TODO: migrate to "${config.xdg.configHome}/mozilla/firefox"
+            configPath = ".mozilla/firefox";
             profiles = {
               default = {
                 id = 0;

@@ -7,6 +7,8 @@
           enable = true;
           settings = {
             autoupdate = false;
+          };
+          tui = {
             theme = lib.mkForce "gruvbox"; # override stylix theme
           };
         };

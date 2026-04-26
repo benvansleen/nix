@@ -44,5 +44,9 @@
         or inputs.stylix.homeManagerModules.stylix or inputs.stylix.homeManagerModules.default
       )
     ];
+
+    config = {
+      gtk.gtk4.theme = null;
+    };
   };
 }

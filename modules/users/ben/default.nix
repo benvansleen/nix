@@ -85,18 +85,9 @@ in
             stateHome = "${dirs.root}/${dirs.state}";
           };
 
-          programs = {
-            bottom.enable = true;
-            git = {
-              enable = true;
-              settings = {
-                user = {
-                  name = user;
-                  email = "benvansleen@gmail.com";
-                };
-                init.defaultBranch = "master";
-              };
-            };
+          programs.git.settings.user = {
+            inherit (inputs.secrets.personal-info) email;
+            name = user;
           };
 
           sops = inputs.secrets.${user} "${dirs.root}/.ssh/master" // {

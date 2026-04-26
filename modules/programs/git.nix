@@ -2,6 +2,11 @@
   flake.modules.homeManager.git = {
     config = {
       programs = {
+        git = {
+          enable = true;
+          settings.init.defaultBranch = "master";
+          signing.format = "openpgp";
+        };
         difftastic = {
           enable = true;
           git.enable = true;
