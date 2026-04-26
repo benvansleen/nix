@@ -1,12 +1,6 @@
 { inputs, ... }:
 {
-  flake-file.inputs.lanzaboote = {
-    url = "github:nix-community/lanzaboote";
-    inputs = {
-      nixpkgs.follows = "nixpkgs";
-      pre-commit.inputs.flake-compat.follows = "flake-compat";
-    };
-  };
+  flake-file.inputs.lanzaboote.url = "github:nix-community/lanzaboote";
 
   flake.modules.nixos.secureboot =
     { config, lib, ... }:

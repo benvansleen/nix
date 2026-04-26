@@ -1,16 +1,6 @@
 { inputs, ... }:
 {
-  flake-file.inputs.nixos-cli = {
-    url = "github:nix-community/nixos-cli";
-    inputs = {
-      nixpkgs.follows = "nixpkgs";
-      flake-compat.follows = "flake-compat";
-      optnix.inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-compat.follows = "flake-compat";
-      };
-    };
-  };
+  flake-file.inputs.nixos-cli.url = "github:nix-community/nixos-cli";
 
   flake.modules.nixos.nixosCli = {
     imports = [ inputs.nixos-cli.nixosModules.nixos-cli ];

@@ -66,7 +66,7 @@
         };
       };
 
-      opencode = inputs.opencode.packages.${final.stdenv.hostPlatform.system}.default;
+      # opencode = inputs.opencode.packages.${final.stdenv.hostPlatform.system}.default;
     };
   };
 }

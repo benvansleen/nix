@@ -1,9 +1,6 @@
 { inputs, ... }:
 {
-  flake-file.inputs.clonix = {
-    url = "github:benvansleen/clonix";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
+  flake-file.inputs.clonix.url = "github:benvansleen/clonix";
 
   flake.modules.nixos.clonix =
     { config, lib, ... }:

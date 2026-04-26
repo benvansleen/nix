@@ -1,6 +1,8 @@
 { inputs, ... }:
 
 {
+  flake-file.inputs.disko.url = "github:nix-community/disko";
+
   flake.modules.nixos.pi-disk = {
     config = {
       fileSystems = {

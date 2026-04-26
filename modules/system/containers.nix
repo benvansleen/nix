@@ -1,10 +1,7 @@
 { inputs, ... }:
 
 {
-  flake-file.inputs.extra-container = {
-    url = "github:erikarvstedt/extra-container";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
+  flake-file.inputs.extra-container.url = "github:erikarvstedt/extra-container";
 
   flake.modules.nixos.containers =
     {

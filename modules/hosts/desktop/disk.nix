@@ -1,9 +1,7 @@
 { inputs, ... }:
 
 {
-  flake-file.inputs = {
-    disko.url = "github:nix-community/disko";
-  };
+  flake-file.inputs.disko.url = "github:nix-community/disko";
 
   flake.modules.nixos.desktop-disk =
     { config, ... }:
