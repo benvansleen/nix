@@ -84,7 +84,7 @@
 
         security = {
           doas = {
-            enable = lib.constants.privilege-escalation == "doas";
+            enable = inputs.self.constants.privilege-escalation == "doas";
             extraRules = [
               {
                 groups = [ "wheel" ];
@@ -95,7 +95,7 @@
             ];
           };
           sudo = {
-            enable = lib.constants.privilege-escalation == "sudo";
+            enable = inputs.self.constants.privilege-escalation == "sudo";
             execWheelOnly = true;
           };
 

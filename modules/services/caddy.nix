@@ -1,3 +1,5 @@
+{ inputs, ... }:
+
 {
   flake.modules.nixos.caddy =
     {
@@ -78,7 +80,7 @@
                 hash = "sha256-ldAPh2Mqh1xIE+KVPiQpyOxXnaAuDbUPI2SACTdtYN0=";
                 doInstallCheck = false;
               };
-              inherit (lib.constants) email;
+              inherit (inputs.self.constants) email;
               dataDir = "/var/lib/caddy";
               logDir = "/var/log/caddy";
 
@@ -149,7 +151,7 @@
                       "grafana.${secondary.subdomain}.${secondary.domain}"
                     ];
                     extraConfig = cloudflare ''
-                      redir / https://grafana.${lib.constants.tailscale-domain}
+                      redir / https://grafana.${inputs.self.constants.tailscale-domain}
                     '';
                   };
 

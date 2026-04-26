@@ -134,7 +134,7 @@
 
           zsh-abbr = mkIf osConfig.machine.allowUnfree {
             enable = true;
-            package = pkgs.unfree.zsh-abbr;
+            package = pkgs.zsh-abbr;
             abbreviations = {
               q = "exit";
               cls = "clear";

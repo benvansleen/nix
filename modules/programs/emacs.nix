@@ -76,7 +76,7 @@
           emacs-pkg = pkgs.emacs-unstable-pgtk;
           emacs = pkgs.emacsWithPackagesFromUsePackage {
             package = emacs-pkg;
-            # package = lib.optimizeForThisHostIfPowerful {
+            # package = pkgs.optimizeForThisHostIfPowerful {
             #   config = osConfig;
             #   pkg = emacs-pkg;
             #   extraFlags = [

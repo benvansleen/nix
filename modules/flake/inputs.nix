@@ -30,28 +30,6 @@
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    emacs-overlay = {
-      url = "github:nix-community/emacs-overlay";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        nixpkgs-stable.follows = "nixpkgs-stable";
-      };
-    };
-
-    pre-commit-hooks = {
-      url = "github:cachix/git-hooks.nix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-compat.follows = "flake-compat";
-      };
-    };
-
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     flake-compat.url = "github:edolstra/flake-compat";
   };
 }

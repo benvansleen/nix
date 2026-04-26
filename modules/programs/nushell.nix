@@ -1,3 +1,5 @@
+{ inputs, ... }:
+
 {
   flake.modules.homeManager.nushell =
     {
@@ -45,7 +47,7 @@
             ];
             shellAliases = with pkgs; {
               cd = lib.mkIf config.programs.zoxide.enableNushellIntegration "z";
-              sudo = lib.mkIf (lib.constants.privilege-escalation == "doas") "doas";
+              sudo = lib.mkIf (inputs.self.constants.privilege-escalation == "doas") "doas";
 
               htop = "${lib.getExe bottom} -b";
               # ps = "${getExe procs}";

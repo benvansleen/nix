@@ -1,17 +1,13 @@
-{ inputs, ... }:
+{ inputs, lib, ... }:
+
 let
-  localLib = import ../../../lib inputs;
-  overlays = import ../../../overlays (inputs // { lib = localLib; });
+  # localLib = import ../../../lib inputs;
   mkFlakeHostSystem =
     hostModule:
-    localLib.nixosSystem {
+    lib.nixosSystem {
       specialArgs = inputs;
       modules = [
-        {
-          nixpkgs = {
-            inherit overlays;
-          };
-        }
+        inputs.self.overlaid
         hostModule
       ];
     };

@@ -1,3 +1,5 @@
+{ inputs, ... }:
+
 {
   flake.modules.nixos."borgbackup/server" =
     {
@@ -12,7 +14,7 @@
       backupConfig = import ../../../shared/backups.nix;
     in
     {
-      config = mkIf (config.machine.name == lib.constants.backup-machine) {
+      config = mkIf (config.machine.name == inputs.self.constants.backup-machine) {
         services.borgbackup.repos = lib.mapAttrs (name: _cfg: {
           path = "/mnt/storage/borgbackup/${name}";
           ## Provide a placeholder to satisfy NixOS assertion.

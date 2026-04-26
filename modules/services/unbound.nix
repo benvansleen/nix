@@ -1,3 +1,5 @@
+{ inputs, ... }:
+
 {
   flake.modules.nixos.unbound =
     {
@@ -44,7 +46,7 @@
                 forward-zone = [
                   {
                     ## requests to tailnet hosts should be forwarded to Tailscale MagicDNS
-                    name = lib.constants.tailscale-domain;
+                    name = inputs.self.constants.tailscale-domain;
                     forward-addr = [
                       "100.100.100.100"
                     ];

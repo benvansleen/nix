@@ -7,7 +7,7 @@
     {
       config = {
         hardware.keyboard.zsa.enable = true;
-        environment.systemPackages = with pkgs; [ unfree.keymapp ];
+        environment.systemPackages = with pkgs; [ keymapp ];
       };
     };
 }

@@ -99,13 +99,7 @@
       };
     };
     opencode.url = "github:anomalyco/opencode";
-    pre-commit-hooks = {
-      url = "github:cachix/git-hooks.nix";
-      inputs = {
-        flake-compat.follows = "flake-compat";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
+    pre-commit-hooks.url = "github:cachix/git-hooks.nix";
     secrets = {
       url = "git+ssh://git@github.com/benvansleen/secrets.git";
       inputs = {
@@ -125,9 +119,6 @@
       };
     };
     systems.url = "github:nix-systems/default";
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    treefmt-nix.url = "github:numtide/treefmt-nix";
   };
 }

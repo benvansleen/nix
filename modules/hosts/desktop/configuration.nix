@@ -1,3 +1,5 @@
+{ inputs, ... }:
+
 {
   flake.modules.nixos.desktop-configuration =
     { config, lib, ... }:
@@ -21,7 +23,7 @@
                   "**/Code/**/target/"
                 ];
               };
-              targetDir = "${lib.constants.backup-path}/${deploymentName}";
+              targetDir = "${inputs.self.constants.backup-path}/${deploymentName}";
               remote = {
                 enable = true;
                 ipOrHostname = "pi";

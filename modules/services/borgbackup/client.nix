@@ -1,3 +1,5 @@
+{ inputs, ... }:
+
 {
   flake.modules.nixos."borgbackup/client" =
     {
@@ -10,8 +12,8 @@
         mkIf
         ;
 
-      isLocalBackup = config.machine.name == lib.constants.backup-machine;
-      host = if !isLocalBackup then "root@${lib.constants.backup-machine}:" else "";
+      isLocalBackup = config.machine.name == inputs.self.constants.backup-machine;
+      host = if !isLocalBackup then "root@${inputs.self.constants.backup-machine}:" else "";
       backupConfig = import ../../../shared/backups.nix;
     in
     {
@@ -19,7 +21,7 @@
         services.borgbackup.jobs = {
           "${config.machine.name}-backups" = {
             inherit (backupConfig.clients.${config.machine.name}) paths exclude;
-            repo = "${host}${lib.constants.backup-path}/borgbackup/${config.machine.name}";
+            repo = "${host}${inputs.self.constants.backup-path}/borgbackup/${config.machine.name}";
 
             environment = {
               ## using tailscale ssh
