@@ -16,6 +16,7 @@
         nixosCli
         self.modules.nixos."prometheus/client"
         sops
+        stylix
         tailscale
         users
       ];
