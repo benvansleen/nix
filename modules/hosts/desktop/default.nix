@@ -9,7 +9,7 @@
       desktop-hardware
 
       btrfs
-      inputs.self.modules.nixos."borgbackup/client"
+      self.modules.nixos."borgbackup/client"
       clonix
       containers
       crossplatformBuilder

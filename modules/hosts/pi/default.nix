@@ -8,6 +8,8 @@
       pi-disk
       pi-hardware
 
+      self.modules.nixos."borgbackup/client"
+      self.modules.nixos."borgbackup/server"
       caddy
       clonix
       containers

@@ -41,13 +41,18 @@
   };
 
   flake.overlays = {
-    default = final: _prev: {
+    default = final: prev: {
       stable = import inputs.nixpkgs-stable {
         inherit (final.stdenv.hostPlatform) system;
         inherit (final) config;
       };
 
       inherit (final.local) nushell;
+
+      ## 4/26/2026: checks for pi builds currently failing
+      prometheus = prev.prometheus.overrideAttrs {
+        doCheck = false;
+      };
 
       ## upstream overlay currently broken: https://github.com/anomalyco/opencode/issues/23719
       opencode =

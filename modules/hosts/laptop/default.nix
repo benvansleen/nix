@@ -7,6 +7,7 @@
       laptop-disk
       laptop-hardware
 
+      self.modules.nixos."borgbackup/client"
       btrfs
       clonix
       containers

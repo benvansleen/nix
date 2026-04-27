@@ -1,9 +1,7 @@
 { inputs, ... }:
 
 {
-  flake-file.inputs = {
-    nixos-hardware.url = "github:nixos/nixos-hardware";
-  };
+  flake-file.inputs.nixos-hardware.url = "github:nixos/nixos-hardware";
 
   flake.modules.nixos.desktop-hardware =
     {
@@ -19,6 +17,7 @@
         common-pc
         common-pc-ssd
       ];
+
       config = {
         nix.settings.system-features = [ "gccarch-znver5" ];
         nixpkgs = {

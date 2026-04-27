@@ -18,6 +18,9 @@
           };
         };
 
+        # allow building kernel
+        initrd.systemd.tpm2.enable = false;
+
         hardware.enableRedistributableFirmware = true;
       };
     };
