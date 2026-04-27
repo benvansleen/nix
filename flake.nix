@@ -1,80 +1,32 @@
+# DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
+# Use `nix run .#write-flake` to regenerate it.
 {
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
+
   nixConfig = {
-    extra-substituters = [
-      "https://nix-community.cachix.org"
-    ];
+    extra-substituters = [ "https://nix-community.cachix.org" ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
-    systems.url = "github:nix-systems/default";
-    secrets = {
-      url = "git+ssh://git@github.com/benvansleen/secrets.git";
-      # url = "path:/home/ben/.config/nix/secrets";
+    centerpiece = {
+      url = "github:friedow/centerpiece";
       inputs = {
+        home-manager.follows = "home-manager";
         nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
+        treefmt-nix.follows = "treefmt-nix";
       };
     };
-
-    nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
-    nixos-hardware.url = "github:nixos/nixos-hardware";
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
+    clonix = {
+      url = "github:benvansleen/clonix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    impermanence = {
-      url = "github:nix-community/impermanence";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-      };
-    };
-
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    lanzaboote = {
-      url = "github:nix-community/lanzaboote";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        pre-commit.inputs.flake-compat.follows = "flake-compat";
-      };
-    };
-
-    nixos-cli = {
-      url = "github:nix-community/nixos-cli";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        flake-compat.follows = "flake-compat";
-        optnix.inputs = {
-          nixpkgs.follows = "nixpkgs";
-          flake-compat.follows = "flake-compat";
-        };
-      };
-    };
-
-    stylix = {
-      url = "github:nix-community/stylix";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        systems.follows = "systems";
-      };
-    };
-
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs = {
@@ -82,158 +34,114 @@
         nixpkgs-stable.follows = "nixpkgs-stable";
       };
     };
-
-    nvim = {
-      url = "github:benvansleen/nvim/migrate-to-nix-wrapper-modules";
+    extra-container = {
+      url = "github:erikarvstedt/extra-container";
       inputs = {
+        flake-utils.inputs.systems.follows = "systems";
         nixpkgs.follows = "nixpkgs";
-        pre-commit-hooks.follows = "pre-commit-hooks";
-        treefmt-nix.follows = "treefmt-nix";
       };
     };
-
+    flake-compat = {
+      url = "github:nixos/flake-compat";
+      flake = false;
+    };
+    flake-file.url = "github:vic/flake-file";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs = {
+        flake-compat.follows = "flake-compat";
+        gitignore.follows = "gitignore";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    gitignore = {
+      url = "github:hercules-ci/gitignore";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     hyprbar = {
       url = "github:benvansleen/hyprbar";
       inputs = {
         nixpkgs.follows = "nixpkgs";
+        pre-commit-hooks.follows = "git-hooks";
         systems.follows = "systems";
-        pre-commit-hooks.follows = "pre-commit-hooks";
       };
     };
-
-    centerpiece = {
-      url = "github:friedow/centerpiece";
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      inputs = {
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    import-tree.url = "github:vic/import-tree";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-        treefmt-nix.follows = "treefmt-nix";
+        pre-commit.inputs.flake-compat.follows = "flake-compat";
       };
     };
-
-    opencode = {
-      url = "github:anomalyco/opencode";
-    };
-
-    clonix = {
-      url = "github:benvansleen/clonix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    extra-container = {
-      url = "github:erikarvstedt/extra-container";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    pre-commit-hooks = {
-      url = "github:cachix/git-hooks.nix";
+    nixos-cli = {
+      url = "github:nix-community/nixos-cli";
       inputs = {
-        nixpkgs.follows = "nixpkgs";
         flake-compat.follows = "flake-compat";
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
       };
     };
-
+    nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
+    nixos-hardware.url = "github:nixos/nixos-hardware";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
+    nvim = {
+      url = "path:/home/ben/.config/nvim";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+        pre-commit-hooks.follows = "git-hooks";
+        treefmt-nix.follows = "treefmt-nix";
+      };
+    };
+    opencode = {
+      url = "github:anomalyco/opencode";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    pkgs-by-name.url = "github:drupol/pkgs-by-name-for-flake-parts";
+    secrets = {
+      url = "git+ssh://git@github.com/benvansleen/secrets.git";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
+    };
+    systems.url = "github:nix-systems/default";
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    flake-compat.url = "github:edolstra/flake-compat";
   };
-
-  outputs =
-    {
-      self,
-      pre-commit-hooks,
-      treefmt-nix,
-      ...
-    }@inputs:
-    let
-      lib = import ./lib inputs;
-      mkSystem = lib.mkSystem (import ./overlays (inputs // { inherit lib; }));
-    in
-    {
-      nixosConfigurations = {
-        desktop = mkSystem ./hosts/desktop;
-        laptop = mkSystem ./hosts/laptop;
-        pi = mkSystem ./hosts/pi;
-      };
-
-      apps = lib.eachSystem (
-        pkgs: _:
-        let
-          run = import ./run { inherit pkgs lib; };
-          create-app = pkg: {
-            type = "app";
-            program = lib.getExe pkg;
-          };
-          set-password-for = user: create-app (run.set-password-for user);
-        in
-        with lib;
-        (pipe run [
-          (filterAttrs (name: value: (builtins.typeOf value) == "set" && !hasPrefix "override" name))
-          (mapAttrs (_name: create-app))
-        ])
-        // (pipe { root = set-password-for "root"; } [
-          (attrs: attrs // (eachUser set-password-for))
-          (mapAttrs' (user: app: nameValuePair "set-password-for-${user}" app))
-        ])
-      );
-
-      devShells = lib.eachSystem (
-        pkgs: system: {
-          default =
-            with pkgs;
-            mkShell {
-              buildInputs = [
-                self.checks.${system}.pre-commit-check.enabledPackages
-              ];
-              inherit (self.checks.${system}.pre-commit-check) shellHook;
-            };
-        }
-      );
-
-      formatter = lib.eachSystem (
-        pkgs: _: (treefmt-nix.lib.evalModule pkgs ./treefmt.nix).config.build.wrapper
-      );
-      checks = lib.eachSystem (
-        _: system: {
-          pre-commit-check = pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              check-added-large-files.enable = true;
-              check-merge-conflicts.enable = true;
-              detect-private-keys.enable = true;
-              deadnix.enable = true;
-              end-of-file-fixer.enable = true;
-              flake-checker.enable = true;
-              ripsecrets.enable = true;
-              statix = {
-                enable = true;
-                settings.config = "statix.toml";
-              };
-              treefmt = {
-                enable = true;
-                packageOverrides.treefmt = self.outputs.formatter.${system};
-              };
-              typos = {
-                enable = true;
-                settings = {
-                  diff = false;
-                  ignored-words = [
-                    "artic"
-                    "facter"
-                  ];
-                  exclude = "*.patch";
-                };
-              };
-            };
-          };
-        }
-      );
-    };
 }
