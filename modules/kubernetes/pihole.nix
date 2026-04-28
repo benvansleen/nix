@@ -114,6 +114,30 @@ in
                 hostnames = [ "pihole.k3s.vansleen.dev" ];
                 rules = [
                   {
+                    name = "root-redirect";
+                    matches = [
+                      {
+                        path = {
+                          type = "Exact";
+                          value = "/";
+                        };
+                      }
+                    ];
+                    filters = [
+                      {
+                        type = "RequestRedirect";
+                        requestRedirect = {
+                          path = {
+                            type = "ReplaceFullPath";
+                            replaceFullPath = "/admin/";
+                          };
+                          statusCode = 302;
+                        };
+                      }
+                    ];
+                  }
+                  {
+                    name = "backend";
                     backendRefs = [
                       {
                         name = "pihole-web";
