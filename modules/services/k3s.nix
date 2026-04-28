@@ -185,10 +185,12 @@
       in
       {
         imports = [
+          self.modules.nixos.k3s-cert-manager
           self.modules.nixos.k3s-tailscale-operator
         ];
 
         config = {
+          modules.k3s-cert-manager.enable = true;
           modules.k3s-tailscale-operator.enable = cfg.useTailscale;
           services.k3s = {
             enable = true;

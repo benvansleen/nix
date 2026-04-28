@@ -14,6 +14,41 @@
           applications.nginx = {
             namespace = "nginx";
             createNamespace = true;
+
+            objects = lib.mkIf config.modules.gateway.enable [
+              {
+                apiVersion = "gateway.networking.k8s.io/v1";
+                kind = "HTTPRoute";
+                metadata = {
+                  name = "nginx";
+                  namespace = "nginx";
+                };
+                spec = {
+                  parentRefs = [
+                    {
+                      name = "public";
+                      namespace = "gateway";
+                      sectionName = "websecure";
+                    }
+                  ];
+                  hostnames = [
+                    "nginx.k3s.vansleen.dev"
+                    "nginx-test.k3s.vansleen.dev"
+                  ];
+                  rules = [
+                    {
+                      backendRefs = [
+                        {
+                          name = "nginx";
+                          port = 80;
+                        }
+                      ];
+                    }
+                  ];
+                };
+              }
+            ];
+
             resources = {
               deployments.nginx.spec = {
                 replicas = 2;
@@ -44,19 +79,6 @@
                   </body>
                 </html>
               '';
-
-              ingresses.nginx.spec = lib.mkIf config.modules.tailscale-operator.enable {
-                ingressClassName = "tailscale";
-                tls = [
-                  {
-                    hosts = [ "nginx" ];
-                  }
-                ];
-                defaultBackend.service = {
-                  name = "nginx";
-                  port.name = "http";
-                };
-              };
             };
           };
         };
