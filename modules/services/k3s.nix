@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.nixos = {
     k3s =
@@ -84,20 +86,19 @@
 
                   serviceConfig = {
                     Type = "oneshot";
-                    RemainAfterExit = true;
                   };
 
                   path = [ pkgs.iproute2 ];
 
                   script = ''
-                    for attempt in $(seq 1 30); do
-                      if ip -4 addr show cni0 >/dev/null 2>&1; then
+                    for attempt in $(seq 1 150); do
+                      if ip -4 -o addr show cni0 >/dev/null 2>&1; then
                         break
                       fi
-                      sleep 1
+                      sleep 2
                     done
 
-                    if ip -4 addr show cni0 >/dev/null 2>&1; then
+                    if ip -4 -o addr show cni0 >/dev/null 2>&1; then
                       pod_ip_cidr="$(ip -4 -o addr show cni0 | while read -r _ _ _ cidr _; do printf '%s\n' "$cidr"; break; done)"
                       pod_cidr="''${pod_ip_cidr%.1/24}.0/24"
                       ip route replace throw "$pod_cidr" table 52
@@ -137,6 +138,15 @@
                 };
               };
 
+              timers.k3s-tailscale-routes = {
+                wantedBy = [ "timers.target" ];
+                timerConfig = {
+                  OnBootSec = "30s";
+                  OnUnitActiveSec = "1min";
+                  AccuracySec = "10s";
+                };
+              };
+
               paths.copy-kubeconfig =
                 lib.mkIf (config.services.k3s.enable && config.services.k3s.role == "server")
                   {
@@ -154,9 +164,6 @@
             ];
 
             networking.firewall = {
-              extraInputRules = ''
-                ip saddr 10.42.0.0/16 accept
-              '';
               trustedInterfaces = [
                 "cni0"
                 "flannel.1"
@@ -177,7 +184,12 @@
         cfg = config.modules.k3s;
       in
       {
+        imports = [
+          self.modules.nixos.k3s-tailscale-operator
+        ];
+
         config = {
+          modules.k3s-tailscale-operator.enable = cfg.useTailscale;
           services.k3s = {
             enable = true;
             role = "server";

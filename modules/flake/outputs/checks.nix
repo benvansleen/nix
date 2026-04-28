@@ -24,13 +24,19 @@
           check-added-large-files.enable = true;
           check-merge-conflicts.enable = true;
           detect-private-keys.enable = true;
-          deadnix.enable = true;
+          deadnix = {
+            enable = true;
+            settings.exclude = [ "generated" ];
+          };
           end-of-file-fixer.enable = true;
           flake-checker.enable = true;
           ripsecrets.enable = true;
           statix = {
             enable = true;
-            settings.config = "statix.toml";
+            settings = {
+              config = "statix.toml";
+              ignore = [ "generated" ];
+            };
           };
           treefmt = {
             enable = true;
@@ -44,7 +50,10 @@
                 "artic"
                 "facter"
               ];
-              exclude = "*.patch";
+              exclude = [
+                "*.patch"
+                "generated/*"
+              ];
             };
           };
         };
