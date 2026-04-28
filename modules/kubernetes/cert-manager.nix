@@ -63,6 +63,8 @@ in
               object;
         in
         lib.mkIf cfg.enable {
+          nixidy.applicationImports = [ ../../generated/cert-manager.nix ];
+
           applications.cert-manager = {
             inherit namespace;
             createNamespace = true;
@@ -77,26 +79,19 @@ in
               transformer = map ignoreWebhookFailure;
             };
 
-            objects = [
-              {
-                apiVersion = "cert-manager.io/v1";
-                kind = "ClusterIssuer";
-                metadata.name = "letsencrypt-cloudflare";
-                spec.acme = {
-                  inherit (inputs.secrets.personal-info) email;
-                  server = "https://acme-v02.api.letsencrypt.org/directory";
-                  privateKeySecretRef.name = "letsencrypt-cloudflare-account-key";
-                  solvers = [
-                    {
-                      dns01.cloudflare.apiTokenSecretRef = {
-                        name = cloudflare-secret-name;
-                        key = "api-token";
-                      };
-                    }
-                  ];
-                };
-              }
-            ];
+            resources.clusterIssuers.letsencrypt-cloudflare.spec.acme = {
+              inherit (inputs.secrets.personal-info) email;
+              server = "https://acme-v02.api.letsencrypt.org/directory";
+              privateKeySecretRef.name = "letsencrypt-cloudflare-account-key";
+              solvers = [
+                {
+                  dns01.cloudflare.apiTokenSecretRef = {
+                    name = cloudflare-secret-name;
+                    key = "api-token";
+                  };
+                }
+              ];
+            };
           };
         };
     };

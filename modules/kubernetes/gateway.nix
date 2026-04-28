@@ -18,7 +18,10 @@
           secretName = "gateway-k3s-vansleen-dev-tls";
         in
         lib.mkIf cfg.enable {
-          nixidy.applicationImports = [ ../../generated/traefik.nix ];
+          nixidy.applicationImports = [
+            ../../generated/traefik.nix
+          ]
+          ++ lib.optionals config.modules.cert-manager.enable [ ../../generated/cert-manager.nix ];
 
           applications.gateway = {
             namespace = "gateway";
@@ -64,24 +67,14 @@
               };
             };
 
-            objects = lib.mkIf config.modules.cert-manager.enable [
-              {
-                apiVersion = "cert-manager.io/v1";
-                kind = "Certificate";
-                metadata = {
-                  name = "gateway-k3s-vansleen-dev";
-                  namespace = "gateway";
-                };
-                spec = {
-                  inherit secretName;
-                  dnsNames = [ "*.${domain}" ];
-                  issuerRef = {
-                    name = "letsencrypt-cloudflare";
-                    kind = "ClusterIssuer";
-                  };
-                };
-              }
-            ];
+            resources.certificates.gateway-k3s-vansleen-dev.spec = lib.mkIf config.modules.cert-manager.enable {
+              inherit secretName;
+              dnsNames = [ "*.${domain}" ];
+              issuerRef = {
+                name = "letsencrypt-cloudflare";
+                kind = "ClusterIssuer";
+              };
+            };
           };
         };
     };
