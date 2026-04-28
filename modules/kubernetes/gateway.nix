@@ -31,7 +31,7 @@
               chart = charts.traefik.traefik;
               values = {
                 providers = {
-                  kubernetesCRD.enabled = false;
+                  kubernetesCRD.enabled = true;
                   kubernetesIngress.enabled = false;
                   kubernetesGateway.enabled = true;
                 };
@@ -74,6 +74,22 @@
                 name = "letsencrypt-cloudflare";
                 kind = "ClusterIssuer";
               };
+            };
+
+            resources.ingressRoutes.traefik-dashboard.spec = {
+              entryPoints = [ "websecure" ];
+              routes = [
+                {
+                  match = "Host(`traefik.${domain}`)";
+                  services = [
+                    {
+                      name = "api@internal";
+                      kind = "TraefikService";
+                    }
+                  ];
+                }
+              ];
+              tls.secretName = secretName;
             };
           };
         };
