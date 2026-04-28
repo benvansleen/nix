@@ -19,6 +19,10 @@
           name = "tailscale";
           chart = inputs.nixhelm.chartsDerivations.${system}.tailscale.tailscale-operator;
         };
+        "generators/traefik" = inputs'.nixidy.packages.generators.fromChartCRD {
+          name = "traefik";
+          chart = inputs.nixhelm.chartsDerivations.${system}.traefik.traefik;
+        };
       };
 
       legacyPackages = {
@@ -39,6 +43,7 @@
               set -eo pipefail
 
               cat ${self'.packages."generators/tailscale"} > generated/tailscale-operator.nix
+              cat ${self'.packages."generators/traefik"} > generated/traefik.nix
             '').outPath;
         };
       };

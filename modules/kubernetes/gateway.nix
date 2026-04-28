@@ -18,6 +18,8 @@
           secretName = "gateway-k3s-vansleen-dev-tls";
         in
         lib.mkIf cfg.enable {
+          nixidy.applicationImports = [ ../../generated/traefik.nix ];
+
           applications.gateway = {
             namespace = "gateway";
             createNamespace = true;

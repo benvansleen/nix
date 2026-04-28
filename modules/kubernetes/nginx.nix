@@ -11,45 +11,37 @@
           cfg = config.modules.nginx;
         in
         lib.mkIf cfg.enable {
+          nixidy.applicationImports = lib.mkIf config.modules.gateway.enable [ ../../generated/traefik.nix ];
+
           applications.nginx = {
             namespace = "nginx";
             createNamespace = true;
 
-            objects = lib.mkIf config.modules.gateway.enable [
-              {
-                apiVersion = "gateway.networking.k8s.io/v1";
-                kind = "HTTPRoute";
-                metadata = {
-                  name = "nginx";
-                  namespace = "nginx";
-                };
-                spec = {
-                  parentRefs = [
-                    {
-                      name = "public";
-                      namespace = "gateway";
-                      sectionName = "websecure";
-                    }
-                  ];
-                  hostnames = [
-                    "nginx.k3s.vansleen.dev"
-                    "nginx-test.k3s.vansleen.dev"
-                  ];
-                  rules = [
-                    {
-                      backendRefs = [
-                        {
-                          name = "nginx";
-                          port = 80;
-                        }
-                      ];
-                    }
-                  ];
-                };
-              }
-            ];
-
             resources = {
+              httpRoutes.nginx.spec = lib.mkIf config.modules.gateway.enable {
+                parentRefs = [
+                  {
+                    name = "public";
+                    namespace = "gateway";
+                    sectionName = "websecure";
+                  }
+                ];
+                hostnames = [
+                  "nginx.k3s.vansleen.dev"
+                  "nginx-test.k3s.vansleen.dev"
+                ];
+                rules = [
+                  {
+                    backendRefs = [
+                      {
+                        name = "nginx";
+                        port = 80;
+                      }
+                    ];
+                  }
+                ];
+              };
+
               deployments.nginx.spec = {
                 replicas = 2;
                 selector.matchLabels.app = "nginx";
