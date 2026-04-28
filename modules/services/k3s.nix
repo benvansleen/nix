@@ -31,6 +31,23 @@
             default = [ ];
             description = "Labels to register on this k3s node.";
           };
+          secrets = mkOption {
+            type =
+              with types;
+              listOf (submodule {
+                options = {
+                  namespace = mkOption { type = str; };
+                  name = mkOption { type = str; };
+                  dataFromSops = mkOption {
+                    type = attrsOf str;
+                    default = { };
+                    description = "Kubernetes secret keys mapped to SOPS secret file paths.";
+                  };
+                };
+              });
+            default = [ ];
+            description = "Kubernetes generic secrets to create from local SOPS secret files.";
+          };
         };
 
         config =
@@ -143,6 +160,62 @@
                       ${lib.concatMapStringsSep "\n" copyForUser config.modules.k3s.users}
                     '';
                 };
+
+                k3s-kubernetes-secrets =
+                  lib.mkIf (config.services.k3s.enable && config.services.k3s.role == "server" && cfg.secrets != [ ])
+                    {
+                      description = "Create Kubernetes secrets from SOPS files";
+                      wantedBy = [ "multi-user.target" ];
+                      after = [ "k3s.service" ];
+                      requires = [ "k3s.service" ];
+                      environment.KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
+                      serviceConfig = {
+                        Type = "oneshot";
+                        TimeoutStartSec = "2min";
+                      };
+
+                      script =
+                        let
+                          kubectl = lib.getExe pkgs.kubectl;
+                          applySecret =
+                            secret:
+                            let
+                              writeEnvFile = lib.concatStringsSep "\n" (
+                                lib.mapAttrsToList (key: path: ''
+                                  printf '%s=' ${lib.escapeShellArg key} >> "$env_file"
+                                  cat ${lib.escapeShellArg path} >> "$env_file"
+                                  printf '\n' >> "$env_file"
+                                '') secret.dataFromSops
+                              );
+                            in
+                            ''
+                              ${kubectl} create namespace ${lib.escapeShellArg secret.namespace} \
+                                --dry-run=client -o yaml | ${kubectl} apply --validate=false -f -
+
+                              env_file="$(${lib.getExe' pkgs.coreutils "mktemp"})"
+                              ${writeEnvFile}
+                              ${kubectl} -n ${lib.escapeShellArg secret.namespace} create secret generic ${lib.escapeShellArg secret.name} \
+                                --from-env-file="$env_file" \
+                                --dry-run=client -o yaml | ${kubectl} apply --validate=false -f -
+                              rm -f "$env_file"
+                            '';
+                        in
+                        /* sh */ ''
+                          for attempt in $(seq 1 60); do
+                            if ${kubectl} get --raw=/readyz >/dev/null; then
+                              break
+                            fi
+
+                            if [ "$attempt" -eq 60 ]; then
+                              exit 1
+                            fi
+
+                            sleep 2
+                          done
+
+                          ${lib.concatMapStringsSep "\n" applySecret cfg.secrets}
+                        '';
+                    };
               };
 
               timers.k3s-tailscale-routes = {

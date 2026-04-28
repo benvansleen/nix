@@ -8,7 +8,6 @@ in
   flake.modules.nixos.k3s-pihole =
     {
       config,
-      pkgs,
       lib,
       ...
     }:
@@ -38,40 +37,16 @@ in
             mkdir -p /etc/pihole
             mkdir -p /etc/dnsmasq.d
           '';
-
-          systemd.services.pihole-kubernetes-secret = {
-            wantedBy = [ "multi-user.target" ];
-            after = [ "k3s.service" ];
-            requires = [ "k3s.service" ];
-            environment.KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
-            serviceConfig = {
-              Type = "oneshot";
-              TimeoutStartSec = "2min";
-            };
-
-            script = /* sh */ ''
-              for attempt in $(seq 1 60); do
-                if ${pkgs.kubectl}/bin/kubectl get --raw=/readyz >/dev/null; then
-                  break
-                fi
-
-                if [ "$attempt" -eq 60 ]; then
-                  exit 1
-                fi
-
-                sleep 2
-              done
-
-              ${pkgs.kubectl}/bin/kubectl create namespace ${namespace} \
-                --dry-run=client -o yaml | ${pkgs.kubectl}/bin/kubectl apply --validate=false -f -
-
-              password="$(cat ${config.sops.secrets.pihole_webpassword.path})"
-              ${pkgs.kubectl}/bin/kubectl -n ${namespace} create secret generic ${secret-name} \
-                --from-literal=FTLCONF_webserver_api_password="$password" \
-                --from-literal=PIHOLE_PASSWORD="$password" \
-                --dry-run=client -o yaml | ${pkgs.kubectl}/bin/kubectl apply --validate=false -f -
-            '';
-          };
+          modules.k3s.secrets = [
+            {
+              inherit namespace;
+              name = secret-name;
+              dataFromSops = {
+                FTLCONF_webserver_api_password = config.sops.secrets.pihole_webpassword.path;
+                PIHOLE_PASSWORD = config.sops.secrets.pihole_webpassword.path;
+              };
+            }
+          ];
         };
     };
 
