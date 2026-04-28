@@ -48,7 +48,7 @@
           };
           grafana.enable = true;
           maybe.enable = true;
-          pihole.enable = true;
+          pihole.enable = false;
           prometheus = {
             server = {
               scrapeConfigs = [
@@ -118,7 +118,7 @@
             ];
           };
           unbound = {
-            enable = true;
+            enable = false;
             port = 5335;
             num-threads = 4;
           };

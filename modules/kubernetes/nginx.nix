@@ -63,11 +63,11 @@
                 ports.http.port = 80;
               };
 
-              configMaps.nginx-html.data."index.html" = ''
+              configMaps.nginx-html.data."index.html" = /* html */ ''
                 <!DOCTYPE html>
                 <html>
                   <body>
-                    <h1>Hello from nixidy!</h1>
+                    <h1>let's change the content</h1>
                   </body>
                 </html>
               '';

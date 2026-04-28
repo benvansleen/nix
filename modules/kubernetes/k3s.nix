@@ -6,6 +6,7 @@
       cert-manager
       gateway
       nginx
+      pihole
       tailscale-operator
     ];
 
@@ -17,6 +18,7 @@
       cert-manager.enable = true;
       gateway.enable = true;
       nginx.enable = true;
+      pihole.enable = true;
       tailscale-operator.enable = true;
     };
   };

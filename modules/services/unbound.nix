@@ -28,7 +28,7 @@
         let
           cfg = config.modules.unbound;
         in
-        {
+        lib.mkIf cfg.enable {
           modules.tailscale.tailscale-up-extra-args = [
             "--exit-node-allow-lan-access"
           ];

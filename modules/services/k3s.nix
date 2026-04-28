@@ -184,14 +184,18 @@
         cfg = config.modules.k3s;
       in
       {
-        imports = [
-          self.modules.nixos.k3s-cert-manager
-          self.modules.nixos.k3s-tailscale-operator
+        imports = with self.modules.nixos; [
+          k3s-cert-manager
+          k3s-pihole
+          k3s-tailscale-operator
         ];
 
         config = {
-          modules.k3s-cert-manager.enable = true;
-          modules.k3s-tailscale-operator.enable = cfg.useTailscale;
+          modules = {
+            k3s-cert-manager.enable = true;
+            k3s-pihole.enable = true;
+            k3s-tailscale-operator.enable = cfg.useTailscale;
+          };
           services.k3s = {
             enable = true;
             role = "server";
