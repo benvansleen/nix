@@ -46,6 +46,9 @@
             "--exit-node=auto:any"
           ];
         };
+        k3s.nodeLabels = [
+          "node.vansleen.dev/tier=performance"
+        ];
       };
       persist.enable = true;
 

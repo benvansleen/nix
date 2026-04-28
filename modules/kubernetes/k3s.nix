@@ -4,6 +4,7 @@
   flake.modules.kubernetes.k3s = {
     imports = with self.modules.kubernetes; [
       cert-manager
+      descheduler
       gateway
       nginx
       pihole
@@ -16,6 +17,7 @@
 
     modules = {
       cert-manager.enable = true;
+      descheduler.enable = true;
       gateway.enable = true;
       nginx.enable = true;
       pihole.enable = true;

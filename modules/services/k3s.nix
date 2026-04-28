@@ -26,6 +26,11 @@
             default = true;
             description = "Use the node's runtime Tailscale IP for k3s node traffic.";
           };
+          nodeLabels = mkOption {
+            type = with types; listOf str;
+            default = [ ];
+            description = "Labels to register on this k3s node.";
+          };
         };
 
         config =
@@ -35,11 +40,13 @@
           {
             services.k3s = {
               tokenFile = config.sops.secrets.k3s_token.path;
-              extraFlags = lib.optionals cfg.useTailscale [
-                "--node-ip=\${K3S_TAILSCALE_IP}"
-                "--node-external-ip=\${K3S_TAILSCALE_IP}"
-                "--flannel-iface=tailscale0"
-              ];
+              extraFlags =
+                lib.optionals cfg.useTailscale [
+                  "--node-ip=\${K3S_TAILSCALE_IP}"
+                  "--node-external-ip=\${K3S_TAILSCALE_IP}"
+                  "--flannel-iface=tailscale0"
+                ]
+                ++ map (label: "--node-label=${label}") cfg.nodeLabels;
             };
 
             systemd = {
@@ -204,6 +211,8 @@
               "--disable=servicelb"
               "--disable=local-storage"
               "--disable=metrics-server"
+              "--kube-controller-manager-arg=node-monitor-period=2s"
+              "--kube-controller-manager-arg=node-monitor-grace-period=20s"
             ]
             ++ lib.optionals cfg.useTailscale [
               "--advertise-address=\${K3S_TAILSCALE_IP}"
