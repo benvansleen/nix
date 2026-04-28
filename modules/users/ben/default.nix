@@ -113,7 +113,10 @@ in
         self.modules.homeManager.${user}
       ];
 
-      modules.sops-user.username = user;
+      modules = {
+        k3s.users = [ user ];
+        sops-user.username = user;
+      };
 
       programs = {
         hyprland = {

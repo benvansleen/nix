@@ -12,6 +12,7 @@
       imports = with self.modules.nixos; [
         facter
         impermanence
+        k3s
         nix
         nixosCli
         self.modules.nixos."prometheus/client"
@@ -34,6 +35,7 @@
 
       config = {
         modules = {
+          k3s.primary = "pi";
           tailscale.enable = true;
           prometheus.client.enable = true;
         };

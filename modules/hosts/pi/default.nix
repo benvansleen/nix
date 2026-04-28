@@ -13,6 +13,7 @@
       caddy
       clonix
       containers
+      self.modules.nixos."k3s/server"
       grafana
       maybe
       pihole

@@ -14,6 +14,7 @@
       containers
       crossplatformBuilder
       displayManager
+      self.modules.nixos."k3s/agent"
       firefox
       remotebuilder
       secureboot

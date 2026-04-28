@@ -37,7 +37,7 @@
             };
           };
           # By default, nix-sops will create the .ssh directory as owned by root.
-          system.activationScripts."user-owns-.ssh".text = ''
+          system.activationScripts."user-owns-.ssh".text = /* sh */ ''
             chown ${cfg.username} ${user.home}/.ssh
           '';
 

@@ -77,7 +77,7 @@
                   "github.com/tailscale/caddy-tailscale@bb080c4414acd465d8be93b4d8f907dbb2ab2544" # jan 6, 2026
                   "github.com/caddy-dns/cloudflare@v0.2.4" # apr 26, 2026
                 ];
-                hash = "sha256-SULyUeOCg/3ffcJ/Z+7lEmiVuDjChur+p4kBE5Yqdsg=";
+                hash = "sha256-uZkBzoitr7UamGnxbTtcLBmG+2nMLfn8cSJ+6l+4r7E=";
                 doInstallCheck = false;
               };
               inherit (self.constants) email;

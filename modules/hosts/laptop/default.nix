@@ -12,6 +12,7 @@
       clonix
       containers
       displayManager
+      self.modules.nixos."k3s/agent"
       firefox
       secureboot
       zsa
