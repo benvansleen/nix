@@ -106,6 +106,7 @@
             };
           };
           searx = {
+            enable = false;
             port = 8888;
           };
           tailscale = {

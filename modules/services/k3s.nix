@@ -267,6 +267,7 @@
         imports = with self.modules.nixos; [
           k3s-cert-manager
           k3s-pihole
+          k3s-searx
           k3s-tailscale-operator
         ];
 
@@ -274,6 +275,7 @@
           modules = {
             k3s-cert-manager.enable = true;
             k3s-pihole.enable = true;
+            k3s-searx.enable = true;
             k3s-tailscale-operator.enable = cfg.useTailscale;
           };
           services.k3s = {

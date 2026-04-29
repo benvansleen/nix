@@ -8,6 +8,7 @@
       gateway
       nginx
       pihole
+      searx
       tailscale-operator
     ];
 
@@ -21,6 +22,7 @@
       gateway.enable = true;
       nginx.enable = true;
       pihole.enable = true;
+      searx.enable = true;
       tailscale-operator.enable = true;
     };
   };
