@@ -1,8 +1,16 @@
 { inputs, self, ... }:
 
 {
-  flake-file.inputs.nixidy.url = "github:arnarg/nixidy";
-  flake-file.inputs.nixhelm.url = "github:farcaller/nixhelm";
+  flake-file.inputs = {
+    nixidy = {
+      url = "github:arnarg/nixidy";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixhelm = {
+      url = "github:farcaller/nixhelm";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
 
   perSystem =
     {

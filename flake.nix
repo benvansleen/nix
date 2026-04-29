@@ -93,8 +93,14 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixhelm.url = "github:farcaller/nixhelm";
-    nixidy.url = "github:arnarg/nixidy";
+    nixhelm = {
+      url = "github:farcaller/nixhelm";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixidy = {
+      url = "github:arnarg/nixidy";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-cli = {
       url = "github:nix-community/nixos-cli";
       inputs = {
