@@ -10,6 +10,7 @@
     }:
     {
       options.modules.caddy = with lib; {
+        enable = mkEnableOption "caddy";
         admin-port = mkOption {
           type = types.port;
           default = 2019;
@@ -21,7 +22,7 @@
         let
           cfg = config.modules.caddy;
         in
-        {
+        lib.mkIf cfg.enable {
           sops.templates."caddy.env".content = ''
             TS_AUTHKEY=${config.sops.placeholder.tailscale_sidecar_authkey}
             CLOUDFLARE_TOKEN=${config.sops.placeholder.cloudflare_caddy_api_token}
