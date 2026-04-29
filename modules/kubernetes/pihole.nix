@@ -159,7 +159,9 @@ in
                     dnsPolicy = "Default";
                     nodeSelector."kubernetes.io/hostname" = "pi";
                     containers.pihole = {
-                      image = "pihole/pihole:2025.07.1";
+                      ## MUST pre-pull image before upgrading; otherwise will imagepull will fail
+                      ## due to dns outage. `ssh pi 'sudo k3s ctr images pull docker.io/pihole/pihole:<tag>'`
+                      image = "pihole/pihole:2026.04.1";
                       env = {
                         TZ.value = "America/New_York";
                         PIHOLE_INTERFACE.value = "end0";
