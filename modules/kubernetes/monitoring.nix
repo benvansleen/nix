@@ -138,7 +138,7 @@ in
                     };
                     volumes = {
                       config.configMap.name = "prometheus";
-                      data.emptyDir = { };
+                      data.persistentVolumeClaim.claimName = "prometheus-data";
                     };
                   };
                 };
@@ -171,13 +171,22 @@ in
                 };
               };
 
-              persistentVolumeClaims.grafana-data = {
-                metadata.name = "grafana-data";
-
-                spec = {
-                  accessModes = [ "ReadWriteOnce" ];
-                  storageClassName = "local-path";
-                  resources.requests.storage = "1Gi";
+              persistentVolumeClaims = {
+                grafana-data = {
+                  metadata.name = "grafana-data";
+                  spec = {
+                    accessModes = [ "ReadWriteOnce" ];
+                    storageClassName = "local-path";
+                    resources.requests.storage = "1Gi";
+                  };
+                };
+                prometheus-data = {
+                  metadata.name = "prometheus-data";
+                  spec = {
+                    accessModes = [ "ReadWriteOnce" ];
+                    storageClassName = "local-path";
+                    resources.requests.storage = "1Gi";
+                  };
                 };
               };
 
