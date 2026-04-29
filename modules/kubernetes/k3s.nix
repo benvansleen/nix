@@ -8,6 +8,7 @@
         cert-manager
         descheduler
         gateway
+        monitoring
         nginx
         pihole
         searx
@@ -28,6 +29,7 @@
         cert-manager.enable = true;
         descheduler.enable = true;
         gateway.enable = true;
+        monitoring.enable = true;
         nginx.enable = true;
         pihole.enable = true;
         searx.enable = true;

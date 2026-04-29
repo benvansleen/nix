@@ -75,7 +75,6 @@ in
                   port: 15335
                   interface: 127.0.0.1
                   access-control: 127.0.0.0/8 allow
-                  verbosity: 1
 
                   # Tailscale LoadBalancer IP for Service/gateway/traefik.
                   # Check with: kubectl -n gateway get svc traefik -o wide
@@ -92,6 +91,15 @@ in
                   harden-referral-path: yes
                   harden-algo-downgrade: yes
                   tls-cert-bundle: /etc/ssl/certs/ca-certificates.crt
+
+                  # useful when debugging
+                  verbosity: 1
+                  use-syslog: no
+                  logfile: ""
+                  log-time-ascii: yes
+                  log-queries: yes
+                  log-replies: yes
+                  log-servfail: yes
 
                 forward-zone:
                   name: "${self.constants.tailscale-domain}"

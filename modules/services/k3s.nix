@@ -284,7 +284,6 @@
             extraFlags = [
               "--disable=traefik"
               "--disable=servicelb"
-              "--disable=local-storage"
               "--disable=metrics-server"
               "--kube-controller-manager-arg=node-monitor-period=2s"
               "--kube-controller-manager-arg=node-monitor-grace-period=20s"
