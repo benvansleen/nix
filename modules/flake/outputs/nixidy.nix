@@ -24,8 +24,8 @@
           src = pkgs.fetchFromGitHub {
             owner = "cert-manager";
             repo = "cert-manager";
-            rev = "v1.19.1";
-            hash = "sha256-OK6U9QIRYolLBjcNBhzFmZZqfBFoJzY8aUHew2F0MAQ=";
+            rev = "v1.20.2";
+            hash = "sha256-JbQcRPPgjlvcOxnYID3zJq5CAqigI7HbbwHm5S+9r4E";
           };
           crds = [
             "deploy/crds/cert-manager.io_certificates.yaml"

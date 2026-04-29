@@ -19,8 +19,8 @@
             pkgs.fetchFromGitHub {
               owner = "kubernetes-sigs";
               repo = "descheduler";
-              rev = "descheduler-helm-chart-0.35.0";
-              hash = "sha256-uaN1CIcHhpLKK+sxxBRww8gUg717iesoZhLDvZmAJIA=";
+              rev = "descheduler-helm-chart-0.35.1";
+              hash = "sha256-dLNr1lqiAvtcLJvNDLj7kLutQ8cZiJnVfFaSZFm4+Zk=";
             }
             + "/charts/descheduler";
         in
