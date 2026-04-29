@@ -85,6 +85,16 @@ in
                         target_label: instance
                       - action: labelmap
                         regex: __meta_kubernetes_node_label_(.+)
+
+                  - job_name: traefik
+                    static_configs:
+                      - targets:
+                          - traefik-metrics.gateway.svc.cluster.local:9100
+
+                  - job_name: unbound
+                    static_configs:
+                      - targets:
+                          - pihole-unbound-metrics.dns.svc.cluster.local:9167
               '';
 
               configMaps = {

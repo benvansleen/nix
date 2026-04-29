@@ -1,7 +1,7 @@
 { self, ... }:
 
 let
-  namespace = "pihole";
+  namespace = "dns";
   secret-name = "pihole-webpassword";
   dhcp = true;
 in
@@ -31,11 +31,12 @@ in
 
           networking.firewall = {
             allowedTCPPorts = lib.mkForce [ 53 ];
-            allowedUDPPorts =
-              lib.mkForce [
+            allowedUDPPorts = lib.mkForce (
+              [
                 53 # dns
               ]
-              ++ lib.optionals dhcp [ 67 ];
+              ++ lib.optionals dhcp [ 67 ]
+            );
           };
 
           system.activationScripts.mk-pihole-persist-dirs.text = /* sh */ ''
@@ -105,6 +106,13 @@ in
                   log-queries: yes
                   log-replies: yes
                   log-servfail: yes
+                  extended-statistics: yes
+
+                remote-control:
+                  control-enable: yes
+                  control-interface: 127.0.0.1
+                  control-port: 15336
+                  control-use-cert: no
 
                 forward-zone:
                   name: "${self.constants.tailscale-domain}"
@@ -172,55 +180,71 @@ in
                     hostNetwork = true;
                     dnsPolicy = "Default";
                     nodeSelector."kubernetes.io/hostname" = "pi";
-                    containers.pihole = {
-                      ## MUST pre-pull image before upgrading; otherwise will imagepull will fail
-                      ## due to dns outage. `ssh pi 'sudo k3s ctr images pull docker.io/pihole/pihole:<tag>'`
-                      image = "pihole/pihole:2026.04.1";
-                      securityContext.capabilities.add = lib.mkIf dhcp [ "NET_ADMIN" ];
-                      env = {
-                        TZ.value = "America/New_York";
-                        PIHOLE_INTERFACE.value = "end0";
-                        FTLCONF_dns_upstreams.value = "127.0.0.1#15335";
-                        FTLCONF_webserver_port.value = "18080";
-                        FTLCONF_dns_dnssec.value = "false";
-                        FTLCONF_dns_listeningMode.value = "all";
-                        FTLCONF_webserver_session_timeout.value = "604800";
-                        FTLCONF_dhcp_active.value = lib.mkIf dhcp "true";
-                        FTLCONF_dhcp_start.value = "192.168.1.10";
-                        FTLCONF_dhcp_end.value = "192.168.1.150";
-                        FTLCONF_dhcp_router.value = "192.168.1.1";
-                      };
-                      envFrom = [
-                        { secretRef.name = secret-name; }
-                      ];
-                      ports = {
-                        dns-tcp = {
-                          containerPort = 53;
-                          protocol = "TCP";
+                    containers = {
+                      pihole = {
+                        ## MUST pre-pull image before upgrading; otherwise will imagepull will fail
+                        ## due to dns outage. `ssh pi 'sudo k3s ctr images pull docker.io/pihole/pihole:<tag>'`
+                        image = "pihole/pihole:2026.04.1";
+                        securityContext.capabilities.add = lib.mkIf dhcp [ "NET_ADMIN" ];
+                        env = {
+                          TZ.value = "America/New_York";
+                          PIHOLE_INTERFACE.value = "end0";
+                          FTLCONF_dns_upstreams.value = "127.0.0.1#15335";
+                          FTLCONF_webserver_port.value = "18080";
+                          FTLCONF_dns_dnssec.value = "false";
+                          FTLCONF_dns_listeningMode.value = "all";
+                          FTLCONF_webserver_session_timeout.value = "${toString (14 * 24 * 60 * 60)}";
+                          FTLCONF_dhcp_active.value = lib.mkIf dhcp "true";
+                          FTLCONF_dhcp_start.value = "192.168.1.10";
+                          FTLCONF_dhcp_end.value = "192.168.1.150";
+                          FTLCONF_dhcp_router.value = "192.168.1.1";
+                          FTLCONF_misc_nice.value = "-20";
                         };
-                        dns-udp = {
-                          containerPort = 53;
-                          protocol = "UDP";
+                        envFrom = [
+                          { secretRef.name = secret-name; }
+                        ];
+                        ports = {
+                          dns-tcp = {
+                            containerPort = 53;
+                            protocol = "TCP";
+                          };
+                          dns-udp = {
+                            containerPort = 53;
+                            protocol = "UDP";
+                          };
+                          dhcp-udp = lib.mkIf dhcp {
+                            containerPort = 67;
+                            protocol = "UDP";
+                          };
+                          http.containerPort = 18080;
                         };
-                        dhcp-udp = lib.mkIf dhcp {
-                          containerPort = 67;
-                          protocol = "UDP";
+                        volumeMounts = {
+                          "/etc/pihole".name = "pihole-etc";
+                          "/etc/dnsmasq.d".name = "dnsmasq";
                         };
-                        http.containerPort = 18080;
                       };
-                      volumeMounts = {
-                        "/etc/pihole".name = "pihole-etc";
-                        "/etc/dnsmasq.d".name = "dnsmasq";
-                      };
-                    };
-                    containers.unbound = {
-                      ## if image not found, use `nix run .#update-unbound`
-                      image = "docker.io/library/unbound:latest";
+                      unbound = {
+                        ## if image not found, use `nix run .#update-unbound`
+                        image = "unbound:latest";
+                        imagePullPolicy = "IfNotPresent";
 
-                      ports.unbound.containerPort = 15335;
-                      volumeMounts."/etc/unbound/unbound.conf" = {
-                        name = "unbound-conf";
-                        subPath = "unbound.conf";
+                        ports.unbound.containerPort = 15335;
+                        volumeMounts."/etc/unbound/unbound.conf" = {
+                          name = "unbound-conf";
+                          subPath = "unbound.conf";
+                        };
+                      };
+                      unbound-exporter = {
+                        image = "unbound-exporter:latest";
+                        imagePullPolicy = "IfNotPresent";
+                        args = [
+                          "-unbound.ca="
+                          "-unbound.cert="
+                          "-unbound.host=tcp://127.0.0.1:15336"
+                          "-unbound.key="
+                          "-web.listen-address=:9167"
+                        ];
+                        ports.metrics.containerPort = 9167;
                       };
                     };
                     volumes = {
@@ -235,6 +259,14 @@ in
                       unbound-conf.configMap.name = "unbound-conf";
                     };
                   };
+                };
+              };
+
+              services.pihole-unbound-metrics.spec = {
+                selector.app = "pihole";
+                ports.metrics = {
+                  port = 9167;
+                  targetPort = "metrics";
                 };
               };
 

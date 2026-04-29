@@ -63,6 +63,13 @@
                   annotations."tailscale.com/hostname" = "gateway";
                 };
 
+                metrics.prometheus = {
+                  addEntryPointsLabels = true;
+                  addRoutersLabels = true;
+                  addServicesLabels = true;
+                  service.enabled = true;
+                };
+
                 ports.web.expose.default = false;
               };
             };
