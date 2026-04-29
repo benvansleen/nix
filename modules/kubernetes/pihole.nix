@@ -3,6 +3,7 @@
 let
   namespace = "pihole";
   secret-name = "pihole-webpassword";
+  dhcp = true;
 in
 {
   flake.modules.nixos.k3s-pihole =
@@ -30,7 +31,11 @@ in
 
           networking.firewall = {
             allowedTCPPorts = lib.mkForce [ 53 ];
-            allowedUDPPorts = lib.mkForce [ 53 ];
+            allowedUDPPorts =
+              lib.mkForce [
+                53 # dns
+              ]
+              ++ lib.optionals dhcp [ 67 ];
           };
 
           system.activationScripts.mk-pihole-persist-dirs.text = /* sh */ ''
@@ -171,6 +176,7 @@ in
                       ## MUST pre-pull image before upgrading; otherwise will imagepull will fail
                       ## due to dns outage. `ssh pi 'sudo k3s ctr images pull docker.io/pihole/pihole:<tag>'`
                       image = "pihole/pihole:2026.04.1";
+                      securityContext.capabilities.add = lib.mkIf dhcp [ "NET_ADMIN" ];
                       env = {
                         TZ.value = "America/New_York";
                         PIHOLE_INTERFACE.value = "end0";
@@ -179,6 +185,10 @@ in
                         FTLCONF_dns_dnssec.value = "false";
                         FTLCONF_dns_listeningMode.value = "all";
                         FTLCONF_webserver_session_timeout.value = "604800";
+                        FTLCONF_dhcp_active.value = lib.mkIf dhcp "true";
+                        FTLCONF_dhcp_start.value = "192.168.1.10";
+                        FTLCONF_dhcp_end.value = "192.168.1.150";
+                        FTLCONF_dhcp_router.value = "192.168.1.1";
                       };
                       envFrom = [
                         { secretRef.name = secret-name; }
@@ -190,6 +200,10 @@ in
                         };
                         dns-udp = {
                           containerPort = 53;
+                          protocol = "UDP";
+                        };
+                        dhcp-udp = lib.mkIf dhcp {
+                          containerPort = 67;
                           protocol = "UDP";
                         };
                         http.containerPort = 18080;
