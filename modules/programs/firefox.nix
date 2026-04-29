@@ -139,7 +139,7 @@
                     "SearxNG" = {
                       urls = [
                         {
-                          template = "https://searx.ben.vansleen.dev/search";
+                          template = "https://searx.vansleen.dev/search";
                           params = [
                             {
                               name = "q";

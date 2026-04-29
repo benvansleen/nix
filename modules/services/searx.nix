@@ -17,7 +17,7 @@
         let
           cfg = config.modules.searx;
         in
-        {
+        lib.mkIf cfg.enable {
           sops.templates."searxng.env".content = ''
             SEARXNG_SECRET=${config.sops.placeholder.searx_secretkey}
           '';

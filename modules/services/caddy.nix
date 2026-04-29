@@ -10,6 +10,7 @@
     }:
     {
       options.modules.caddy = with lib; {
+        enable = mkEnableOption "caddy";
         admin-port = mkOption {
           type = types.port;
           default = 2019;
@@ -21,39 +22,48 @@
         let
           cfg = config.modules.caddy;
         in
-        {
+        lib.mkIf cfg.enable {
           sops.templates."caddy.env".content = ''
             TS_AUTHKEY=${config.sops.placeholder.tailscale_sidecar_authkey}
             CLOUDFLARE_TOKEN=${config.sops.placeholder.cloudflare_caddy_api_token}
           '';
           services.caddy =
             let
-              services = {
-                grafana = /* caddy */ ''
-                  tailscale_auth
-                  encode zstd gzip
-                  reverse_proxy pi:${toString config.modules.grafana.port} {
-                    header_up X-Webauth-User {http.auth.user.tailscale_user}
-                  }
-                '';
-                maybe = /* caddy */ ''
-                  encode zstd gzip
-                  reverse_proxy pi:${toString config.modules.maybe.port}
-                '';
-                pihole = /* caddy */ ''
-                  encode zstd gzip
-                  redir / /admin{uri}
-                  reverse_proxy pi:${toString config.modules.pihole.web-ui-port}
-                '';
-                prometheus = /* caddy */ ''
-                  encode zstd gzip
-                  reverse_proxy pi:${toString config.modules.prometheus.server.port}
-                '';
-                searx = /* caddy */ ''
-                  encode zstd gzip
-                  reverse_proxy pi:${toString config.modules.searx.port}
-                '';
-              };
+              services =
+                lib.optionalAttrs config.modules.grafana.enable {
+                  grafana = /* caddy */ ''
+                    tailscale_auth
+                    encode zstd gzip
+                    reverse_proxy pi:${toString config.modules.grafana.port} {
+                      header_up X-Webauth-User {http.auth.user.tailscale_user}
+                    }
+                  '';
+                }
+                // lib.optionalAttrs config.modules.maybe.enable {
+                  maybe = /* caddy */ ''
+                    encode zstd gzip
+                    reverse_proxy pi:${toString config.modules.maybe.port}
+                  '';
+                }
+                // lib.optionalAttrs config.modules.pihole.enable {
+                  pihole = /* caddy */ ''
+                    encode zstd gzip
+                    redir / /admin{uri}
+                    reverse_proxy pi:${toString config.modules.pihole.web-ui-port}
+                  '';
+                }
+                // lib.optionalAttrs config.services.prometheus.enable {
+                  prometheus = /* caddy */ ''
+                    encode zstd gzip
+                    reverse_proxy pi:${toString config.modules.prometheus.server.port}
+                  '';
+                }
+                // lib.optionalAttrs config.services.searx.enable {
+                  searx = /* caddy */ ''
+                    encode zstd gzip
+                    reverse_proxy pi:${toString config.modules.searx.port}
+                  '';
+                };
 
               tailscale = host: config: /* caddy */ ''
                 :443 {

@@ -46,66 +46,10 @@
           containers = {
             disable-podman-dns = true;
           };
-          grafana.enable = true;
           maybe.enable = true;
-          pihole.enable = true;
-          prometheus = {
-            server = {
-              scrapeConfigs = [
-                {
-                  job_name = "home";
-                  static_configs = [
-                    {
-                      targets = [
-                        # TODO: fix when moving to colmena
-                        "pi:${toString config.modules.prometheus.client.port}"
-                        "desktop:${toString config.modules.prometheus.client.port}"
-                        "laptop:${toString config.modules.prometheus.client.port}"
-                      ];
-                    }
-                  ];
-                  scrape_interval = "15s";
-                }
-                {
-                  job_name = "dns";
-                  static_configs = [
-                    {
-                      targets = [
-                        # TODO: fix when moving to colmena
-                        "pi:${toString config.modules.unbound.prometheusPort}"
-                      ];
-                    }
-                  ];
-                  scrape_interval = "15s";
-                }
-                {
-                  # https://github.com/Malfhas/caddy-grafana
-                  job_name = "caddy";
-                  static_configs = [
-                    {
-                      targets = [
-                        # TODO: fix when moving to colmena
-                        "pi:${toString config.modules.caddy.admin-port}"
-                      ];
-                    }
-                  ];
-                  scrape_interval = "15s";
-                }
-                {
-                  job_name = "pihole";
-                  static_configs = [
-                    {
-                      targets = [
-                        "pi:${toString config.modules.pihole.prometheus-exporter-port}"
-                      ];
-                    }
-                  ];
-                  scrape_interval = "15s";
-                }
-              ];
-            };
-          };
+          pihole.enable = false;
           searx = {
+            enable = false;
             port = 8888;
           };
           tailscale = {
@@ -118,7 +62,7 @@
             ];
           };
           unbound = {
-            enable = true;
+            enable = false;
             port = 5335;
             num-threads = 4;
           };

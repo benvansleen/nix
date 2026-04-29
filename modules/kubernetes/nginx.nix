@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.kubernetes.nginx =
     { config, lib, ... }:
@@ -9,6 +11,9 @@
       config =
         let
           cfg = config.modules.nginx;
+          podLabels = {
+            app = "nginx";
+          };
         in
         lib.mkIf cfg.enable {
           nixidy.applicationImports = lib.mkIf config.modules.gateway.enable [ ../../generated/traefik.nix ];
@@ -27,8 +32,7 @@
                   }
                 ];
                 hostnames = [
-                  "nginx.k3s.vansleen.dev"
-                  "nginx-test.k3s.vansleen.dev"
+                  "nginx.vansleen.dev"
                 ];
                 rules = [
                   {
@@ -44,10 +48,14 @@
 
               deployments.nginx.spec = {
                 replicas = 2;
-                selector.matchLabels.app = "nginx";
+                strategy.rollingUpdate = {
+                  maxSurge = 0;
+                  maxUnavailable = 1;
+                };
+                selector.matchLabels = podLabels;
                 template = {
-                  metadata.labels.app = "nginx";
-                  spec = {
+                  metadata.labels = podLabels;
+                  spec = (self.lib.performanceFavoredPodSpec podLabels) // {
                     containers.nginx = {
                       image = "nginx:1.25.1";
                       ports.http.containerPort = 80;
@@ -59,15 +67,20 @@
               };
 
               services.nginx.spec = {
-                selector.app = "nginx";
+                selector = podLabels;
                 ports.http.port = 80;
               };
 
-              configMaps.nginx-html.data."index.html" = ''
+              podDisruptionBudgets.nginx.spec = {
+                minAvailable = 1;
+                selector.matchLabels = podLabels;
+              };
+
+              configMaps.nginx-html.data."index.html" = /* html */ ''
                 <!DOCTYPE html>
                 <html>
                   <body>
-                    <h1>Hello from nixidy!</h1>
+                    <h1>let's change the content</h1>
                   </body>
                 </html>
               '';

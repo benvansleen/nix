@@ -26,6 +26,28 @@
             default = true;
             description = "Use the node's runtime Tailscale IP for k3s node traffic.";
           };
+          nodeLabels = mkOption {
+            type = with types; listOf str;
+            default = [ ];
+            description = "Labels to register on this k3s node.";
+          };
+          secrets = mkOption {
+            type =
+              with types;
+              listOf (submodule {
+                options = {
+                  namespace = mkOption { type = str; };
+                  name = mkOption { type = str; };
+                  dataFromSops = mkOption {
+                    type = attrsOf str;
+                    default = { };
+                    description = "Kubernetes secret keys mapped to SOPS secret file paths.";
+                  };
+                };
+              });
+            default = [ ];
+            description = "Kubernetes generic secrets to create from local SOPS secret files.";
+          };
         };
 
         config =
@@ -35,11 +57,13 @@
           {
             services.k3s = {
               tokenFile = config.sops.secrets.k3s_token.path;
-              extraFlags = lib.optionals cfg.useTailscale [
-                "--node-ip=\${K3S_TAILSCALE_IP}"
-                "--node-external-ip=\${K3S_TAILSCALE_IP}"
-                "--flannel-iface=tailscale0"
-              ];
+              extraFlags =
+                lib.optionals cfg.useTailscale [
+                  "--node-ip=\${K3S_TAILSCALE_IP}"
+                  "--node-external-ip=\${K3S_TAILSCALE_IP}"
+                  "--flannel-iface=tailscale0"
+                ]
+                ++ map (label: "--node-label=${label}") cfg.nodeLabels;
             };
 
             systemd = {
@@ -136,6 +160,62 @@
                       ${lib.concatMapStringsSep "\n" copyForUser config.modules.k3s.users}
                     '';
                 };
+
+                k3s-kubernetes-secrets =
+                  lib.mkIf (config.services.k3s.enable && config.services.k3s.role == "server" && cfg.secrets != [ ])
+                    {
+                      description = "Create Kubernetes secrets from SOPS files";
+                      wantedBy = [ "multi-user.target" ];
+                      after = [ "k3s.service" ];
+                      requires = [ "k3s.service" ];
+                      environment.KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
+                      serviceConfig = {
+                        Type = "oneshot";
+                        TimeoutStartSec = "2min";
+                      };
+
+                      script =
+                        let
+                          kubectl = lib.getExe pkgs.kubectl;
+                          applySecret =
+                            secret:
+                            let
+                              writeEnvFile = lib.concatStringsSep "\n" (
+                                lib.mapAttrsToList (key: path: ''
+                                  printf '%s=' ${lib.escapeShellArg key} >> "$env_file"
+                                  cat ${lib.escapeShellArg path} >> "$env_file"
+                                  printf '\n' >> "$env_file"
+                                '') secret.dataFromSops
+                              );
+                            in
+                            ''
+                              ${kubectl} create namespace ${lib.escapeShellArg secret.namespace} \
+                                --dry-run=client -o yaml | ${kubectl} apply --validate=false -f -
+
+                              env_file="$(${lib.getExe' pkgs.coreutils "mktemp"})"
+                              ${writeEnvFile}
+                              ${kubectl} -n ${lib.escapeShellArg secret.namespace} create secret generic ${lib.escapeShellArg secret.name} \
+                                --from-env-file="$env_file" \
+                                --dry-run=client -o yaml | ${kubectl} apply --validate=false -f -
+                              rm -f "$env_file"
+                            '';
+                        in
+                        /* sh */ ''
+                          for attempt in $(seq 1 60); do
+                            if ${kubectl} get --raw=/readyz >/dev/null; then
+                              break
+                            fi
+
+                            if [ "$attempt" -eq 60 ]; then
+                              exit 1
+                            fi
+
+                            sleep 2
+                          done
+
+                          ${lib.concatMapStringsSep "\n" applySecret cfg.secrets}
+                        '';
+                    };
               };
 
               timers.k3s-tailscale-routes = {
@@ -184,22 +264,29 @@
         cfg = config.modules.k3s;
       in
       {
-        imports = [
-          self.modules.nixos.k3s-cert-manager
-          self.modules.nixos.k3s-tailscale-operator
+        imports = with self.modules.nixos; [
+          k3s-cert-manager
+          k3s-pihole
+          k3s-searx
+          k3s-tailscale-operator
         ];
 
         config = {
-          modules.k3s-cert-manager.enable = true;
-          modules.k3s-tailscale-operator.enable = cfg.useTailscale;
+          modules = {
+            k3s-cert-manager.enable = true;
+            k3s-pihole.enable = true;
+            k3s-searx.enable = true;
+            k3s-tailscale-operator.enable = cfg.useTailscale;
+          };
           services.k3s = {
             enable = true;
             role = "server";
             extraFlags = [
               "--disable=traefik"
               "--disable=servicelb"
-              "--disable=local-storage"
               "--disable=metrics-server"
+              "--kube-controller-manager-arg=node-monitor-period=2s"
+              "--kube-controller-manager-arg=node-monitor-grace-period=20s"
             ]
             ++ lib.optionals cfg.useTailscale [
               "--advertise-address=\${K3S_TAILSCALE_IP}"
