@@ -205,7 +205,9 @@ in
                     sectionName = "websecure";
                   }
                 ];
-                hostnames = [ "prometheus.k3s.vansleen.dev" ];
+                hostnames = [
+                  "prometheus.vansleen.dev"
+                ];
                 rules = [
                   {
                     backendRefs = [
@@ -226,7 +228,9 @@ in
                     sectionName = "websecure";
                   }
                 ];
-                hostnames = [ "grafana.k3s.vansleen.dev" ];
+                hostnames = [
+                  "grafana.vansleen.dev"
+                ];
                 rules = [
                   {
                     backendRefs = [

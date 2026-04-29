@@ -78,8 +78,8 @@ in
 
                   # Tailscale LoadBalancer IP for Service/gateway/traefik.
                   # Check with: kubectl -n gateway get svc traefik -o wide
-                  local-zone: "k3s.vansleen.dev." redirect
-                  local-data: "k3s.vansleen.dev. 300 IN A 100.104.245.35"
+                  local-zone: "vansleen.dev." redirect
+                  local-data: "vansleen.dev. 300 IN A 100.104.245.35"
 
                   qname-minimisation: yes
                   edns-buffer-size: 1232
@@ -120,7 +120,7 @@ in
                     sectionName = "websecure";
                   }
                 ];
-                hostnames = [ "pihole.k3s.vansleen.dev" ];
+                hostnames = [ "pihole.vansleen.dev" ];
                 rules = [
                   {
                     name = "root-redirect";

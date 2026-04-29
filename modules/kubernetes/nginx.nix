@@ -32,8 +32,7 @@
                   }
                 ];
                 hostnames = [
-                  "nginx.k3s.vansleen.dev"
-                  "nginx-test.k3s.vansleen.dev"
+                  "nginx.vansleen.dev"
                 ];
                 rules = [
                   {

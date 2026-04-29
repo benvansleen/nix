@@ -14,8 +14,8 @@
       config =
         let
           cfg = config.modules.gateway;
-          domain = "k3s.vansleen.dev";
-          secretName = "gateway-k3s-vansleen-dev-tls";
+          domain = "vansleen.dev";
+          secretName = "gateway-vansleen-dev-tls";
         in
         lib.mkIf cfg.enable {
           nixidy.applicationImports = [
@@ -67,7 +67,7 @@
               };
             };
 
-            resources.certificates.gateway-k3s-vansleen-dev.spec = lib.mkIf config.modules.cert-manager.enable {
+            resources.certificates.gateway-vansleen-dev.spec = lib.mkIf config.modules.cert-manager.enable {
               inherit secretName;
               dnsNames = [ "*.${domain}" ];
               issuerRef = {

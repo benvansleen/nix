@@ -3,7 +3,7 @@
 let
   namespace = "searx";
   secret-name = "searxng-secret";
-  hostname = "searx.k3s.vansleen.dev";
+  hostname = "searx.vansleen.dev";
 in
 {
   flake.modules.nixos.k3s-searx =
