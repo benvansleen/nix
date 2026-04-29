@@ -71,6 +71,7 @@ in
             resources = {
               configMaps.unbound-conf.data."unbound.conf" = ''
                 server:
+                  username: "" # for nix-built image
                   port: 15335
                   interface: 127.0.0.1
                   access-control: 127.0.0.0/8 allow
@@ -191,9 +192,11 @@ in
                       };
                     };
                     containers.unbound = {
-                      image = "mvance/unbound-rpi:1.22.0";
+                      ## if image not found, use `nix run .#update-unbound`
+                      image = "docker.io/library/unbound:latest";
+
                       ports.unbound.containerPort = 15335;
-                      volumeMounts."/opt/unbound/etc/unbound/unbound.conf" = {
+                      volumeMounts."/etc/unbound/unbound.conf" = {
                         name = "unbound-conf";
                         subPath = "unbound.conf";
                       };

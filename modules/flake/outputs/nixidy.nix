@@ -61,6 +61,19 @@
               cat ${self'.packages."generators/traefik"} > generated/traefik.nix
             '').outPath;
         };
+        update-unbound = {
+          type = "app";
+          program =
+            (pkgs.writeShellScript "update-unbound" /* sh */ ''
+              set -eo pipefail
+
+              image_tar=${self.packages.aarch64-linux.unbound-image}
+              scp "$image_tar" "pi:/tmp/unbound-image.tar.gz"
+              ssh root@pi "k3s ctr images import /tmp/unbound-image.tar.gz"
+
+              ssh root@pi "k3s ctr images list | grep -i unbound"
+            '').outPath;
+        };
       };
     };
 }
