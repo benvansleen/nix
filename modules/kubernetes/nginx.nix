@@ -1,3 +1,5 @@
+{ self, ... }:
+
 {
   flake.modules.kubernetes.nginx =
     { config, lib, ... }:
@@ -9,33 +11,8 @@
       config =
         let
           cfg = config.modules.nginx;
-          quickNodeFailureTolerations = [
-            {
-              key = "node.kubernetes.io/not-ready";
-              operator = "Exists";
-              effect = "NoExecute";
-              tolerationSeconds = 30;
-            }
-            {
-              key = "node.kubernetes.io/unreachable";
-              operator = "Exists";
-              effect = "NoExecute";
-              tolerationSeconds = 30;
-            }
-          ];
-          preferPerformanceNodes = {
-            nodeAffinity.preferredDuringSchedulingIgnoredDuringExecution = [
-              {
-                weight = 100;
-                preference.matchExpressions = [
-                  {
-                    key = "node.vansleen.dev/tier";
-                    operator = "In";
-                    values = [ "performance" ];
-                  }
-                ];
-              }
-            ];
+          podLabels = {
+            app = "nginx";
           };
         in
         lib.mkIf cfg.enable {
@@ -76,20 +53,10 @@
                   maxSurge = 0;
                   maxUnavailable = 1;
                 };
-                selector.matchLabels.app = "nginx";
+                selector.matchLabels = podLabels;
                 template = {
-                  metadata.labels.app = "nginx";
-                  spec = {
-                    affinity = preferPerformanceNodes;
-                    tolerations = quickNodeFailureTolerations;
-                    topologySpreadConstraints = [
-                      {
-                        maxSkew = 1;
-                        topologyKey = "kubernetes.io/hostname";
-                        whenUnsatisfiable = "DoNotSchedule";
-                        labelSelector.matchLabels.app = "nginx";
-                      }
-                    ];
+                  metadata.labels = podLabels;
+                  spec = (self.lib.performanceFavoredPodSpec podLabels) // {
                     containers.nginx = {
                       image = "nginx:1.25.1";
                       ports.http.containerPort = 80;
@@ -101,13 +68,13 @@
               };
 
               services.nginx.spec = {
-                selector.app = "nginx";
+                selector = podLabels;
                 ports.http.port = 80;
               };
 
               podDisruptionBudgets.nginx.spec = {
                 minAvailable = 1;
-                selector.matchLabels.app = "nginx";
+                selector.matchLabels = podLabels;
               };
 
               configMaps.nginx-html.data."index.html" = /* html */ ''
