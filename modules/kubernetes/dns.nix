@@ -196,7 +196,7 @@ in
                           FTLCONF_webserver_session_timeout.value = "${toString (14 * 24 * 60 * 60)}";
                           FTLCONF_dhcp_active.value = lib.mkIf dhcp "true";
                           FTLCONF_dhcp_start.value = "192.168.1.10";
-                          FTLCONF_dhcp_end.value = "192.168.1.250";
+                          FTLCONF_dhcp_end.value = "192.168.1.150";
                           FTLCONF_dhcp_router.value = "192.168.1.1";
                           FTLCONF_misc_nice.value = "-20";
                         };
