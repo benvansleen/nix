@@ -266,6 +266,7 @@
       {
         imports = with self.modules.nixos; [
           k3s-cert-manager
+          k3s-longhorn
           k3s-pihole
           k3s-searx
           k3s-tailscale-operator
@@ -285,6 +286,7 @@
               "--disable=traefik"
               "--disable=servicelb"
               "--disable=metrics-server"
+              "--disable=local-storage"
               "--kube-controller-manager-arg=node-monitor-period=2s"
               "--kube-controller-manager-arg=node-monitor-grace-period=20s"
             ]
@@ -312,6 +314,10 @@
         cfg = config.modules.k3s;
       in
       {
+        imports = with self.modules.nixos; [
+          k3s-longhorn
+        ];
+
         ## one-time from agent nodes:
         ## mkdir -p ~/.kube
         ## scp <cfg.primary>:/etc/rancher/k3s/k3s.yaml ~/.kube/config

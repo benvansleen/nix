@@ -8,6 +8,7 @@
         cert-manager
         descheduler
         gateway
+        longhorn
         monitoring
         nginx
         pihole
@@ -29,6 +30,7 @@
         cert-manager.enable = true;
         descheduler.enable = true;
         gateway.enable = true;
+        longhorn.enable = true;
         monitoring.enable = true;
         nginx.enable = true;
         pihole.enable = true;
@@ -37,7 +39,7 @@
       };
     };
 
-  flake.lib.performanceFavoredPodSpec =
+  flake.lib =
     let
       quickNodeFailureTolerations = [
         {
@@ -51,6 +53,15 @@
           operator = "Exists";
           effect = "NoExecute";
           tolerationSeconds = 30;
+        }
+      ];
+
+      spreadAcrossNodes = labels: [
+        {
+          maxSkew = 1;
+          topologyKey = "kubernetes.io/hostname";
+          whenUnsatisfiable = "ScheduleAnyway";
+          labelSelector.matchLabels = labels;
         }
       ];
 
@@ -68,17 +79,13 @@
           }
         ];
       };
+
     in
-    labels: {
-      affinity = preferPerformanceNodes;
-      tolerations = quickNodeFailureTolerations;
-      topologySpreadConstraints = [
-        {
-          maxSkew = 1;
-          topologyKey = "kubernetes.io/hostname";
-          whenUnsatisfiable = "DoNotSchedule";
-          labelSelector.matchLabels = labels;
-        }
-      ];
+    {
+      performanceFavoredPodSpec = labels: {
+        affinity = preferPerformanceNodes;
+        tolerations = quickNodeFailureTolerations;
+        topologySpreadConstraints = spreadAcrossNodes labels;
+      };
     };
 }

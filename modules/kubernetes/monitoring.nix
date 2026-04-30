@@ -124,11 +124,16 @@ in
 
               deployments.prometheus.spec = {
                 replicas = 1;
+                strategy.type = "Recreate";
                 selector.matchLabels = prometheusLabels;
                 template = {
                   metadata.labels = prometheusLabels;
                   spec = (self.lib.performanceFavoredPodSpec prometheusLabels) // {
                     serviceAccountName = "prometheus";
+                    securityContext = {
+                      fsGroup = 65534;
+                      fsGroupChangePolicy = "OnRootMismatch";
+                    };
                     containers.prometheus = {
                       image = "prom/prometheus:v2.55.1";
                       args = [
@@ -148,7 +153,7 @@ in
                     };
                     volumes = {
                       config.configMap.name = "prometheus";
-                      data.persistentVolumeClaim.claimName = "prometheus-data";
+                      data.persistentVolumeClaim.claimName = "prometheus-data-longhorn";
                     };
                   };
                 };
@@ -156,10 +161,15 @@ in
 
               deployments.grafana.spec = {
                 replicas = 1;
+                strategy.type = "Recreate";
                 selector.matchLabels = grafanaLabels;
                 template = {
                   metadata.labels = grafanaLabels;
                   spec = (self.lib.performanceFavoredPodSpec grafanaLabels) // {
+                    securityContext = {
+                      fsGroup = 472;
+                      fsGroupChangePolicy = "OnRootMismatch";
+                    };
                     containers.grafana = {
                       image = "grafana/grafana:11.5.2";
                       ports.http.containerPort = 3000;
@@ -175,26 +185,26 @@ in
                     volumes = {
                       datasources.configMap.name = "grafana-datasources";
                       grafana-config.configMap.name = "grafana-config";
-                      data.persistentVolumeClaim.claimName = "grafana-data";
+                      data.persistentVolumeClaim.claimName = "grafana-data-longhorn";
                     };
                   };
                 };
               };
 
               persistentVolumeClaims = {
-                grafana-data = {
-                  metadata.name = "grafana-data";
+                grafana-data-longhorn = {
+                  metadata.name = "grafana-data-longhorn";
                   spec = {
                     accessModes = [ "ReadWriteOnce" ];
-                    storageClassName = "local-path";
+                    storageClassName = "longhorn";
                     resources.requests.storage = "1Gi";
                   };
                 };
-                prometheus-data = {
-                  metadata.name = "prometheus-data";
+                prometheus-data-longhorn = {
+                  metadata.name = "prometheus-data-longhorn";
                   spec = {
                     accessModes = [ "ReadWriteOnce" ];
-                    storageClassName = "local-path";
+                    storageClassName = "longhorn";
                     resources.requests.storage = "1Gi";
                   };
                 };
