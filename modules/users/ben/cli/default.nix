@@ -11,6 +11,7 @@
           bottom
           comma
           git
+          k9s
           opencode
           tmux
           zoxide
