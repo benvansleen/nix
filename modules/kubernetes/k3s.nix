@@ -32,7 +32,7 @@
         gateway.enable = true;
         longhorn.enable = true;
         monitoring.enable = true;
-        nginx.enable = true;
+        nginx.enable = false;
         pihole.enable = true;
         searx.enable = true;
         tailscale-operator.enable = true;
