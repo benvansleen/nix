@@ -10,13 +10,13 @@
           atuin
           bottom
           comma
-          git
           k9s
           opencode
           tmux
           zoxide
           zsh
 
+          ben-git
           ben-starship
           ben-television
           ben-zsh
